@@ -4,9 +4,44 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FinancialManagementProgram"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:vm="clr-namespace:FinancialManagementProgram.ViewModels"
+        xmlns:tabvm="clr-namespace:FinancialManagementProgram.ViewModels.Tabs"
+        xmlns:tab="clr-namespace:FinancialManagementProgram.Tabs"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Button HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20,10" Click="Button_Click">인증</Button>
+        WindowStyle="None" ResizeMode="NoResize"
+        MouseDown="Window_MouseDown"
+        Title="Account Book App" Height="520" Width="960">
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource DefaultText}" />
+        <DataTemplate DataType="{x:Type tabvm:DashboardTabVM}">
+            <tab:DashboardTab />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type tabvm:AccountManagementTabVM}">
+            <tab:AccountManagementTab />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type tabvm:TransactionTabVM}">
+            <tab:TransactionTab />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type tabvm:AnalyzeTabVM}">
+            <tab:AnalyzeTab />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type tabvm:SettingsTabVM}">
+            <tab:SettingsTab />
+        </DataTemplate>
+    </Window.Resources>
+    <Grid Background="{DynamicResource BackgroundColor}">
+        <md:Card Width="200" HorizontalAlignment="Left" Background="{DynamicResource CardColor}" UniformCornerRadius="0"/>
+        <Button Style="{StaticResource MaterialDesignIconForegroundButton}" 
+                Width="40" Height="40" Margin="8" 
+                Foreground="{DynamicResource TextColor}"
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Top" 
+                Command="{Binding CloseAppCommand}">
+            <md:PackIcon Kind="Close" />
+        </Button>
     </Grid>
 </Window>

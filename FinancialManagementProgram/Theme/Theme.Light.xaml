@@ -1,0 +1,44 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="Primary" Color="#3F51B5"/>
+    <SolidColorBrush x:Key="PrimaryContent" Color="#ffffff"/>
+
+    <SolidColorBrush x:Key="TextColor" Color="#707070"/>
+    <SolidColorBrush x:Key="HeaderTextColor" Color="#000000"/>
+
+    <SolidColorBrush x:Key="CardColor" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="BackgroundColor" Color="#eeeeee"/>
+    <SolidColorBrush x:Key="BorderColor" Color="#dfdfdf"/>
+    
+    <SolidColorBrush x:Key="WarningColor" Color="#ffa62b"/>
+    <SolidColorBrush x:Key="SuccessfulColor" Color="#4fab52"/>
+    <SolidColorBrush x:Key="ErrorColor" Color="#f44336"/>
+
+    <LinearGradientBrush x:Key="GradientBlackColor" StartPoint="0,0" EndPoint="0.7,1">
+        <GradientStop Color="#95827D" Offset="0"/>
+        <GradientStop Color="#331B14" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="GradientGreenColor" StartPoint="0,0" EndPoint="0.7,1">
+        <GradientStop Color="#7AC57C" Offset="0"/>
+        <GradientStop Color="#43A447" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="GradientRedColor" StartPoint="0,0" EndPoint="0.7,1">
+        <GradientStop Color="#E58289" Offset="0"/>
+        <GradientStop Color="#C13842" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="GradientYellowColor" StartPoint="0,0" EndPoint="0.7,1">
+        <GradientStop Color="#FFCF78" Offset="0"/>
+        <GradientStop Color="#FF9002" Offset="1"/>
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="GradientBlueColor" StartPoint="0,0" EndPoint="0.7,1">
+        <GradientStop Color="#3BC3E8" Offset="0"/>
+        <GradientStop Color="#657FD9" Offset="1"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="TooltipColor" Color="#505050"/>
+    <SolidColorBrush x:Key="TooltipContentColor" Color="#FFFFFF"/>
+</ResourceDictionary>
