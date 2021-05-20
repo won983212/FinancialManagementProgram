@@ -3,10 +3,126 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:FinancialManagementProgram.Tabs"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:ctrl="clr-namespace:FinancialManagementProgram.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="520" d:DesignWidth="760">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource DefaultText}" />
+    </UserControl.Resources>
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Top menu -->
+        <StackPanel Orientation="Horizontal"
+                    Grid.ColumnSpan="2"
+                    Margin="20,20,20,40"
+                    VerticalAlignment="Top">
+            <TextBlock Text="통장 관리"
+                       FontSize="14pt"
+                       VerticalAlignment="Center"
+                       Margin="0,0,4,0" />
+            <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                    Foreground="{DynamicResource TextColor}"
+                    Width="30" Height="30">
+                <md:PackIcon Kind="Add"/>
+            </Button>
+        </StackPanel>
+        
+        <!-- Card Control Panel -->
+        <md:Card Grid.Row="1" Margin="12,56,12,12" Width="230">
+            <StackPanel Margin="16,95,16,0">
+                <Grid Margin="0,0,0,16">
+                    <TextBlock VerticalAlignment="Center">이번달 수입</TextBlock>
+                    <TextBlock HorizontalAlignment="Right"
+                               FontWeight="Bold"
+                               FontSize="10.5pt"
+                               Foreground="{DynamicResource Primary}">+ 3,150원</TextBlock>
+                </Grid>
+                <Grid>
+                    <TextBlock VerticalAlignment="Center">이번달 지출</TextBlock>
+                    <TextBlock HorizontalAlignment="Right"
+                               FontWeight="Bold"
+                               FontSize="10.5pt"
+                               Foreground="{DynamicResource ErrorColor}">- 5,120원</TextBlock>
+                </Grid>
+                <StackPanel Orientation="Horizontal" 
+                            Margin="0,30,0,0"
+                            HorizontalAlignment="Right">
+                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                            FontSize="9pt" Padding="0" Margin="0,0,16,0">
+                        메모편집
+                    </Button>
+                    <Button Style="{StaticResource MaterialDesignFlatButton}"
+                            FontSize="9pt" Padding="0">
+                        계좌삭제
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </md:Card>
+        <ctrl:PayCard Grid.Row="1" VerticalAlignment="Top" />
+        
+        <!-- Card Information Panel -->
+        <md:Card Grid.Row="1" Grid.Column="1" Margin="0,0,12,12">
+            <Grid Margin="20,20,20,40">
+                <Grid.Resources>
+                    <Style x:Key="InfoTitleText" TargetType="{x:Type TextBlock}">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+                    </Style>
+                    <Style x:Key="InfoValueText" TargetType="{x:Type TextBlock}">
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="HorizontalAlignment" Value="Right"/>
+                        <Setter Property="Foreground" Value="{DynamicResource HeaderTextColor}"/>
+                        <Setter Property="Grid.Column" Value="1"/>
+                    </Style>
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Foreground="{DynamicResource HeaderTextColor}"
+                           FontSize="12pt"
+                           FontWeight="Bold"
+                           Margin="0,0,0,12">알뜰계좌 정보</TextBlock>
+                <TextBlock Grid.Row="1" Style="{StaticResource InfoTitleText}">계좌 번호</TextBlock>
+                <TextBlock Grid.Row="1" Style="{StaticResource InfoValueText}">1002 - 356 - 602174</TextBlock>
+                <TextBlock Grid.Row="2" Style="{StaticResource InfoTitleText}">잔액</TextBlock>
+                <TextBlock Grid.Row="2" Style="{StaticResource InfoValueText}">3,000,000 원</TextBlock>
+                <TextBlock Grid.Row="3" Style="{StaticResource InfoTitleText}">계좌 별명</TextBlock>
+                <TextBlock Grid.Row="3" Style="{StaticResource InfoValueText}">알뜰상품적금</TextBlock>
+                <TextBlock Grid.Row="4" Style="{StaticResource InfoTitleText}">은행 이름</TextBlock>
+                <TextBlock Grid.Row="4" Style="{StaticResource InfoValueText}">우리은행</TextBlock>
+                <TextBlock Grid.Row="5" Style="{StaticResource InfoTitleText}">마지막 동기화</TextBlock>
+                <TextBlock Grid.Row="5" Style="{StaticResource InfoValueText}">15분전</TextBlock>
+                <TextBlock Grid.Row="6" Style="{StaticResource InfoTitleText}">메모</TextBlock>
+                <TextBlock Grid.Row="6" Style="{StaticResource InfoValueText}">알뜰하게 사용하기 위한 카드이다.</TextBlock>
+            </Grid>
+        </md:Card>
+        
+        <!-- Card Listbox -->
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="12,12,0,12" Orientation="Horizontal">
+            <ctrl:PayCard Grid.Row="1" VerticalAlignment="Top" Margin="0,0,12,0" CardBackground="{DynamicResource GradientBlackColor}" />
+            <ctrl:PayCard Grid.Row="1" VerticalAlignment="Top" Margin="0,0,12,0" />
+            <ctrl:PayCard Grid.Row="1" VerticalAlignment="Top" Margin="0,0,12,0" />
+            <ctrl:PayCard Grid.Row="1" VerticalAlignment="Top" />
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -10,10 +10,15 @@ using System.Windows.Input;
 
 namespace FinancialManagementProgram.ViewModels
 {
+    class TabItem
+    {
+        public string Title { get; set; }
+        public string IconName { get; set; }
+        public TabChild ViewModel { get; set; }
+    }
+
     class MainViewModel : TabContainer
     {
-        private TabChild[] _tabs;
-
         public static SnackbarMessageQueue SnackMessageQueue { get; private set; }
 
         private int _selectedTabItemIndex = 0;
@@ -23,21 +28,29 @@ namespace FinancialManagementProgram.ViewModels
             set
             {
                 _selectedTabItemIndex = value;
-                CurrentPage = _tabs[_selectedTabItemIndex];
+                CurrentPage = _tabs[_selectedTabItemIndex].ViewModel;
                 OnPropertyChanged();
             }
         }
 
-        public ICommand CloseAppCommand = new RelayCommand(() => Console.WriteLine("!!!"));
+        private readonly TabItem[] _tabs;
+        public TabItem[] TabItems
+        {
+            get => _tabs;
+        }
 
         public MainViewModel()
         {
-            _tabs = new TabChild[] // Tab이 만들어지면 여기에 추가
+            _tabs = new TabItem[] // Tab이 만들어지면 여기에 추가
             {
-                new DashboardTabVM(this), new AccountManagementTabVM(this), new TransactionTabVM(this), new AnalyzeTabVM(this), new SettingsTabVM(this)
+                new TabItem(){ Title = "대시보드", IconName = "ViewDashboard", ViewModel = new DashboardTabVM(this) },
+                new TabItem(){ Title = "통장 관리", IconName = "CreditCardOutline", ViewModel = new AccountManagementTabVM(this) },
+                new TabItem(){ Title = "수입 및 지출", IconName = "History", ViewModel = new TransactionTabVM(this) },
+                new TabItem(){ Title = "지출 분석", IconName = "ChartTimelineVariantShimmer", ViewModel = new AnalyzeTabVM(this) },
+                new TabItem(){ Title = "설정", IconName = "Cog", ViewModel = new SettingsTabVM(this) }
             };
 
-            SelectedTabItemIndex = 0;
+            SelectedTabItemIndex = 2;
         }
 
         static MainViewModel()

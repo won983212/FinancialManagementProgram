@@ -17,22 +17,6 @@ namespace FinancialManagementProgram.kftcAPI
         Initial, Skip = 2
     }
 
-    readonly struct UserAccessToken
-    {
-        public string AccessToken { get; }
-        public long ExpiresIn { get; }
-        public string RefreshToken { get; }
-        public string UserSeqNo { get; }
-
-        public UserAccessToken(JObject obj)
-        {
-            AccessToken = obj.Value<string>("access_token");
-            ExpiresIn = obj.Value<long>("expires_in");
-            RefreshToken = obj.Value<string>("refresh_token");
-            UserSeqNo = obj.Value<string>("user_seq_no");
-        }
-    }
-
     static class APIs
     {
         private static readonly Random Rand = new Random();

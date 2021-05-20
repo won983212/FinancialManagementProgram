@@ -34,13 +34,48 @@
         </DataTemplate>
     </Window.Resources>
     <Grid Background="{DynamicResource BackgroundColor}">
-        <md:Card Width="200" HorizontalAlignment="Left" Background="{DynamicResource CardColor}" UniformCornerRadius="0"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Content -->
+        <ContentControl Grid.Column="1" Content="{Binding CurrentPage}" />
+        
+        <!-- Sidemenu bar -->
+        <md:Card Width="200" HorizontalAlignment="Left" Background="{DynamicResource CardColor}" UniformCornerRadius="0">
+            <StackPanel>
+                <DockPanel HorizontalAlignment="Center" Margin="0,12">
+                    <md:PackIcon Kind="CartOutline" Width="32" Height="32" Margin="0,0,12,0"
+                                 Foreground="{DynamicResource TextColor}"
+                                 VerticalAlignment="Center"/>
+                    <TextBlock DockPanel.Dock="Top" Margin="0,0,0,4">이번달 지출</TextBlock>
+                    <TextBlock FontSize="15pt" Foreground="{DynamicResource Primary}">123,456원</TextBlock>
+                </DockPanel>
+                <Separator Background="{DynamicResource BorderColor}" Margin="12,0"/>
+                <ListBox ItemsSource="{Binding TabItems}" 
+                         SelectedIndex="{Binding SelectedTabItemIndex}"
+                         Style="{StaticResource CardListBox}"
+                         Margin="10">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="12,6">
+                                <md:PackIcon Kind="{Binding IconName}" Width="24" Height="24" Margin="0,0,16,0" />
+                                <TextBlock Text="{Binding Title}" VerticalAlignment="Center" FontSize="9pt"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </md:Card>
+
+        <!-- Exit button -->
         <Button Style="{StaticResource MaterialDesignIconForegroundButton}" 
-                Width="40" Height="40" Margin="8" 
+                Width="40" Height="40" Margin="8" Grid.Column="1"
                 Foreground="{DynamicResource TextColor}"
                 HorizontalAlignment="Right" 
                 VerticalAlignment="Top" 
-                Command="{Binding CloseAppCommand}">
+                Click="ExitButton_Click">
             <md:PackIcon Kind="Close" />
         </Button>
     </Grid>
