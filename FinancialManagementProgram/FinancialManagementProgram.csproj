@@ -82,8 +82,13 @@
     <Compile Include="Controls\PayCard.xaml.cs">
       <DependentUpon>PayCard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TransactionCalendar.xaml.cs">
+      <DependentUpon>TransactionCalendar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\BalanceChangesToBrush.cs" />
     <Compile Include="Converters\BrushToColorConverter.cs" />
+    <Compile Include="Converters\DayTotalSpendingConverter.cs" />
+    <Compile Include="kftcAPI\APIContext.cs" />
     <Compile Include="kftcAPI\BankAccount.cs" />
     <Compile Include="kftcAPI\Transaction.cs" />
     <Compile Include="kftcAPI\TransactionCategory.cs" />
@@ -114,6 +119,10 @@
     <Compile Include="ViewModels\Tabs\DashboardTabVM.cs" />
     <Compile Include="ViewModels\Tabs\AccountManagementTabVM.cs" />
     <Page Include="Controls\PayCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TransactionCalendar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -9,6 +9,7 @@ using System.Windows.Media;
 
 namespace FinancialManagementProgram.Converters
 {
+    [ValueConversion(typeof(SolidColorBrush), typeof(Color))]
     class BrushToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
