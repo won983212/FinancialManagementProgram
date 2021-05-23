@@ -50,7 +50,7 @@ namespace FinancialManagementProgram.ViewModels
                 new TabItem(){ Title = "설정", IconName = "Cog", ViewModel = new SettingsTabVM(this) }
             };
 
-            SelectedTabItemIndex = 2;
+            SelectedTabItemIndex = 3;
         }
 
         static MainViewModel()

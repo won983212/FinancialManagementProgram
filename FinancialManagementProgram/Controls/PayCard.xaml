@@ -9,7 +9,7 @@
              DataContext="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}"
              d:DesignHeight="120" d:DesignWidth="200">
     <UserControl.Resources>
-        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource DefaultText}">
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="Foreground" Value="White"/>
         </Style>
     </UserControl.Resources>

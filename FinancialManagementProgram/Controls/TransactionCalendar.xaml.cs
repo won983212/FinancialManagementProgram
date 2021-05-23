@@ -22,8 +22,6 @@ namespace FinancialManagementProgram.Controls
         private static readonly DependencyProperty DateProperty =
             DependencyProperty.Register("Date", typeof(DateTime), typeof(TransactionCalendar), new PropertyMetadata(OnDateChanged));
 
-        private static readonly int[] MonthDays = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-
         private static readonly Pen linePen;
         private static readonly Brush OtherMonthBrush;
         private static readonly Brush CurrentMonthBrush;
@@ -127,17 +125,8 @@ namespace FinancialManagementProgram.Controls
         private void UpdateCalendar(DateTime firstDate)
         {
             int offset = (int) firstDate.DayOfWeek;
-            int days = MonthDays[firstDate.Month - 1];
-            int lastMonthDays = MonthDays[11 - ((13 - firstDate.Month) % 12)];
-
-            // handle february 29 days
-            if (IsLeapYear(firstDate.Year))
-            {
-                if (firstDate.Month == 2)
-                    days++;
-                if (firstDate.Month == 3)
-                    lastMonthDays++;
-            }
+            int days = CommonUtil.GetTotalDays(firstDate);
+            int lastMonthDays = CommonUtil.GetTotalDays(firstDate.Year, 12 - ((13 - firstDate.Month) % 12));
 
             // remains before
             for (int d = 0; d < offset; d++)
@@ -152,7 +141,7 @@ namespace FinancialManagementProgram.Controls
             {
                 int index = 7 + offset + d;
                 DateTime date = new DateTime(firstDate.Year, firstDate.Month, d + 1);
-                DayTransaction transaction = APIContext.Current.GetDayTransaction(date.ToString("yyyy.MM.dd"));
+                TransactionGroup transaction = APIDataAnalyzer.Current.GetDayTransaction(date.ToString("yyyy.MM.dd"));
 
                 // set digit number
                 TextBlock label = GetTextblockAt(index, 0);
@@ -222,16 +211,10 @@ namespace FinancialManagementProgram.Controls
             dc.DrawLine(linePen, new Point(0, ActualHeight), new Point(ActualWidth, ActualHeight));
         }
 
-        private static bool IsLeapYear(int year)
-        {
-            return year % 400 == 0 || year % 4 == 0 && year % 100 > 0;
-        }
-
         private static void OnDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             TransactionCalendar obj = d as TransactionCalendar;
-            DateTime value = (DateTime)e.NewValue;
-            obj.UpdateCalendar(new DateTime(value.Year, value.Month, 1));
+            obj.UpdateCalendar((DateTime)e.NewValue);
         }
 
         static TransactionCalendar()

@@ -85,13 +85,19 @@
     <Compile Include="Controls\TransactionCalendar.xaml.cs">
       <DependentUpon>TransactionCalendar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TransactionChart.xaml.cs">
+      <DependentUpon>TransactionChart.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\SimplifyBudgetUnitConverter.cs" />
     <Compile Include="Converters\BalanceChangesToBrush.cs" />
     <Compile Include="Converters\BrushToColorConverter.cs" />
     <Compile Include="Converters\DayTotalSpendingConverter.cs" />
-    <Compile Include="kftcAPI\APIContext.cs" />
+    <Compile Include="CommonUtil.cs" />
+    <Compile Include="kftcAPI\APIDataAnalyzer.cs" />
     <Compile Include="kftcAPI\BankAccount.cs" />
     <Compile Include="kftcAPI\Transaction.cs" />
     <Compile Include="kftcAPI\TransactionCategory.cs" />
+    <Compile Include="kftcAPI\TransactionGroup.cs" />
     <Compile Include="kftcAPI\UserAccessToken.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="RelayCommand.cs" />
@@ -123,6 +129,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TransactionCalendar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TransactionChart.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

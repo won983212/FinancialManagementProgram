@@ -33,12 +33,9 @@
         <GradientStop Color="#FFCF78" Offset="0"/>
         <GradientStop Color="#FF9002" Offset="1"/>
     </LinearGradientBrush>
-    
+
     <LinearGradientBrush x:Key="GradientBlueColor" StartPoint="0,0" EndPoint="0.7,1">
         <GradientStop Color="#3BC3E8" Offset="0"/>
         <GradientStop Color="#657FD9" Offset="1"/>
     </LinearGradientBrush>
-
-    <SolidColorBrush x:Key="TooltipColor" Color="#505050"/>
-    <SolidColorBrush x:Key="TooltipContentColor" Color="#FFFFFF"/>
 </ResourceDictionary>

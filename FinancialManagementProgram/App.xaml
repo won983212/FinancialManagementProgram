@@ -16,6 +16,7 @@
             <!-- Converters -->
             <converter:DayTotalSpendingConverter x:Key="DayTotalSpendingConverter" />
             <converter:BalanceChangesToBrush x:Key="BalanceChangesToBrush" />
+            <converter:SimplifyBudgetUnitConverter x:Key="SimplifyBudgetUnitConverter" />
 
             <!-- Fonts -->
             <FontFamily x:Key="PrimaryFont">#Roboto</FontFamily>
@@ -24,15 +25,26 @@
             <!-- <FontFamily x:Key="PrimaryFont">pack://application:,,,/Resources/Fonts/#Roboto</FontFamily> -->
 
             <!-- Styles -->
-            <Style TargetType="{x:Type ToolTip}" BasedOn="{StaticResource MaterialDesignToolTip}">
-                <Setter Property="Foreground" Value="{DynamicResource TooltipContentColor}" />
-                <Setter Property="Background" Value="{DynamicResource TooltipColor}" />
+            <Style TargetType="{x:Type ToolTip}">
+                <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+                <Setter Property="Background" Value="{DynamicResource CardColor}" />
                 <Setter Property="Padding" Value="6" />
+                <Setter Property="Placement" Value="Custom" />
+                <Setter Property="CustomPopupPlacementCallback" Value="{x:Static md:ToolTipAssist.CustomPopupPlacementCallback}" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToolTip}">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding Foreground}" BorderThickness="1" Margin="{TemplateBinding Margin}">
+                                <ContentPresenter Name="ContentPresenter" Margin="{TemplateBinding Padding}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" ContentStringFormat="{TemplateBinding ContentStringFormat}" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
 
-            <Style x:Key="DefaultText" TargetType="TextBlock">
+            <Style x:Key="DefaultWindowStyle" TargetType="{x:Type Window}">
+                <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}" />
                 <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
-                <Setter Property="FontFamily" Value="{StaticResource PrimaryFont}"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

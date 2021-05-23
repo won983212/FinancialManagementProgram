@@ -7,9 +7,6 @@
              xmlns:ctrl="clr-namespace:FinancialManagementProgram.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="520" d:DesignWidth="760">
-    <UserControl.Resources>
-        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource DefaultText}" />
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -74,11 +71,11 @@
         <md:Card Grid.Row="1" Grid.Column="1" Margin="0,0,12,12">
             <Grid Margin="20,20,20,40">
                 <Grid.Resources>
-                    <Style x:Key="InfoTitleText" TargetType="{x:Type TextBlock}">
+                    <Style x:Key="InfoTitleText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                         <Setter Property="VerticalAlignment" Value="Center"/>
                         <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
                     </Style>
-                    <Style x:Key="InfoValueText" TargetType="{x:Type TextBlock}">
+                    <Style x:Key="InfoValueText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                         <Setter Property="VerticalAlignment" Value="Center"/>
                         <Setter Property="HorizontalAlignment" Value="Right"/>
                         <Setter Property="Foreground" Value="{DynamicResource HeaderTextColor}"/>

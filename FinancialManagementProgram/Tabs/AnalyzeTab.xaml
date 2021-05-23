@@ -3,10 +3,265 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:FinancialManagementProgram.Tabs"
-             mc:Ignorable="d" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:api="clr-namespace:FinancialManagementProgram.kftcAPI"
+             xmlns:control="clr-namespace:FinancialManagementProgram.Controls"
+             mc:Ignorable="d"
+             Loaded="UserControl_Loaded" 
+             Unloaded="UserControl_Unloaded"
              d:DesignHeight="520" d:DesignWidth="760">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.ColumnSpan="2" FontSize="14pt" Margin="20" Text="지출 분석"/>
+
+        <!-- status of budget panel -->
+        <md:Card Grid.Row="1" Margin="8,0,8,8">
+            <Grid Margin="16,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.ColumnSpan="2"
+                           HorizontalAlignment="Center"
+                           FontSize="14pt"
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           Text="{Binding TargetDate, Source={x:Static api:APIDataAnalyzer.Current}, StringFormat=MMMM}"/>
+                <Separator Grid.Row="1"
+                           Grid.ColumnSpan="2"
+                           Margin="0,20"
+                           Background="{DynamicResource BorderColor}"/>
+
+                <StackPanel Grid.Row="2"
+                            Grid.ColumnSpan="2">
+                    <TextBlock HorizontalAlignment="Right"
+                               Margin="0,0,0,8"
+                               Foreground="{DynamicResource TextColor}"
+                               Text="{Binding Budget, StringFormat={}{0:#,##원}, Source={x:Static api:APIDataAnalyzer.Current}}"/>
+                    <ProgressBar Height="6"
+                                 Foreground="{DynamicResource Primary}"
+                                 Background="{DynamicResource BorderColor}"
+                                 BorderBrush="{DynamicResource BorderColor}"
+                                 md:TransitionAssist.DisableTransitions="True"
+                                 Value="{Binding BudgetUsagePercent, Mode=OneWay, Source={x:Static api:APIDataAnalyzer.Current}}">
+                        <ProgressBar.ToolTip>
+                            <ToolTip Content="{Binding BudgetUsagePercent, Source={x:Static api:APIDataAnalyzer.Current}}"
+                                 ContentStringFormat="예산 {0}% 사용됨" />
+                        </ProgressBar.ToolTip>
+                    </ProgressBar>
+                </StackPanel>
+                <TextBlock Grid.Row="3" 
+                           FontSize="10.5pt"
+                           Margin="0,8,0,28"
+                           Foreground="{DynamicResource TextColor}">
+                    <Run>지출</Run>
+                    <Run FontWeight="Bold" Text="{Binding TotalSpending, Mode=OneWay, StringFormat={}{0:#,##원;;없음}, Source={x:Static api:APIDataAnalyzer.Current}}"/>
+                </TextBlock>
+                <Button Grid.Row="3"
+                        Grid.Column="1"
+                        Style="{StaticResource MaterialDesignFlatButton}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Content="예산 설정"
+                        FontSize="9pt"
+                        Padding="0"/>
+
+                <TextBlock Grid.Row="4"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextColor}"
+                           ToolTip="이번달 총 지출입니다."
+                           Text="이번달 지출"/>
+                <TextBlock Grid.Row="4"
+                           Grid.Column="1"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           Text="{Binding TotalSpending, StringFormat={}{0:#,##원;;없음}, Source={x:Static api:APIDataAnalyzer.Current}}"/>
+                
+                <TextBlock Grid.Row="5"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextColor}"
+                           ToolTip="예산에서 지출을 뺀 값입니다."
+                           Text="남은 예산"/>
+                <TextBlock Grid.Row="5"
+                           Grid.Column="1"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           Text="{Binding RemainingBudget, StringFormat={}{0:#,##원;;없음}}"/>
+
+                <TextBlock Grid.Row="6"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextColor}"
+                           ToolTip="하루에 최대 얼마나 써야 이번달 남은 예산안으로 쓸 수 있는지 보여줍니다."
+                           Text="하루 권장 지출"/>
+                <TextBlock Grid.Row="6"
+                           Grid.Column="1"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           Text="{Binding RecommendedSpendingInDay, StringFormat={}{0:#,##원;;0원}}"/>
+
+                <TextBlock Grid.Row="7"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextColor}"
+                           ToolTip="지금까지의 사용 추세로 볼 때, 이번달에 총 지출이 얼마나 나올지 예상한 수치입니다."
+                           Text="총 예상 지출"/>
+                <TextBlock Grid.Row="7"
+                           Grid.Column="1"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           Text="{Binding PredictSpendingThisMonth, StringFormat={}{0:#,##원;;0원}}"/>
+            </Grid>
+        </md:Card>
+
+        <!-- analyzing total transaction changes panel -->
+        <md:Card Grid.Row="2" Margin="8,0,8,8">
+            <Grid Margin="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </Grid.Resources>
+
+                <Rectangle Grid.Column="2" 
+                           Grid.RowSpan="3"
+                           Width="1"
+                           Margin="8,0"
+                           Fill="{DynamicResource BorderColor}" />
+
+                <TextBlock Grid.ColumnSpan="2"
+                           FontSize="12pt"
+                           Margin="0,0,0,24"
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           Text="이번주" />
+                <TextBlock Grid.Column="3" 
+                           Grid.ColumnSpan="2"
+                           FontSize="12pt"
+                           Margin="0,0,0,24"
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           Text="이번달" />
+                
+                <TextBlock Grid.Column="0" 
+                           Grid.Row="1"
+                           FontSize="18pt"
+                           FontWeight="Light"
+                           Margin="0,0,0,12"
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           Text="{Binding PredictSpendingThisWeek, Converter={StaticResource SimplifyBudgetUnitConverter}}" >
+                    <TextBlock.ToolTip>
+                        <ToolTip Content="{Binding PredictSpendingThisWeek}" ContentStringFormat="{}{0:#,##원;;0원}" />
+                    </TextBlock.ToolTip>
+                </TextBlock>
+                <TextBlock Grid.Column="1" 
+                           Grid.Row="1"
+                           FontSize="18pt"
+                           FontWeight="Light"
+                           Foreground="{DynamicResource Primary}"
+                           Margin="0,0,0,12"
+                           Text="{Binding SpendingWeeklyIncreasingRateText}" >
+                    <TextBlock.ToolTip>
+                        <ToolTip Content="{Binding SpendingLastWeek}" ContentStringFormat="지난주 지출: {0:#,##원;;0원}" />
+                    </TextBlock.ToolTip>
+                </TextBlock>
+                <TextBlock Grid.Column="3" 
+                           Grid.Row="1"
+                           FontSize="18pt"
+                           FontWeight="Light"
+                           Margin="0,0,0,12"
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           Text="{Binding PredictSpendingThisMonth, Converter={StaticResource SimplifyBudgetUnitConverter}}">
+                    <TextBlock.ToolTip>
+                        <ToolTip Content="{Binding PredictSpendingThisMonth}" ContentStringFormat="{}{0:#,##원;;0원}" />
+                    </TextBlock.ToolTip>
+                </TextBlock>
+                <TextBlock Grid.Column="4" 
+                           Grid.Row="1"
+                           FontSize="18pt"
+                           FontWeight="Light"
+                           Foreground="{DynamicResource ErrorColor}"
+                           Margin="0,0,0,12"
+                           Text="{Binding SpendingMonthlyIncreasingRateText}" >
+                    <TextBlock.ToolTip>
+                        <ToolTip Content="{Binding SpendingLastMonth}" ContentStringFormat="지난달 지출: {0:#,##원;;0원}" />
+                    </TextBlock.ToolTip>
+                </TextBlock>
+
+                <TextBlock Grid.Column="0" 
+                           Grid.Row="2"
+                           FontSize="8pt"
+                           Margin="0,0,0,20"
+                           Foreground="{DynamicResource TextColor}"
+                           Text="예상 지출" />
+                <TextBlock Grid.Column="1" 
+                           Grid.Row="2"
+                           FontSize="8pt"
+                           Margin="0,0,0,20"
+                           Foreground="{DynamicResource TextColor}"
+                           Text="전주 대비" />
+                <TextBlock Grid.Column="3" 
+                           Grid.Row="2"
+                           FontSize="8pt"
+                           Margin="0,0,0,20"
+                           Foreground="{DynamicResource TextColor}"
+                           Text="예상 지출" />
+                <TextBlock Grid.Column="4" 
+                           Grid.Row="2"
+                           FontSize="8pt"
+                           Margin="0,0,0,20"
+                           Foreground="{DynamicResource TextColor}"
+                           Text="전달 대비" />
+            </Grid>
+        </md:Card>
+        
+        <!-- categorized transaction pie chart -->
+        <md:Card Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" 
+                 Margin="0,0,8,8" Width="300">
+            <StackPanel Margin="20,16">
+                <TextBlock FontSize="12pt" 
+                       Foreground="{DynamicResource HeaderTextColor}"
+                       Margin="0,0,0,16">카테고리별 지출 현황</TextBlock>
+                <Separator Background="{DynamicResource BorderColor}" />
+                <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        HorizontalAlignment="Right"
+                        FontSize="9pt"
+                        Padding="0"
+                        Content="카테고리 설정" />
+                <control:TransactionChart CategorizedTransaction="{Binding CategorizedTransactions, Source={x:Static api:APIDataAnalyzer.Current}}" 
+                                          Margin="0,16" />
+            </StackPanel>
+        </md:Card>
     </Grid>
 </UserControl>
