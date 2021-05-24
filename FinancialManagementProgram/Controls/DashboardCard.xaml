@@ -1,0 +1,55 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:FinancialManagementProgram.Controls" x:Class="FinancialManagementProgram.Controls.DashboardCard"
+             mc:Ignorable="d"
+             d:DesignWidth="170">
+    <Grid DataContext="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:DashboardCard}}}">
+        <md:Card Margin="0,16,0,0" Height="100">
+            <Grid Margin="12,12,12,8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Right"
+                           Margin="0,0,0,4"
+                           Text="{Binding Title}"/>
+                <TextBlock Grid.Row="1" 
+                           Foreground="{DynamicResource HeaderTextColor}"
+                           FontSize="12pt"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Right"
+                           Text="{Binding ValueText}"/>
+                <Separator Grid.Row="2" 
+                           Margin="0,4,0,0"
+                           Background="{DynamicResource BorderColor}" />
+                <StackPanel Grid.Row="3"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Top">
+                    <md:PackIcon Kind="{Binding SubIconKind}" 
+                                 Margin="4,0"
+                                 Width="20" Height="20"/>
+                    <TextBlock VerticalAlignment="Center"
+                               Text="{Binding SubcontentText}"/>
+                </StackPanel>
+            </Grid>
+        </md:Card>
+        <Border Width="45" Height="45" 
+                CornerRadius="3" 
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="8,0,0,0"
+                Background="{Binding IconBackgroundBrush}">
+            <md:PackIcon Kind="{Binding IconKind}"
+                         Width="24" Height="24"
+                         Foreground="{DynamicResource PrimaryContent}"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"/>
+        </Border>
+    </Grid>
+</UserControl>

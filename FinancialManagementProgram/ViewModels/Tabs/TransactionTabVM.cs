@@ -18,7 +18,7 @@ namespace FinancialManagementProgram.ViewModels.Tabs
         public TransactionTabVM(TabContainer parent)
             : base(parent)
         {
-            Transactions = CollectionViewSource.GetDefaultView(APIDataAnalyzer.Current.Transactions);
+            Transactions = CollectionViewSource.GetDefaultView(APIDataManager.Current.Transactions);
             Transactions.GroupDescriptions.Add(new PropertyGroupDescription("TransDate"));
         }
     }

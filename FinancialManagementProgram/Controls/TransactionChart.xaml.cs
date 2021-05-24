@@ -12,25 +12,11 @@ using System.Windows.Shapes;
 
 namespace FinancialManagementProgram.Controls
 {
-    public class ColoredChartCategory
+    public partial class TransactionChart : UserControl
     {
-        public Brush Fill { get; set; }
-
-        public string CategoryName { get; set; }
-
-        public int Amount { get; set; }
-    }
-
-    public partial class TransactionChart : UserControl, INotifyPropertyChanged
-    {
-        public static readonly DependencyProperty CategorizedTransactionsProperty =
-            DependencyProperty.Register("CategorizedTransaction",
-                typeof(IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>>), typeof(TransactionChart),
-                new PropertyMetadata(OnCategorizedTransactionsChanged));
-
-        private ICollectionView _chartDatas;
-        private ObservableCollection<ColoredChartCategory> _categorizedTotal = new ObservableCollection<ColoredChartCategory>();
-        public event PropertyChangedEventHandler PropertyChanged;
+        public static readonly DependencyProperty ChartDatasProperty =
+            DependencyProperty.Register(nameof(ChartDatas), typeof(IEnumerable<ColoredChartCategory>), typeof(TransactionChart),
+                new PropertyMetadata(OnChartDatasChanged));
 
         public TransactionChart()
         {
@@ -46,17 +32,17 @@ namespace FinancialManagementProgram.Controls
             };
         }
 
-        private void UpdatePieChart()
+        private void UpdatePieChart(IEnumerable<ColoredChartCategory> datas)
         {
             const double PieProportion = 0.5;
             double radius = canvasChart.Width / 2;
 
             int total = 0;
-            foreach (var ent in _categorizedTotal)
+            foreach (var ent in datas)
                 total += ent.Amount;
 
             double angle = 0;
-            foreach (var ent in _categorizedTotal)
+            foreach (var ent in datas)
             {
                 Point from1 = CreateStraightPoint(radius * PieProportion, angle, radius);
                 Point from2 = CreateStraightPoint(radius, angle, radius);
@@ -103,48 +89,16 @@ namespace FinancialManagementProgram.Controls
             }
         }
 
-        private void BuildCategoryEntites(IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>> data)
+        private static void OnChartDatasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            _categorizedTotal.Clear();
-            int i = 0;
-            foreach (var ent in data)
-            {
-                _categorizedTotal.Add(new ColoredChartCategory() 
-                { 
-                    CategoryName = ent.Key.Label, 
-                    Amount = ent.Value.TotalSpending, 
-                    Fill = i++ == 0 ? Brushes.Tomato : Brushes.Green
-                });
-            }
-
-            ChartDatas = CollectionViewSource.GetDefaultView(_categorizedTotal);
-            ChartDatas.SortDescriptions.Add(new SortDescription("Amount", ListSortDirection.Descending));
+            Console.WriteLine("?");
+            ((TransactionChart)d).UpdatePieChart((IEnumerable<ColoredChartCategory>)e.NewValue);
         }
 
-        private static void OnCategorizedTransactionsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public IEnumerable<ColoredChartCategory> ChartDatas
         {
-            TransactionChart obj = d as TransactionChart;
-            var value = e.NewValue as IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>>;
-            obj.BuildCategoryEntites(value);
-            obj.UpdatePieChart();
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-        public ICollectionView ChartDatas
-        { 
-            get => _chartDatas;
-            private set { _chartDatas = value; OnPropertyChanged(); }
-        }
-
-        public IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>> CategorizedTransaction
-        {
-            get => (IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>>)GetValue(CategorizedTransactionsProperty);
-            set => SetValue(CategorizedTransactionsProperty, value);
+            get => (IEnumerable<ColoredChartCategory>)GetValue(ChartDatasProperty);
+            set => SetValue(ChartDatasProperty, value);
         }
     }
 }

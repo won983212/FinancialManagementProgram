@@ -17,36 +17,34 @@ namespace FinancialManagementProgram.ViewModels.Tabs
 
         public void OnDataHandlerPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(APIDataAnalyzer.Budget))
+            if (e.PropertyName == nameof(APIDataManager.Budget))
             {
                 OnPropertyChanged(nameof(RemainingBudget));
                 OnPropertyChanged(nameof(RecommendedSpendingInDay));
             }
-            else if (e.PropertyName == nameof(APIDataAnalyzer.TotalSpending))
+            else if (e.PropertyName == nameof(APIDataManager.TotalSpending))
             {
                 OnPropertyChanged(nameof(RemainingBudget));
             }
-            else if (e.PropertyName == nameof(APIDataAnalyzer.TargetDate))
+            else if (e.PropertyName == nameof(APIDataManager.TargetDate))
             {
                 OnPropertyChanged(nameof(RecommendedSpendingInDay));
                 OnPropertyChanged(nameof(PredictSpendingThisMonth));
                 OnPropertyChanged(nameof(SpendingLastMonth));
-                OnPropertyChanged(nameof(SpendingMonthlyIncreasingRateText));
                 OnPropertyChanged(nameof(PredictSpendingThisWeek));
                 OnPropertyChanged(nameof(SpendingLastWeek));
-                OnPropertyChanged(nameof(SpendingWeeklyIncreasingRateText));
             }
         }
 
         private static int TotalSpendingBetween(DateTime from, DateTime to)
         {
-            return APIDataAnalyzer.Current.GetTransactionsBetween(from, to).Sum((e) => e.Transactions.TotalSpending);
+            return APIDataManager.Current.GetTransactionsBetween(from, to).Sum((e) => e.Transactions.TotalSpending);
         }
 
 
         public int RemainingBudget
         {
-            get => APIDataAnalyzer.Current.Budget - APIDataAnalyzer.Current.TotalSpending;
+            get => APIDataManager.Current.Budget - APIDataManager.Current.TotalSpending;
         }
 
         public int RecommendedSpendingInDay
@@ -68,30 +66,13 @@ namespace FinancialManagementProgram.ViewModels.Tabs
                 int totalDays = CommonUtil.GetTotalDays(TargetDate);
                 if (TargetDate.Year != now.Year || TargetDate.Month != now.Month)
                     totalDays = now.Day;
-                return APIDataAnalyzer.Current.TotalSpending * totalDays / now.Day;
+                return APIDataManager.Current.TotalSpending * totalDays / now.Day;
             }
         }
 
         public int SpendingLastMonth
         {
             get => TotalSpendingBetween(TargetDate.AddMonths(-1), TargetDate);
-        }
-
-        public string SpendingMonthlyIncreasingRateText
-        {
-            get 
-            {
-                int spending = PredictSpendingThisMonth;
-                int lastMonthSpending = SpendingLastMonth;
-                if (lastMonthSpending == 0)
-                    return SimplifyBudgetUnitConverter.SimplifyBudgetUnit(spending, true);
-
-                double value = spending * 100.0 / lastMonthSpending - 100;
-                if (value == 0)
-                    return "동일";
-
-                return string.Format("{0:+#\\%;-#\\%;비슷}", (int)value);
-            }
         }
 
         public int PredictSpendingThisWeek
@@ -118,26 +99,9 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             }
         }
 
-        public string SpendingWeeklyIncreasingRateText
-        {
-            get
-            {
-                int spending = PredictSpendingThisWeek;
-                int lastWeekSpending = SpendingLastWeek;
-                if (lastWeekSpending == 0)
-                    return SimplifyBudgetUnitConverter.SimplifyBudgetUnit(spending, true);
-
-                double value = PredictSpendingThisWeek * 100.0 / lastWeekSpending - 100;
-                if (value == 0)
-                    return "동일";
-
-                return string.Format("{0:+#\\%;-#\\%;비슷}", (int)value);
-            }
-        }
-
         private DateTime TargetDate
         {
-            get => APIDataAnalyzer.Current.TargetDate;
+            get => APIDataManager.Current.TargetDate;
         }
     }
 }

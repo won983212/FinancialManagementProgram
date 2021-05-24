@@ -10,21 +10,21 @@ using System.Windows.Media;
 namespace FinancialManagementProgram.Converters
 {
     [ValueConversion(typeof(int), typeof(Brush))]
-    class BalanceChangesToBrush : IValueConverter
+    class BalanceToBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null || value is int == false)
                 return null;
 
-            int amount = (int) value;
+            int amount = (int)value;
             if (amount < 0)
                 return App.Current.FindResource("ErrorColor");
             else
                 return App.Current.FindResource("Primary");
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetTypes, object parameter, CultureInfo culture)
         {
             return null;
         }

@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:FinancialManagementProgram.Controls"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             DataContext="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}"
              d:DesignHeight="120" d:DesignWidth="200">
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -15,7 +14,8 @@
     </UserControl.Resources>
     <md:Card Width="200" Height="120" 
              Padding="12,16,12,12"
-             Background="{Binding CardBackground}">
+             DataContext="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:PayCard}}}"
+             Background="{Binding BankAccount.Color, Converter={StaticResource AccountColorToBrushConverter}}" >
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

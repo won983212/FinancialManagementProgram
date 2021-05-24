@@ -79,6 +79,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\DashboardCard.xaml.cs">
+      <DependentUpon>DashboardCard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PayCard.xaml.cs">
       <DependentUpon>PayCard.xaml</DependentUpon>
     </Compile>
@@ -88,12 +91,20 @@
     <Compile Include="Controls\TransactionChart.xaml.cs">
       <DependentUpon>TransactionChart.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TransactionChartDataList.xaml.cs">
+      <DependentUpon>TransactionChartDataList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\AccountColorToBrushConvereter.cs" />
+    <Compile Include="Converters\AccountTotalAmountConverter.cs" />
+    <Compile Include="Converters\BalanceToBrushConverter.cs" />
+    <Compile Include="Converters\DatetimeDifferenceConverter.cs" />
+    <Compile Include="Converters\IncreasingRateConverter.cs" />
+    <Compile Include="Converters\IncreasingRateToBrushConverter.cs" />
     <Compile Include="Converters\SimplifyBudgetUnitConverter.cs" />
-    <Compile Include="Converters\BalanceChangesToBrush.cs" />
     <Compile Include="Converters\BrushToColorConverter.cs" />
     <Compile Include="Converters\DayTotalSpendingConverter.cs" />
     <Compile Include="CommonUtil.cs" />
-    <Compile Include="kftcAPI\APIDataAnalyzer.cs" />
+    <Compile Include="kftcAPI\APIDataManager.cs" />
     <Compile Include="kftcAPI\BankAccount.cs" />
     <Compile Include="kftcAPI\Transaction.cs" />
     <Compile Include="kftcAPI\TransactionCategory.cs" />
@@ -124,6 +135,10 @@
     <Compile Include="ViewModels\Tabs\TransactionTabVM.cs" />
     <Compile Include="ViewModels\Tabs\DashboardTabVM.cs" />
     <Compile Include="ViewModels\Tabs\AccountManagementTabVM.cs" />
+    <Page Include="Controls\DashboardCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\PayCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -133,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TransactionChart.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TransactionChartDataList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

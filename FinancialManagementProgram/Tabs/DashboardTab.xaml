@@ -3,10 +3,162 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:FinancialManagementProgram.Tabs"
+             xmlns:control="clr-namespace:FinancialManagementProgram.Controls"
+             xmlns:converter="clr-namespace:FinancialManagementProgram.Converters"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:api="clr-namespace:FinancialManagementProgram.kftcAPI"
              mc:Ignorable="d" 
              d:DesignHeight="520" d:DesignWidth="760">
-    <Grid>
+    <UserControl.Resources>
+        <converter:AccountTotalAmountConverter x:Key="AccountTotalAmountConverter" />
+    </UserControl.Resources>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- tab title -->
+        <TextBlock Style="{StaticResource TextblockTabHeader}"
+                   Margin="0,0,0,20"
+                   Text="대시보드" />
+        
+        <!-- summary panels -->
+        <UniformGrid Grid.Row="1" Rows="1" Columns="4" Margin="0,0,-12,12">
+            <control:DashboardCard Margin="0,0,12,0"
+                                   IconBackgroundBrush="{DynamicResource Primary}"
+                                   Title="총 자산 합계"
+                                   ValueText="{Binding BankAccounts, Source={x:Static api:APIDataManager.Current}, 
+                        Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;0}원}"
+                                   SubIconKind="Wallet"
+                                   IconKind="CurrencyUsd"
+                                   SubcontentText="{Binding Items.Count, ElementName=listAccounts, StringFormat=추가된 계좌 {0}개}"/>
+            <control:DashboardCard Margin="0,0,12,0"
+                                   IconBackgroundBrush="{DynamicResource ErrorColor}"
+                                   Title="이번달 예상 지출"
+                                   ValueText="120원"
+                                   SubIconKind="TrendingUp"
+                                   IconKind="CartOutline"
+                                   SubcontentText="전달대비 +17%"/>
+            <control:DashboardCard Margin="0,0,12,0"
+                                   IconBackgroundBrush="{DynamicResource SuccessfulColor}"
+                                   Title="남은 예산"
+                                   ValueText="150원"
+                                   SubIconKind="PiggyBank"
+                                   IconKind="CashMultiple"
+                                   SubcontentText="총 예산 200,000원"/>
+            <control:DashboardCard Margin="0,0,12,0"
+                                   IconBackgroundBrush="{DynamicResource WarningColor}"
+                                   Title="하루 권장 지출"
+                                   ValueText="190원"
+                                   SubIconKind="TimerSand"
+                                   IconKind="ClipboardCheckOutline"
+                                   SubcontentText="이번달은 7일 남음"/>
+        </UniformGrid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
             
+            <!-- Wallet Panel -->
+            <md:Card Margin="0,0,12,0">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.ColumnSpan="2" 
+                               Foreground="{DynamicResource HeaderTextColor}"
+                               FontSize="12pt"
+                               Text="자산별 잔액 현황" />
+                    <Separator Grid.Row="1" Grid.ColumnSpan="2" 
+                               Margin="0,16"
+                               Background="{DynamicResource BorderColor}"/>
+
+                    <ItemsControl x:Name="listAccounts"
+                                  Grid.Row="2" Grid.ColumnSpan="2" 
+                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                  ItemsSource="{Binding BankAccounts, Source={x:Static api:APIDataManager.Current}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse Width="8" Height="8" 
+                                             Margin="0,0,12,0" 
+                                             Fill="{Binding Color, Converter={StaticResource AccountColorToBrushConverter}}"/>
+                                    <TextBlock Grid.Column="1" 
+                                               Text="{Binding Label}" />
+                                    <TextBlock Grid.Column="2" 
+                                               Foreground="{DynamicResource HeaderTextColor}"
+                                               Text="{Binding BalanceAmount, StringFormat={}{0:#,##;-#,##,0}원}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Separator Grid.Row="3" Grid.ColumnSpan="2" 
+                               Margin="0,16"
+                               Background="{DynamicResource BorderColor}"/>
+                    <TextBlock Grid.Row="4" 
+                               Text="합계" />
+                    <TextBlock Grid.Row="4" Grid.Column="1" 
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource HeaderTextColor}"
+                               Text="{Binding BankAccounts, Source={x:Static api:APIDataManager.Current}, 
+                        Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;0}원}"/>
+                </Grid>
+            </md:Card>
+            
+            <!-- Category Analyze Panel -->
+            <md:Card Grid.Column="1" Width="400">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.ColumnSpan="2"
+                               Margin="0,0,0,2"
+                               Text="이번달 지출" />
+                    <TextBlock Grid.Row="1" 
+                               Grid.ColumnSpan="2"
+                               Foreground="{DynamicResource HeaderTextColor}"
+                               FontWeight="Light"
+                               FontSize="18pt"
+                               Text="{Binding TotalSpending, Mode=OneWay, StringFormat={}{0:#,##원;;없음}, Source={x:Static api:APIDataManager.Current}}" />
+                    <Separator Grid.Row="2" 
+                               Grid.ColumnSpan="2" 
+                               Margin="0,12"
+                               Background="{DynamicResource BorderColor}"/>
+                    <control:TransactionChartDataList x:Name="chartDataList"
+                                                      Grid.Row="3"
+                                                      Grid.Column="1"
+                                                      Margin="16,0,0,0"
+                                                      VerticalAlignment="Center"
+                                                      CategorizedTransaction="{Binding CategorizedTransactions, Source={x:Static api:APIDataManager.Current}}"/>
+                    <control:TransactionChart Grid.Row="3"
+                                              ChartDatas="{Binding ChartDatas, Mode=OneWay, ElementName=chartDataList}" />
+                </Grid>
+            </md:Card>
+        </Grid>
     </Grid>
 </UserControl>

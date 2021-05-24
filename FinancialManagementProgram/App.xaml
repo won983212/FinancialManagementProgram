@@ -13,10 +13,8 @@
                 <ResourceDictionary Source="Theme/Theme.ListBox.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Converters -->
-            <converter:DayTotalSpendingConverter x:Key="DayTotalSpendingConverter" />
-            <converter:BalanceChangesToBrush x:Key="BalanceChangesToBrush" />
-            <converter:SimplifyBudgetUnitConverter x:Key="SimplifyBudgetUnitConverter" />
+            <!-- Common Converters -->
+            <converter:AccountColorToBrushConverter x:Key="AccountColorToBrushConverter" />
 
             <!-- Fonts -->
             <FontFamily x:Key="PrimaryFont">#Roboto</FontFamily>
@@ -25,6 +23,10 @@
             <!-- <FontFamily x:Key="PrimaryFont">pack://application:,,,/Resources/Fonts/#Roboto</FontFamily> -->
 
             <!-- Styles -->
+            <Style x:Key="TextblockTabHeader" TargetType="{x:Type TextBlock}">
+                <Setter Property="FontSize" Value="14pt" />
+            </Style>
+            
             <Style TargetType="{x:Type ToolTip}">
                 <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
                 <Setter Property="Background" Value="{DynamicResource CardColor}" />

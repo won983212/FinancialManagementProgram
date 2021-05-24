@@ -12,6 +12,7 @@ namespace FinancialManagementProgram.kftcAPI
         public TransactionCategory Category { get; set; }
         public int Amount { get; set; }
         public string BankName { get; set; }
+        public string AccountFintechNum { get; set; }
 
         public string Description { get; set; }
         public string TransDate { get; set; }

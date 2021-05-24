@@ -21,35 +21,15 @@ namespace FinancialManagementProgram.Controls
         public static DependencyProperty BankAccountProperty
             = DependencyProperty.Register("BankAccount", typeof(BankAccount), typeof(PayCard));
 
-        public static DependencyProperty CardBackgroundProperty
-            = DependencyProperty.Register("CardBackground", typeof(Brush), typeof(PayCard), new PropertyMetadata(App.Current.FindResource("GradientBlueColor")));
-
         public BankAccount BankAccount
         {
             get => (BankAccount)GetValue(BankAccountProperty);
             set => SetValue(BankAccountProperty, value);
         }
 
-        public Brush CardBackground
-        {
-            get => (Brush)GetValue(CardBackgroundProperty);
-            set => SetValue(CardBackgroundProperty, value);
-        }
-
         public PayCard()
         {
             InitializeComponent();
-            BankAccount = new BankAccount()
-            {
-                FintechUseNum = "10103812401289408",
-                Label = "알뜰계좌",
-                AccountAlias = "알뜰적금상품",
-                AccountNum = "1002 - 356 - ******",
-                BalanceAmount = 3000000,
-                BankName = "우리은행",
-                LastSyncDate = DateTime.Now.Ticks,
-                Memo = ""
-            };
         }
     }
 }

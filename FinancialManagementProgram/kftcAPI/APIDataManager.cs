@@ -19,22 +19,27 @@ namespace FinancialManagementProgram.kftcAPI
         }
     }
 
-    public class APIDataAnalyzer : ObservableObject
+    public class APIDataManager : ObservableObject
     {
-        private static readonly Lazy<APIDataAnalyzer> _instance = new Lazy<APIDataAnalyzer>(() => new APIDataAnalyzer());
+        private static readonly Lazy<APIDataManager> _instance = new Lazy<APIDataManager>(() => new APIDataManager());
 
+        private DateTime _targetDate;
+        private int _budget = 100000;
+        private List<BankAccount> _accounts = new List<BankAccount>(); // TODO 나중에 추가 및 삭제작업시 Update가 필요해보임
         private SortedList<string, TransactionGroup> _allTransactions = new SortedList<string, TransactionGroup>();
+
+        // monthly data
+        private Dictionary<string, TransactionGroup> _accountTransactions = new Dictionary<string, TransactionGroup>();
         private Dictionary<string, TransactionGroup> _dayTransactions = new Dictionary<string, TransactionGroup>();
         private Dictionary<TransactionCategory, TransactionGroup> _categorizedTransactions = new Dictionary<TransactionCategory, TransactionGroup>();
         private TransactionGroup _monthTransactions = new TransactionGroup();
-        private DateTime _targetDate;
-        private int _budget = 100000;
 
 
-        public APIDataAnalyzer()
+        public APIDataManager()
         {
             // TODO Test Action
             LoadTransaction();
+            LoadAccounts();
         }
 
         private void AddTransactionData(Transaction transaction)
@@ -53,9 +58,20 @@ namespace FinancialManagementProgram.kftcAPI
             {
                 _monthTransactions.AddTransactionGroup(ent.Transactions);
                 _dayTransactions.Add(ent.Date, ent.Transactions);
+
+                foreach (Transaction t in ent.Transactions.Transactions)
+                {
+                    TransactionGroup group;
+                    if (!_accountTransactions.TryGetValue(t.AccountFintechNum, out group))
+                        _accountTransactions.Add(t.AccountFintechNum, group = new TransactionGroup());
+                    group.AddTransaction(t);
+                }
             }
 
             OnPropertyChanged(nameof(Transactions));
+            OnPropertyChanged(nameof(TotalSpending));
+            OnPropertyChanged(nameof(TotalIncoming));
+            OnPropertyChanged(nameof(BudgetUsagePercent));
         }
 
         public IEnumerable<DayTransactions> GetTransactionsBetween(DateTime fromDate, DateTime toDate)
@@ -66,6 +82,71 @@ namespace FinancialManagementProgram.kftcAPI
                 yield return new DayTransactions(_allTransactions, i);
         }
 
+        /// <summary>
+        /// Date format must be yyyy.mm.dd<br/>
+        /// Can get transaction in <b>this month</b> only
+        /// </summary>
+        public TransactionGroup GetDayTransaction(string date)
+        {
+            TransactionGroup result;
+            if (_dayTransactions.TryGetValue(date, out result))
+                return result;
+            return null;
+        }
+
+        /// <summary>
+        /// Can get transaction in <b>this month</b> only
+        /// </summary>
+        public TransactionGroup GetAccountTransaction(string fintechNum)
+        {
+            TransactionGroup result;
+            if (_accountTransactions.TryGetValue(fintechNum, out result))
+                return result;
+            return null;
+        }
+
+        private void LoadAccounts()
+        {
+            _accounts.Add(new BankAccount()
+            {
+                FintechUseNum = "10103812401289408",
+                Label = "알뜰계좌",
+                AccountAlias = "알뜰적금상품",
+                AccountNum = "1002 - 356 - ******",
+                BalanceAmount = 3000000,
+                BankName = "우리은행",
+                LastSyncDate = DateTime.Now,
+                Color = AccountColor.Blue,
+                Memo = ""
+            });
+
+            _accounts.Add(new BankAccount()
+            {
+                FintechUseNum = "92385716893257236",
+                Label = "주거래계좌",
+                AccountAlias = "주거래계좌상품",
+                AccountNum = "3261 - 437 - ******",
+                BalanceAmount = 1251256,
+                BankName = "하나은행",
+                LastSyncDate = DateTime.Now,
+                Color = AccountColor.Red,
+                Memo = ""
+            });
+
+            _accounts.Add(new BankAccount()
+            {
+                FintechUseNum = "193285761239567821",
+                Label = "청약통장",
+                AccountAlias = "청년청약저축",
+                AccountNum = "1361 - 361 - ******",
+                BalanceAmount = 120000,
+                BankName = "농협은행",
+                LastSyncDate = DateTime.Now,
+                Color = AccountColor.Green,
+                Memo = ""
+            });
+        }
+
         private void LoadTransaction()
         {
             AddTransactionData(new Transaction()
@@ -74,6 +155,7 @@ namespace FinancialManagementProgram.kftcAPI
                 Category = new TransactionCategory("편의점"),
                 Amount = 1200,
                 BankName = "우리은행체크",
+                AccountFintechNum = "10103812401289408",
                 Description = "결제 승인",
                 TransDate = "2021.05.18",
                 AfterBalanceAmount = 2993512
@@ -85,6 +167,7 @@ namespace FinancialManagementProgram.kftcAPI
                 Category = new TransactionCategory("편의점"),
                 Amount = -2800,
                 BankName = "우리은행체크",
+                AccountFintechNum = "10103812401289408",
                 Description = "결제 승인",
                 TransDate = "2021.05.18",
                 AfterBalanceAmount = 2991245
@@ -96,6 +179,7 @@ namespace FinancialManagementProgram.kftcAPI
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
                 BankName = "우리은행체크",
+                AccountFintechNum = "10103812401289408",
                 Description = "결제 승인",
                 TransDate = "2021.05.01",
                 AfterBalanceAmount = 2881512
@@ -107,6 +191,7 @@ namespace FinancialManagementProgram.kftcAPI
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
                 BankName = "우리은행체크",
+                AccountFintechNum = "10103812401289408",
                 Description = "결제 승인",
                 TransDate = "2021.05.17",
                 AfterBalanceAmount = 2881512
@@ -118,6 +203,7 @@ namespace FinancialManagementProgram.kftcAPI
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
                 BankName = "우리은행체크",
+                AccountFintechNum = "10103812401289408",
                 Description = "결제 승인",
                 TransDate = "2021.05.17",
                 AfterBalanceAmount = 2881512
@@ -128,7 +214,8 @@ namespace FinancialManagementProgram.kftcAPI
                 Label = "바이브PC",
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
-                BankName = "우리은행체크",
+                BankName = "농협은행체크",
+                AccountFintechNum = "193285761239567821",
                 Description = "결제 승인",
                 TransDate = "2021.05.18",
                 AfterBalanceAmount = 2881512
@@ -140,6 +227,7 @@ namespace FinancialManagementProgram.kftcAPI
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
                 BankName = "우리은행체크",
+                AccountFintechNum = "10103812401289408",
                 Description = "결제 승인",
                 TransDate = "2021.05.23",
                 AfterBalanceAmount = 2881512
@@ -150,7 +238,8 @@ namespace FinancialManagementProgram.kftcAPI
                 Label = "바이브1PC",
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
-                BankName = "우리은행체크",
+                BankName = "농협은행체크",
+                AccountFintechNum = "193285761239567821",
                 Description = "결제 승인",
                 TransDate = "2021.06.01",
                 AfterBalanceAmount = 2881512
@@ -161,7 +250,8 @@ namespace FinancialManagementProgram.kftcAPI
                 Label = "바이브PC",
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
-                BankName = "우리은행체크",
+                BankName = "농협은행체크",
+                AccountFintechNum = "193285761239567821",
                 Description = "결제 승인",
                 TransDate = "2021.06.11",
                 AfterBalanceAmount = 2881512
@@ -173,6 +263,7 @@ namespace FinancialManagementProgram.kftcAPI
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
                 BankName = "우리은행체크",
+                AccountFintechNum = "10103812401289408",
                 Description = "결제 승인",
                 TransDate = "2021.04.19",
                 AfterBalanceAmount = 2881512
@@ -184,6 +275,7 @@ namespace FinancialManagementProgram.kftcAPI
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
                 BankName = "우리은행체크",
+                AccountFintechNum = "10103812401289408",
                 Description = "결제 승인",
                 TransDate = "2021.03.19",
                 AfterBalanceAmount = 2881512
@@ -195,6 +287,7 @@ namespace FinancialManagementProgram.kftcAPI
                 Category = new TransactionCategory("게임"),
                 Amount = -6000,
                 BankName = "우리은행체크",
+                AccountFintechNum = "10103812401289408",
                 Description = "결제 승인",
                 TransDate = "2021.04.15",
                 AfterBalanceAmount = 2881512
@@ -204,17 +297,11 @@ namespace FinancialManagementProgram.kftcAPI
             TargetDate = new DateTime(now.Year, now.Month, 1);
         }
 
-        private void AnalyzeTransaction()
+        private void CategorizeTransaction()
         {
-            _dayTransactions.Clear();
             _categorizedTransactions.Clear();
             foreach (Transaction ent in Transactions)
             {
-                TransactionGroup dayTrans;
-                if (!_dayTransactions.TryGetValue(ent.TransDate, out dayTrans))
-                    _dayTransactions.Add(ent.TransDate, dayTrans = new TransactionGroup());
-                dayTrans.AddTransaction(ent);
-
                 if (ent.Amount < 0)
                 {
                     TransactionGroup categoryTrans;
@@ -225,20 +312,6 @@ namespace FinancialManagementProgram.kftcAPI
             }
 
             OnPropertyChanged(nameof(CategorizedTransactions));
-            OnPropertyChanged(nameof(TotalSpending));
-            OnPropertyChanged(nameof(TotalIncoming));
-            OnPropertyChanged(nameof(BudgetUsagePercent));
-        }
-
-        /// <summary>
-        /// date format must be yyyy.mm.dd
-        /// </summary>
-        public TransactionGroup GetDayTransaction(string date)
-        {
-            TransactionGroup result;
-            if (_dayTransactions.TryGetValue(date, out result))
-                return result;
-            return null;
         }
 
 
@@ -293,13 +366,18 @@ namespace FinancialManagementProgram.kftcAPI
                 {
                     _targetDate = value;
                     PrepareMonthTransaction();
-                    AnalyzeTransaction();
+                    CategorizeTransaction();
                     OnPropertyChanged();
                 }
             }
         }
 
-        public static APIDataAnalyzer Current
+        public IList<BankAccount> BankAccounts
+        {
+            get => _accounts;
+        }
+
+        public static APIDataManager Current
         {
             get => _instance.Value; 
         }
