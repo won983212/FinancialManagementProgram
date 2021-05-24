@@ -108,6 +108,7 @@
     <Compile Include="kftcAPI\BankAccount.cs" />
     <Compile Include="kftcAPI\Transaction.cs" />
     <Compile Include="kftcAPI\TransactionCategory.cs" />
+    <Compile Include="kftcAPI\TransactionDataAnalyzer.cs" />
     <Compile Include="kftcAPI\TransactionGroup.cs" />
     <Compile Include="kftcAPI\UserAccessToken.cs" />
     <Compile Include="ObservableObject.cs" />
@@ -130,8 +131,8 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TabChild.cs" />
     <Compile Include="ViewModels\TabContainer.cs" />
-    <Compile Include="ViewModels\Tabs\SettingsTabVM.cs" />
     <Compile Include="ViewModels\Tabs\AnalyzeTabVM.cs" />
+    <Compile Include="ViewModels\Tabs\SettingsTabVM.cs" />
     <Compile Include="ViewModels\Tabs\TransactionTabVM.cs" />
     <Compile Include="ViewModels\Tabs\DashboardTabVM.cs" />
     <Compile Include="ViewModels\Tabs\AccountManagementTabVM.cs" />

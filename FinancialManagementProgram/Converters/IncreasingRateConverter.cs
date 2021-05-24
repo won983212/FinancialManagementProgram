@@ -17,11 +17,11 @@ namespace FinancialManagementProgram.Converters
                 return null;
 
             int spending = (int) values[0];
-            int lastWeekSpending = (int)values[1];
-            if (lastWeekSpending == 0)
+            int lastSpending = (int)values[1];
+            if (lastSpending == 0)
                 return SimplifyBudgetUnitConverter.SimplifyBudgetUnit(spending, true);
 
-            double value = spending * 100.0 / lastWeekSpending - 100;
+            double value = spending * 100.0 / lastSpending - 100;
             if (value == 0)
                 return "동일";
 

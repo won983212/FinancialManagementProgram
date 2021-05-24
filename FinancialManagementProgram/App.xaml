@@ -15,6 +15,7 @@
 
             <!-- Common Converters -->
             <converter:AccountColorToBrushConverter x:Key="AccountColorToBrushConverter" />
+            <converter:IncreasingRateConverter x:Key="IncreasingRateConverter" />
 
             <!-- Fonts -->
             <FontFamily x:Key="PrimaryFont">#Roboto</FontFamily>

@@ -91,7 +91,6 @@ namespace FinancialManagementProgram.Controls
 
         private static void OnChartDatasChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Console.WriteLine("?");
             ((TransactionChart)d).UpdatePieChart((IEnumerable<ColoredChartCategory>)e.NewValue);
         }
 

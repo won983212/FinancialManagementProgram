@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <converter:AccountTotalAmountConverter x:Key="AccountTotalAmountConverter" />
     </UserControl.Resources>
-    <Grid Margin="20">
+    <Grid Margin="20" DataContext="{Binding Source={x:Static api:APIDataManager.Current}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -29,32 +29,37 @@
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource Primary}"
                                    Title="총 자산 합계"
-                                   ValueText="{Binding BankAccounts, Source={x:Static api:APIDataManager.Current}, 
-                        Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;0}원}"
+                                   ValueText="{Binding BankAccounts, Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;0}원}"
                                    SubIconKind="Wallet"
                                    IconKind="CurrencyUsd"
                                    SubcontentText="{Binding Items.Count, ElementName=listAccounts, StringFormat=추가된 계좌 {0}개}"/>
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource ErrorColor}"
                                    Title="이번달 예상 지출"
-                                   ValueText="120원"
+                                   ValueText="{Binding Analyzer.PredictSpendingThisMonth, StringFormat={}{0:#,##;-#,##;0}원}"
                                    SubIconKind="TrendingUp"
-                                   IconKind="CartOutline"
-                                   SubcontentText="전달대비 +17%"/>
+                                   IconKind="CartOutline">
+                <control:DashboardCard.SubcontentText>
+                    <MultiBinding Converter="{StaticResource IncreasingRateConverter}" StringFormat="저번달 대비 {0}">
+                        <Binding Path="Analyzer.PredictSpendingThisMonth"/>
+                        <Binding Path="Analyzer.SpendingLastMonth"/>
+                    </MultiBinding>
+                </control:DashboardCard.SubcontentText>
+            </control:DashboardCard>
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource SuccessfulColor}"
                                    Title="남은 예산"
-                                   ValueText="150원"
+                                   ValueText="{Binding Analyzer.RemainingBudget, StringFormat={}{0:#,##;-#,##;0}원}"
                                    SubIconKind="PiggyBank"
                                    IconKind="CashMultiple"
-                                   SubcontentText="총 예산 200,000원"/>
+                                   SubcontentText="{Binding Budget, StringFormat=총 예산 {0:#,##;-#,##;0}원}"/>
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource WarningColor}"
                                    Title="하루 권장 지출"
-                                   ValueText="190원"
+                                   ValueText="{Binding Analyzer.RecommendedSpendingInDay, StringFormat={}{0:#,##;-#,##;0}원}"
                                    SubIconKind="TimerSand"
                                    IconKind="ClipboardCheckOutline"
-                                   SubcontentText="이번달은 7일 남음"/>
+                                   SubcontentText="남은 예산 기준임"/>
         </UniformGrid>
 
         <Grid Grid.Row="2">
@@ -88,7 +93,7 @@
                     <ItemsControl x:Name="listAccounts"
                                   Grid.Row="2" Grid.ColumnSpan="2" 
                                   ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                                  ItemsSource="{Binding BankAccounts, Source={x:Static api:APIDataManager.Current}}">
+                                  ItemsSource="{Binding BankAccounts}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0,0,0,12">
@@ -118,8 +123,7 @@
                     <TextBlock Grid.Row="4" Grid.Column="1" 
                                FontWeight="Bold"
                                Foreground="{DynamicResource HeaderTextColor}"
-                               Text="{Binding BankAccounts, Source={x:Static api:APIDataManager.Current}, 
-                        Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;0}원}"/>
+                               Text="{Binding BankAccounts, Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;0}원}"/>
                 </Grid>
             </md:Card>
             
@@ -144,7 +148,7 @@
                                Foreground="{DynamicResource HeaderTextColor}"
                                FontWeight="Light"
                                FontSize="18pt"
-                               Text="{Binding TotalSpending, Mode=OneWay, StringFormat={}{0:#,##원;;없음}, Source={x:Static api:APIDataManager.Current}}" />
+                               Text="{Binding TotalSpending, Mode=OneWay, StringFormat={}{0:#,##원;;없음}}" />
                     <Separator Grid.Row="2" 
                                Grid.ColumnSpan="2" 
                                Margin="0,12"
@@ -154,7 +158,7 @@
                                                       Grid.Column="1"
                                                       Margin="16,0,0,0"
                                                       VerticalAlignment="Center"
-                                                      CategorizedTransaction="{Binding CategorizedTransactions, Source={x:Static api:APIDataManager.Current}}"/>
+                                                      CategorizedTransaction="{Binding CategorizedTransactions}"/>
                     <control:TransactionChart Grid.Row="3"
                                               ChartDatas="{Binding ChartDatas, Mode=OneWay, ElementName=chartDataList}" />
                 </Grid>

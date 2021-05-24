@@ -23,23 +23,5 @@ namespace FinancialManagementProgram.Tabs
         {
             InitializeComponent();
         }
-
-        // event 추가 제거 문제는 mvvm 범위 내에서 해결할 경우 코드가 난잡해짐.
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            APIDataManager.Current.PropertyChanged += Current_PropertyChanged;
-        }
-
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-            APIDataManager.Current.PropertyChanged -= Current_PropertyChanged;
-        }
-
-        private void Current_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            AnalyzeTabVM vm = DataContext as AnalyzeTabVM;
-            if (vm != null)
-                vm.OnDataHandlerPropertyChanged(e);
-        }
     }
 }

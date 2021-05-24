@@ -13,18 +13,8 @@ namespace FinancialManagementProgram
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [Conditional("DEBUG")]
-        private void VerifyPropertyName(string name)
-        {
-            if (TypeDescriptor.GetProperties(this)[name] == null)
-            {
-                Debug.Fail("Invaild property name: " + name);
-            }
-        }
-
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            VerifyPropertyName(propertyName);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

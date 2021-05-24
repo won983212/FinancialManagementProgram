@@ -27,6 +27,7 @@ namespace FinancialManagementProgram.kftcAPI
         private int _budget = 100000;
         private List<BankAccount> _accounts = new List<BankAccount>(); // TODO 나중에 추가 및 삭제작업시 Update가 필요해보임
         private SortedList<string, TransactionGroup> _allTransactions = new SortedList<string, TransactionGroup>();
+        private TransactionDataAnalyzer _analyzer = new TransactionDataAnalyzer();
 
         // monthly data
         private Dictionary<string, TransactionGroup> _accountTransactions = new Dictionary<string, TransactionGroup>();
@@ -334,6 +335,11 @@ namespace FinancialManagementProgram.kftcAPI
         {
             get => _monthTransactions.TotalIncoming;
         }
+
+        public TransactionDataAnalyzer Analyzer
+        {
+            get => _analyzer;
+        }
         
         public int Budget
         {
@@ -367,6 +373,7 @@ namespace FinancialManagementProgram.kftcAPI
                     _targetDate = value;
                     PrepareMonthTransaction();
                     CategorizeTransaction();
+                    Analyzer.Update();
                     OnPropertyChanged();
                 }
             }
