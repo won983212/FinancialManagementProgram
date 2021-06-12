@@ -9,30 +9,33 @@ namespace FinancialManagementProgram.kftcAPI
 {
     public class Transaction
     {
-        // TODO: Test. 나중에 삭제예정
-        public Transaction() { }
-
         public Transaction(BankAccount account, JObject obj)
         {
             BankName = account.BankName;
             FintechNum = account.FintechUseNum;
             Category = new TransactionCategory("게임"); // TODO Category realize
-            Label = obj.Value<string>("branch_name");
+            Label = obj.Value<string>("print_content");
             Amount = obj.Value<long>("tran_amt");
-            Description = obj.Value<string>("print_content");
+            Description = obj.Value<string>("branch_name");
             TransDate = obj.Value<string>("tran_date");
             AfterBalanceAmount = obj.Value<long>("after_balance_amt");
         }
 
-        // TODO Readonly로 만들자. 방법은 constructor에서 json parsing해서 초기화함.
-        public string Label { get; set; }
-        public TransactionCategory Category { get; set; }
-        public long Amount { get; set; }
-        public string BankName { get; set; }
-        public string FintechNum { get; set; }
+        public string Label { get; }
+        public TransactionCategory Category { get; }
+        public long Amount { get; }
+        public string BankName { get; }
+        public string FintechNum { get; }
 
-        public string Description { get; set; }
-        public string TransDate { get; set; }
-        public long AfterBalanceAmount { get; set; }
+        public string Description { get; }
+        public string TransDate { get; }
+        public long AfterBalanceAmount { get; }
+
+
+        // TODO Transaction보여줄 때 그룹은 날짜별로, 아이템은 시간별로 정렬하기.
+        public string FormattedTransDate
+        {
+            get => string.Format("{0}.{1}.{2}", TransDate.Substring(0, 4), TransDate.Substring(4, 2), TransDate.Substring(6, 2));
+        }
     }
 }

@@ -155,7 +155,7 @@
                                Foreground="{DynamicResource HeaderTextColor}"
                                FontWeight="Light"
                                FontSize="18pt"
-                               Text="{Binding TotalSpending, Mode=OneWay, StringFormat={}{0:#,##원;;없음}}" />
+                               Text="{Binding Analyzer.MonthlyTotalSpending, Mode=OneWay, StringFormat={}{0:#,##원;;없음}}" />
                     <Separator Grid.Row="2" 
                                Grid.ColumnSpan="2" 
                                Margin="0,12"
@@ -165,7 +165,7 @@
                                                       Grid.Column="1"
                                                       Margin="16,0,0,0"
                                                       VerticalAlignment="Center"
-                                                      CategorizedTransaction="{Binding CategorizedTransactions}"/>
+                                                      CategorizedTransaction="{Binding Analyzer.CategorizedTransactions}"/>
                     <control:TransactionChart Grid.Row="3"
                                               ChartDatas="{Binding ChartDatas, Mode=OneWay, ElementName=chartDataList}" />
                 </Grid>

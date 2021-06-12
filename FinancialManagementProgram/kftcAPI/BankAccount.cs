@@ -26,8 +26,24 @@ namespace FinancialManagementProgram.kftcAPI
             LastSyncDate = DateTime.Now;
         }
 
-        // TODO 이 생성자는 사용하지 않을 예정임. 테스트가 끝나면 삭제
-        public BankAccount() { }
+        public void RetrieveAccountDetail(BankAccount[] prevAccountList, int idOffset)
+        {
+            DateTime from = DateTime.Now.AddMonths(-5);
+            if (prevAccountList.Contains(this))
+                from = LastSyncDate;
+
+            try
+            {
+                BalanceAmount = APIs.GetAccountDetails(this, APIDataManager.Current.AccessToken, idOffset, from.ToString("yyyyMMdd")).Result;
+                foreach (Transaction t in Transactions.Transactions)
+                    APIDataManager.Current.AddTransactionData(t);
+                Transactions.ClearTransactions();
+            } 
+            catch (AggregateException e)
+            {
+                Logger.Error(e);
+            }
+        }
 
         public override bool Equals(object obj)
         {
@@ -41,17 +57,16 @@ namespace FinancialManagementProgram.kftcAPI
             return FintechUseNum.GetHashCode();
         }
 
-        // TODO Readonly로 만들자. 방법은 constructor에서 json parsing해서 초기화함.
-        public string FintechUseNum { get; set; }
-        public string Label { get; set; }
-        public string AccountNum { get; set; }
-        public string AccountAlias { get; set; }
-        public string BankName { get; set; }
-        public long BalanceAmount { get; set; }
-        public AccountColor Color { get; set; }
+        public string FintechUseNum { get; }
+        public string Label { get; }
+        public string AccountNum { get; }
+        public string AccountAlias { get; }
+        public string BankName { get; }
+        public long BalanceAmount { get; private set; }
+        public AccountColor Color { get; }
         public TransactionGroup Transactions { get; } = new TransactionGroup();
 
-        public DateTime LastSyncDate { get; set; }
-        public string Memo { get; set; } = ".";
+        public DateTime LastSyncDate { get; }
+        public string Memo { get; } = ".";
     }
 }

@@ -31,10 +31,17 @@
 
         <!-- Transaction History Panel -->
         <md:Card Grid.Row="1" Width="310" Margin="12,36,12,12">
+            <md:Card.Resources>
+                <CollectionViewSource x:Key="view" Source="{Binding Analyzer.MonthlyTransactions, Source={x:Static api:APIDataManager.Current}}">
+                    <CollectionViewSource.GroupDescriptions>
+                        <PropertyGroupDescription PropertyName="FormattedTransDate"/>
+                    </CollectionViewSource.GroupDescriptions>
+                </CollectionViewSource>
+            </md:Card.Resources>
             <ListBox Margin="4,64,4,0"
-                     ItemsSource="{Binding Transactions}"
                      HorizontalContentAlignment="Stretch"
                      ItemContainerStyle="{StaticResource NoFocusHighlight}"
+                     ItemsSource="{Binding Source={StaticResource view}}"
                      ScrollViewer.VerticalScrollBarVisibility="Hidden">
                 <ListBox.GroupStyle>
                     <GroupStyle>
@@ -116,15 +123,15 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.ColumnSpan="2" FontSize="15pt" Text="{Binding TargetDate, Source={x:Static api:APIDataManager.Current}, StringFormat=MMMM}"/>
                 <TextBlock Grid.Row="1" Opacity="0.5" Text="수입"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TotalIncoming, Source={x:Static api:APIDataManager.Current}, StringFormat={}{0:#,##원;;없음}}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Analyzer.MonthlyTotalIncoming, Source={x:Static api:APIDataManager.Current}, StringFormat={}{0:#,##원;;없음}}"/>
                 <TextBlock Grid.Row="2" Opacity="0.5" Margin="0,6,4,0" Text="지출"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" Text="{Binding TotalSpending, Source={x:Static api:APIDataManager.Current}, StringFormat={}{0:#,##원;;없음}}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" Text="{Binding Analyzer.MonthlyTotalSpending, Source={x:Static api:APIDataManager.Current}, StringFormat={}{0:#,##원;;없음}}"/>
                 <StackPanel Grid.Column="2" Grid.RowSpan="3"
                             HorizontalAlignment="Right" 
                             VerticalAlignment="Center"
                             Margin="0,0,4,0">
                     <TextBlock Opacity="0.5" Text="예산 사용률"/>
-                    <TextBlock HorizontalAlignment="Right" FontSize="18pt" FontWeight="Light" Text="{Binding BudgetUsagePercent, StringFormat={}{0}%, Source={x:Static api:APIDataManager.Current}}"/>
+                    <TextBlock HorizontalAlignment="Right" FontSize="18pt" FontWeight="Light" Text="{Binding Analyzer.BudgetUsagePercent, StringFormat={}{0}%, Source={x:Static api:APIDataManager.Current}}"/>
                 </StackPanel>
             </Grid>
         </md:Card>

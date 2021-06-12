@@ -24,16 +24,17 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             {
                 _selectedAccountIndex = value;
                 OnPropertyChanged();
-                OnPropertyChanged("AccountTotalSpending");
-                OnPropertyChanged("AccountTotalIncoming");
+                OnPropertyChanged(nameof(AccountTotalSpending));
+                OnPropertyChanged(nameof(AccountTotalIncoming));
             }
         }
 
         private TransactionGroup GetSelectedAccountTransactions()
         {
-            APIDataManager dataManager = APIDataManager.Current;
-            BankAccount account = dataManager.BankAccounts[SelectedAccountIndex];
-            return dataManager.GetAccountTransaction(account.FintechUseNum); // TODO* Monthly bank account transaction.
+            IList<BankAccount> accounts = APIDataManager.Current.BankAccounts;
+            if (accounts.Count == 0)
+                return null;
+            return accounts[SelectedAccountIndex].Transactions;
         }
 
         public long AccountTotalSpending

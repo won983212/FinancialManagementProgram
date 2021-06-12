@@ -41,7 +41,12 @@
         
         <!-- Card Control Panel -->
         <md:Card Grid.Row="1" Margin="12,56,12,12" Width="230">
-            <StackPanel Margin="16,95,16,0">
+            <Grid Margin="16,95,16,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <Grid Margin="0,0,0,16">
                     <TextBlock VerticalAlignment="Center">이번달 수입</TextBlock>
                     <TextBlock HorizontalAlignment="Right"
@@ -50,7 +55,7 @@
                                Foreground="{DynamicResource Primary}"
                                Text="{Binding AccountTotalIncoming, StringFormat={}{0:+ #,##원;;없음}}"/>
                 </Grid>
-                <Grid>
+                <Grid Grid.Row="1">
                     <TextBlock VerticalAlignment="Center">이번달 지출</TextBlock>
                     <TextBlock HorizontalAlignment="Right"
                                FontWeight="Bold"
@@ -59,8 +64,10 @@
                                Text="{Binding AccountTotalSpending, StringFormat={}{0:- #,##원;;없음}}"/>
                 </Grid>
                 <StackPanel Orientation="Horizontal" 
-                            Margin="0,30,0,0"
-                            HorizontalAlignment="Right">
+                            Grid.Row="2"
+                            Margin="0,0,0,8"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
                     <Button Style="{StaticResource MaterialDesignFlatButton}"
                             FontSize="9pt" Padding="0" Margin="0,0,16,0">
                         메모편집
@@ -70,15 +77,15 @@
                         계좌삭제
                     </Button>
                 </StackPanel>
-            </StackPanel>
+            </Grid>
         </md:Card>
         <ctrl:PayCard Grid.Row="1" 
                       VerticalAlignment="Top"
-                      BankAccount="{Binding SelectedValue, ElementName=listAccount}"/>
+                      BankAccount="{Binding SelectedValue, Mode=OneWay, ElementName=listAccount}"/>
         
         <!-- Card Information Panel -->
         <md:Card Grid.Row="1" Grid.Column="1" Margin="0,0,12,12">
-            <Grid Margin="20,20,20,40" DataContext="{Binding SelectedValue, ElementName=listAccount}">
+            <Grid Margin="20,20,20,20" DataContext="{Binding SelectedValue, ElementName=listAccount}">
                 <Grid.Resources>
                     <Style x:Key="InfoTitleText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -108,13 +115,13 @@
                            FontSize="12pt"
                            FontWeight="Bold"
                            Margin="0,0,0,12">
-                    <Run Text="{Binding Label}"/>
+                    <Run Text="{Binding Label, Mode=OneWay}"/>
                     <Run>정보</Run>
                 </TextBlock>
                 <TextBlock Grid.Row="1" Style="{StaticResource InfoTitleText}">계좌 번호</TextBlock>
                 <TextBlock Grid.Row="1" Style="{StaticResource InfoValueText}" Text="{Binding AccountNum}" />
                 <TextBlock Grid.Row="2" Style="{StaticResource InfoTitleText}">잔액</TextBlock>
-                <TextBlock Grid.Row="2" Style="{StaticResource InfoValueText}" Text="{Binding BalanceAmount, StringFormat={}{0:#,##;-#,##,0} 원}"/>
+                <TextBlock Grid.Row="2" Style="{StaticResource InfoValueText}" Text="{Binding BalanceAmount, StringFormat={}{0:#,##;-#,##;0} 원}"/>
                 <TextBlock Grid.Row="3" Style="{StaticResource InfoTitleText}">계좌 별명</TextBlock>
                 <TextBlock Grid.Row="3" Style="{StaticResource InfoValueText}" Text="{Binding AccountAlias}"/>
                 <TextBlock Grid.Row="4" Style="{StaticResource InfoTitleText}">은행 이름</TextBlock>
@@ -135,12 +142,19 @@
                  ItemsSource="{Binding BankAccounts, Source={x:Static api:APIDataManager.Current}}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" />
+                    <StackPanel IsItemsHost="True" Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
+            <ListBox.Template>
+                <ControlTemplate>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ListBox.Template>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <ctrl:PayCard Grid.Row="1" VerticalAlignment="Top" BankAccount="{Binding}" />
+                    <ctrl:PayCard Grid.Row="1" VerticalAlignment="Top" BankAccount="{Binding Mode=OneWay}" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

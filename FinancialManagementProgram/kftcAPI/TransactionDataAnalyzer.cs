@@ -44,7 +44,7 @@ namespace FinancialManagementProgram.kftcAPI
         }
 
         /// <summary>
-        /// Date format must be yyyy.mm.dd<br/>
+        /// Date format must be yyyymmdd<br/>
         /// Can get transaction in <b>this month</b> only
         /// </summary>
         public TransactionGroup GetDayTransaction(string date)

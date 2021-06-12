@@ -30,13 +30,13 @@ namespace FinancialManagementProgram.kftcAPI
         private UserAccessToken _accessToken = null;
         private string _user_ci = null;
 
-        private DateTime _targetDate;
-        private readonly ObservableCollection<BankAccount> _accounts = new ObservableCollection<BankAccount>(); // TODO 나중에 추가 및 삭제작업시 Update가 필요해보임
+        private DateTime _targetDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+        private readonly ObservableCollection<BankAccount> _accounts = new ObservableCollection<BankAccount>();
         private readonly SortedList<string, TransactionGroup> _allTransactions = new SortedList<string, TransactionGroup>();
         private readonly TransactionDataAnalyzer _analyzer = new TransactionDataAnalyzer();
 
 
-        private void AddTransactionData(Transaction transaction)
+        internal void AddTransactionData(Transaction transaction)
         {
             TransactionGroup value;
             if (!_allTransactions.TryGetValue(transaction.TransDate, out value))
@@ -46,22 +46,10 @@ namespace FinancialManagementProgram.kftcAPI
 
         public IEnumerable<DayTransactions> GetTransactionsBetween(DateTime fromDate, DateTime toDate)
         {
-            int from = CommonUtil.FindSortedInsertionIndex(_allTransactions.Keys, fromDate.ToString("yyyy.MM.dd"));
-            int to = CommonUtil.FindSortedInsertionIndex(_allTransactions.Keys, toDate.ToString("yyyy.MM.dd"));
+            int from = CommonUtil.FindSortedInsertionIndex(_allTransactions.Keys, fromDate.ToString("yyyyMMdd"));
+            int to = CommonUtil.FindSortedInsertionIndex(_allTransactions.Keys, toDate.ToString("yyyyMMdd"));
             for (int i = from; i < to; i++)
                 yield return new DayTransactions(_allTransactions, i);
-        }
-
-        private async void GetAccountTransactions(BankAccount[] list, int index, BankAccount account)
-        {
-            DateTime from = DateTime.Now.AddMonths(-5);
-            if (list.Contains(account))
-                from = account.LastSyncDate;
-
-            await APIs.GetAccountDetails(account, AccessToken, index, from.ToString("yyyyMMdd"));
-            foreach (Transaction t in account.Transactions.Transactions)
-                AddTransactionData(t);
-            account.Transactions.ClearTransactions();
         }
 
         public async void RefreshAccountData()
@@ -85,7 +73,7 @@ namespace FinancialManagementProgram.kftcAPI
 
                     // load account balance amount and transactions.
                     int i = 0;
-                    await Task.Factory.StartNew(() => info.Item2.AsParallel().ForAll((acc) => GetAccountTransactions(info.Item2, i++, acc)));
+                    await Task.Factory.StartNew(() => info.Item2.AsParallel().ForAll((acc) => acc.RetrieveAccountDetail(info.Item2, i++)));
                 } 
                 catch (Exception e)
                 {
@@ -110,8 +98,7 @@ namespace FinancialManagementProgram.kftcAPI
                     }
                 }
 
-                DateTime now = DateTime.Now;
-                TargetDate = new DateTime(now.Year, now.Month, 1);
+                Analyzer.Update();
                 OnPropertyChanged(nameof(BankAccounts));
             }
         }

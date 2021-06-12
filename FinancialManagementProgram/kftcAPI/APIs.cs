@@ -63,7 +63,7 @@ namespace FinancialManagementProgram.kftcAPI
             }
         }
 
-        public static async Task GetAccountDetails(BankAccount account, UserAccessToken userToken, int offset, string fromDate)
+        public static async Task<long> GetAccountDetails(BankAccount account, UserAccessToken userToken, int offset, string fromDate)
         {
             string currentDate = CurrentDate();
             string url = string.Format("{0}v2.0/account/transaction_list/fin_num?bank_tran_id={1}&fintech_use_num={2}&inquiry_type=A&inquiry_base=D&from_date={3}&to_date={4}&sort_order=D&tran_dtime={5}"
@@ -72,10 +72,11 @@ namespace FinancialManagementProgram.kftcAPI
 
             JObject obj = JObject.Parse(data);
             CheckRequestError(obj);
-            account.BalanceAmount = obj.Value<long>("balance_amt");
+            long amount = obj.Value<long>("balance_amt");
 
             foreach (JToken token in (JArray)obj["res_list"])
-                account.Transactions.AddTransaction(new Transaction(account.BankName, (JObject)token));
+                account.Transactions.AddTransaction(new Transaction(account, (JObject)token));
+            return amount;
         }
 
         private static void OnAuthCallback(string query, TaskCompletionSource<UserAccessToken> tcs)

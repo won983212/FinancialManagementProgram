@@ -50,7 +50,8 @@
                                  Foreground="{DynamicResource TextColor}"
                                  VerticalAlignment="Center"/>
                     <TextBlock DockPanel.Dock="Top" Margin="0,0,0,4">이번달 지출</TextBlock>
-                    <TextBlock FontSize="15pt" Foreground="{DynamicResource Primary}" Text="{Binding TotalSpending, Source={x:Static api:APIDataManager.Current}, StringFormat={}{0:#,##원}}"/>
+                    <TextBlock FontSize="15pt" Foreground="{DynamicResource Primary}" 
+                               Text="{Binding Analyzer.MonthlyTotalSpending, Source={x:Static api:APIDataManager.Current}, StringFormat={}{0:#,##원;-#,##원;없음}}"/>
                 </DockPanel>
                 <Separator Background="{DynamicResource BorderColor}" Margin="12,0"/>
                 <ListBox ItemsSource="{Binding TabItems}" 
