@@ -34,12 +34,8 @@
             <ListBox Margin="4,64,4,0"
                      ItemsSource="{Binding Transactions}"
                      HorizontalContentAlignment="Stretch"
+                     ItemContainerStyle="{StaticResource NoFocusHighlight}"
                      ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
-                        <Setter Property="Focusable" Value="False"/>
-                    </Style>
-                </ListBox.ItemContainerStyle>
                 <ListBox.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.HeaderTemplate>

@@ -33,10 +33,10 @@ namespace FinancialManagementProgram.ViewModels.Tabs
         {
             APIDataManager dataManager = APIDataManager.Current;
             BankAccount account = dataManager.BankAccounts[SelectedAccountIndex];
-            return dataManager.GetAccountTransaction(account.FintechUseNum);
+            return dataManager.GetAccountTransaction(account.FintechUseNum); // TODO* Monthly bank account transaction.
         }
 
-        public int AccountTotalSpending
+        public long AccountTotalSpending
         {
             get
             {
@@ -47,7 +47,7 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             }
         }
 
-        public int AccountTotalIncoming
+        public long AccountTotalIncoming
         {
             get
             {

@@ -37,7 +37,7 @@ namespace FinancialManagementProgram.Controls
             const double PieProportion = 0.5;
             double radius = canvasChart.Width / 2;
 
-            int total = 0;
+            long total = 0;
             foreach (var ent in datas)
                 total += ent.Amount;
 

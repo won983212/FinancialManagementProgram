@@ -9,7 +9,7 @@ using System.Windows.Data;
 
 namespace FinancialManagementProgram.Converters
 {
-    [ValueConversion(typeof(IList<BankAccount>), typeof(int))]
+    [ValueConversion(typeof(IList<BankAccount>), typeof(long))]
     class AccountTotalAmountConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

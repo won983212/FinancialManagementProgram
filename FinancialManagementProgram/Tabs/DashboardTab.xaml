@@ -87,16 +87,23 @@
                                FontSize="12pt"
                                Text="자산별 잔액 현황" />
                     <Separator Grid.Row="1" Grid.ColumnSpan="2" 
-                               Margin="0,16"
+                               Margin="0,16,0,8"
                                Background="{DynamicResource BorderColor}"/>
 
-                    <ItemsControl x:Name="listAccounts"
-                                  Grid.Row="2" Grid.ColumnSpan="2" 
-                                  ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                                  ItemsSource="{Binding BankAccounts}">
-                        <ItemsControl.ItemTemplate>
+                    <ListBox x:Name="listAccounts"
+                             Grid.Row="2" Grid.ColumnSpan="2" 
+                             ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                             HorizontalContentAlignment="Stretch"
+                             ItemsSource="{Binding BankAccounts, UpdateSourceTrigger=PropertyChanged}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                <Setter Property="Focusable" Value="False"/>
+                                <Setter Property="Padding" Value="0,8" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="0,0,0,12">
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="auto"/>
                                         <ColumnDefinition Width="*"/>
@@ -109,14 +116,14 @@
                                                Text="{Binding Label}" />
                                     <TextBlock Grid.Column="2" 
                                                Foreground="{DynamicResource HeaderTextColor}"
-                                               Text="{Binding BalanceAmount, StringFormat={}{0:#,##;-#,##,0}원}" />
+                                               Text="{Binding BalanceAmount, StringFormat={}{0:#,##;-#,##;0}원}" />
                                 </Grid>
                             </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
 
                     <Separator Grid.Row="3" Grid.ColumnSpan="2" 
-                               Margin="0,16"
+                               Margin="0,8,0,16"
                                Background="{DynamicResource BorderColor}"/>
                     <TextBlock Grid.Row="4" 
                                Text="합계" />

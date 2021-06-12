@@ -9,15 +9,15 @@ using System.Windows.Media;
 
 namespace FinancialManagementProgram.Converters
 {
-    [ValueConversion(typeof(int), typeof(Brush))]
+    [ValueConversion(typeof(long), typeof(Brush))]
     class BalanceToBrushConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || value is int == false)
+            if (value == null || value is long == false)
                 return null;
 
-            int amount = (int)value;
+            long amount = (long)value;
             if (amount < 0)
                 return App.Current.FindResource("ErrorColor");
             else

@@ -27,7 +27,11 @@
             <Style x:Key="TextblockTabHeader" TargetType="{x:Type TextBlock}">
                 <Setter Property="FontSize" Value="14pt" />
             </Style>
-            
+
+            <Style x:Key="NoFocusHighlight" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                <Setter Property="Focusable" Value="False"/>
+            </Style>
+
             <Style TargetType="{x:Type ToolTip}">
                 <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
                 <Setter Property="Background" Value="{DynamicResource CardColor}" />

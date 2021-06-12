@@ -25,7 +25,7 @@ namespace FinancialManagementProgram.Controls
 
         public string CategoryName { get; set; }
 
-        public int Amount { get; set; }
+        public long Amount { get; set; }
     }
 
     public partial class TransactionChartDataList : UserControl, INotifyPropertyChanged

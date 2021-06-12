@@ -24,10 +24,17 @@ namespace FinancialManagementProgram.kftcAPI
             Transactions.AddRange(group.Transactions);
         }
 
+        internal void ClearTransactions()
+        {
+            Transactions.Clear();
+            TotalIncoming = 0;
+            TotalSpending = 0;
+        }
+
         public List<Transaction> Transactions { get; } = new List<Transaction>();
 
-        public int TotalSpending { get; private set; } = 0;
+        public long TotalSpending { get; private set; } = 0;
 
-        public int TotalIncoming { get; private set; } = 0;
+        public long TotalIncoming { get; private set; } = 0;
     }
 }

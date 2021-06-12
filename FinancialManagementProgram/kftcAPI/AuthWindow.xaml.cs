@@ -13,10 +13,10 @@ namespace FinancialManagementProgram.kftcAPI
 
         private readonly AuthCallback callback;
 
-        public AuthWindow(AuthCallback callback)
+        public AuthWindow(string url, AuthCallback callback)
         {
             InitializeComponent();
-            webBrowser.Source = new Uri(APIs.AuthorizeURL(AuthType.Initial));
+            webBrowser.Source = new Uri(url);
             this.callback = callback;
         }
 

@@ -8,14 +8,14 @@ using System.Windows.Data;
 
 namespace FinancialManagementProgram.Converters
 {
-    [ValueConversion(typeof(int), typeof(string))]
+    [ValueConversion(typeof(long), typeof(string))]
     class SimplifyBudgetUnitConverter : IValueConverter
     {
         private static readonly string[] Postfixes = { "", "만", "억", "조", "경", "해" };
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return SimplifyBudgetUnit((int)value, false);
+            return SimplifyBudgetUnit((long)value, false);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -23,9 +23,9 @@ namespace FinancialManagementProgram.Converters
             return null;
         }
 
-        public static string SimplifyBudgetUnit(int amount, bool appendPlusSign)
+        public static string SimplifyBudgetUnit(long amount, bool appendPlusSign)
         {
-            int significant = amount;
+            long significant = amount;
             int postfixIndex = 0;
 
             for (int i = 0; i < Postfixes.Length && significant >= 10000; i++)

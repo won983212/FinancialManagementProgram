@@ -79,6 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BinaryProperties.cs" />
     <Compile Include="Controls\DashboardCard.xaml.cs">
       <DependentUpon>DashboardCard.xaml</DependentUpon>
     </Compile>
@@ -111,6 +112,7 @@
     <Compile Include="kftcAPI\TransactionDataAnalyzer.cs" />
     <Compile Include="kftcAPI\TransactionGroup.cs" />
     <Compile Include="kftcAPI\UserAccessToken.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Tabs\AccountManagementTab.xaml.cs">

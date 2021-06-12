@@ -141,7 +141,7 @@ namespace FinancialManagementProgram.Controls
             {
                 int index = 7 + offset + d;
                 DateTime date = new DateTime(firstDate.Year, firstDate.Month, d + 1);
-                TransactionGroup transaction = APIDataManager.Current.GetDayTransaction(date.ToString("yyyy.MM.dd"));
+                TransactionGroup transaction = APIDataManager.Current.Analyzer.GetDayTransaction(date.ToString("yyyy.MM.dd"));
 
                 // set digit number
                 TextBlock label = GetTextblockAt(index, 0);

@@ -17,7 +17,7 @@ namespace FinancialManagementProgram.Converters
             if (value == null || value is string == false)
                 return null;
 
-            TransactionGroup transaction = APIDataManager.Current.GetDayTransaction((string)value);
+            TransactionGroup transaction = APIDataManager.Current.Analyzer.GetDayTransaction((string)value);
             if (transaction == null)
                 return "0원";
 

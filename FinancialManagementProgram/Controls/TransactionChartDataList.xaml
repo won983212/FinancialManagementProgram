@@ -7,13 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <ListBox ItemsSource="{Binding ChartCategorizedCollectionView, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TransactionChartDataList}}}" 
-                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                 HorizontalContentAlignment="Stretch">
-        <ListBox.ItemContainerStyle>
-            <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
-                <Setter Property="Focusable" Value="False"/>
-            </Style>
-        </ListBox.ItemContainerStyle>
+             ScrollViewer.VerticalScrollBarVisibility="Hidden"
+             ItemContainerStyle="{StaticResource NoFocusHighlight}"
+             HorizontalContentAlignment="Stretch">
         <ListBox.ItemTemplate>
             <DataTemplate>
                 <Grid>

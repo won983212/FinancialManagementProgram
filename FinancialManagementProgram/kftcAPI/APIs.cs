@@ -34,17 +34,48 @@ namespace FinancialManagementProgram.kftcAPI
             ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
         }
 
-        public static Task<UserAccessToken> GenerateToken()
+        public static Task<UserAccessToken> GenerateToken(bool isAuthOnly)
         {
             TaskCompletionSource<UserAccessToken> tcs = new TaskCompletionSource<UserAccessToken>();
-            new AuthWindow((param) => OnAuthCallback(param, tcs)).Show();
+            new AuthWindow(AuthorizeURL(AuthType.Initial, isAuthOnly), (param) => OnAuthCallback(param, tcs)).Show();
             return tcs.Task;
         }
 
-        public static async Task GetUserInfo(UserAccessToken userToken)
+        public static async Task<Tuple<string, BankAccount[]>> GetUserInfo(UserAccessToken userToken)
         {
             string data = await Get(string.Format("{0}v2.0/user/me?user_seq_no={1}", Host, userToken.UserSeqNo), userToken.AccessToken);
-            Console.WriteLine(data);
+            JObject obj = JObject.Parse(data);
+            CheckRequestError(obj);
+
+            JArray accounts_json = obj["res_list"] as JArray;
+            BankAccount[] accounts = new BankAccount[accounts_json.Count];
+
+            if(accounts_json != null)
+            {
+                string user_ci = obj.Value<string>("user_ci");
+                for (int i = 0; i < accounts.Length; i++)
+                    accounts[i] = new BankAccount((JObject)accounts_json[i]);
+                return new Tuple<string, BankAccount[]>(user_ci, accounts);
+            } 
+            else
+            {
+                throw new ArgumentException("Illegal response: Unknown json type. (GetUserInfo)");
+            }
+        }
+
+        public static async Task GetAccountDetails(BankAccount account, UserAccessToken userToken, int offset, string fromDate)
+        {
+            string currentDate = CurrentDate();
+            string url = string.Format("{0}v2.0/account/transaction_list/fin_num?bank_tran_id={1}&fintech_use_num={2}&inquiry_type=A&inquiry_base=D&from_date={3}&to_date={4}&sort_order=D&tran_dtime={5}"
+                , Host, CreateBankTransId(offset), account.FintechUseNum, fromDate, currentDate.Substring(0, 8), currentDate);
+            string data = await Get(url, userToken.AccessToken);
+
+            JObject obj = JObject.Parse(data);
+            CheckRequestError(obj);
+            account.BalanceAmount = obj.Value<long>("balance_amt");
+
+            foreach (JToken token in (JArray)obj["res_list"])
+                account.Transactions.AddTransaction(new Transaction(account.BankName, (JObject)token));
         }
 
         private static void OnAuthCallback(string query, TaskCompletionSource<UserAccessToken> tcs)
@@ -76,10 +107,32 @@ namespace FinancialManagementProgram.kftcAPI
             });
         }
 
-        public static string AuthorizeURL(AuthType authType)
+        private static string AuthorizeURL(AuthType authType, bool isAuthOnly)
         {
-            return string.Format("{0}oauth/2.0/authorize?response_type=code&client_id={1}&redirect_uri=http://localhost/&scope=login inquiry&authorized_cert_yn=N&state={2}&auth_type={3}",
-                Host, ClientID, State, (int)authType);
+            string endPoint = isAuthOnly ? "authorize_account" : "authorize";
+            return string.Format("{0}oauth/2.0/{1}?response_type=code&client_id={2}&redirect_uri=http://localhost/&scope=login inquiry&authorized_cert_yn=N&state={3}&auth_type={4}",
+                Host, endPoint, ClientID, State, (int)authType);
+        }
+
+
+        #region Util
+
+        private static string CreateBankTransId(int offset)
+        {
+            return OrganizationCode + "U" + (DateTime.Now.Ticks / 100000 % 1000000000 + offset).ToString();
+        }
+
+        private static string CurrentDate()
+        {
+            return DateTime.Now.ToString("yyyyMMddHHmmss");
+        }
+
+        private static void CheckRequestError(JObject data)
+        {
+            string code = data.Value<string>("rsp_code");
+            string message = data.Value<string>("rsp_message");
+            if (code != "A0000")
+                throw new ArgumentException(code + ": " + message);
         }
 
         private static async Task<string> Get(string url, string accessToken)
@@ -148,5 +201,8 @@ namespace FinancialManagementProgram.kftcAPI
             }
             return sb.ToString();
         }
+
+
+        #endregion
     }
 }

@@ -16,8 +16,8 @@ namespace FinancialManagementProgram.Converters
             if (values == null || values.Length != 2 || values[0] == DependencyProperty.UnsetValue || values[1] == DependencyProperty.UnsetValue)
                 return null;
 
-            int spending = (int)values[0];
-            int lastWeekSpending = (int)values[1];
+            long spending = (long)values[0];
+            long lastWeekSpending = (long)values[1];
             string colorResource = "Primary";
 
             if (lastWeekSpending != 0 && spending > lastWeekSpending)
