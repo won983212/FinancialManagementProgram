@@ -29,14 +29,14 @@
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource Primary}"
                                    Title="총 자산 합계"
-                                   ValueText="{Binding BankAccounts, Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;0}원}"
+                                   ValueText="{Binding BankAccounts, Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;\\0}원}"
                                    SubIconKind="Wallet"
                                    IconKind="CurrencyUsd"
                                    SubcontentText="{Binding Items.Count, ElementName=listAccounts, StringFormat=추가된 계좌 {0}개}"/>
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource ErrorColor}"
                                    Title="이번달 예상 지출"
-                                   ValueText="{Binding Analyzer.PredictSpendingThisMonth, StringFormat={}{0:#,##;-#,##;0}원}"
+                                   ValueText="{Binding Analyzer.PredictSpendingThisMonth, StringFormat={}{0:#,##;-#,##;\\0}원}"
                                    SubIconKind="TrendingUp"
                                    IconKind="CartOutline">
                 <control:DashboardCard.SubcontentText>
@@ -49,14 +49,14 @@
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource SuccessfulColor}"
                                    Title="남은 예산"
-                                   ValueText="{Binding Analyzer.RemainingBudget, StringFormat={}{0:#,##;-#,##;0}원}"
+                                   ValueText="{Binding Analyzer.RemainingBudget, StringFormat={}{0:#,##;-#,##;\\0}원}"
                                    SubIconKind="PiggyBank"
                                    IconKind="CashMultiple"
-                                   SubcontentText="{Binding Budget, StringFormat=총 예산 {0:#,##;-#,##;0}원}"/>
+                                   SubcontentText="{Binding Budget, StringFormat=총 예산 {0:#,##;-#,##;\\0}원}"/>
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource WarningColor}"
                                    Title="하루 권장 지출"
-                                   ValueText="{Binding Analyzer.RecommendedSpendingInDay, StringFormat={}{0:#,##;-#,##;0}원}"
+                                   ValueText="{Binding Analyzer.RecommendedSpendingInDay, StringFormat={}{0:#,##;\\0;\\0}원}"
                                    SubIconKind="TimerSand"
                                    IconKind="ClipboardCheckOutline"
                                    SubcontentText="남은 예산 기준임"/>
@@ -90,10 +90,20 @@
                                Margin="0,16,0,8"
                                Background="{DynamicResource BorderColor}"/>
 
+                    <TextBlock Grid.Row="2" Grid.ColumnSpan="2" 
+                               Foreground="{DynamicResource TextColor}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontWeight="Light"
+                               FontSize="12pt"
+                               Visibility="{Binding BankAccounts.Count, Converter={StaticResource ZeroToVisibilityConverter}}"
+                               Text="등록된 통장이 없습니다." />
+
                     <ListBox x:Name="listAccounts"
                              Grid.Row="2" Grid.ColumnSpan="2" 
                              ScrollViewer.VerticalScrollBarVisibility="Hidden"
                              HorizontalContentAlignment="Stretch"
+                             Visibility="{Binding BankAccounts.Count, Converter={StaticResource ZeroToVisibilityConverter}, ConverterParameter=Invert}"
                              ItemsSource="{Binding BankAccounts, UpdateSourceTrigger=PropertyChanged}">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MaterialDesignListBoxItem}">
@@ -143,10 +153,6 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
                     <TextBlock Grid.ColumnSpan="2"
                                Margin="0,0,0,2"
                                Text="이번달 지출" />
@@ -160,14 +166,27 @@
                                Grid.ColumnSpan="2" 
                                Margin="0,12"
                                Background="{DynamicResource BorderColor}"/>
-                    <control:TransactionChartDataList x:Name="chartDataList"
-                                                      Grid.Row="3"
-                                                      Grid.Column="1"
-                                                      Margin="16,0,0,0"
-                                                      VerticalAlignment="Center"
-                                                      CategorizedTransaction="{Binding Analyzer.CategorizedTransactions}"/>
-                    <control:TransactionChart Grid.Row="3"
-                                              ChartDatas="{Binding ChartDatas, Mode=OneWay, ElementName=chartDataList}" />
+                    <TextBlock Grid.Row="3"
+                               Visibility="{Binding Analyzer.MonthlyTotalSpending, Converter={StaticResource ZeroToVisibilityConverter}}"
+                               Foreground="{DynamicResource TextColor}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontWeight="Light"
+                               FontSize="12pt"
+                               Text="표시할 지출이 없습니다." />
+                    <Grid Grid.Row="3"
+                          Visibility="{Binding Analyzer.MonthlyTotalSpending, Converter={StaticResource ZeroToVisibilityConverter}, ConverterParameter=Invert}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <control:TransactionChartDataList x:Name="chartDataList"
+                                                          Grid.Column="1"
+                                                          Margin="16,0,0,0"
+                                                          VerticalAlignment="Center"
+                                                          CategorizedTransaction="{Binding Analyzer.CategorizedTransactions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <control:TransactionChart ChartDatas="{Binding ChartDatas, Mode=OneWay, ElementName=chartDataList}" />
+                    </Grid>
                 </Grid>
             </md:Card>
         </Grid>

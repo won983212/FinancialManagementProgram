@@ -7,6 +7,7 @@
              xmlns:control="clr-namespace:FinancialManagementProgram.Controls"
              xmlns:api="clr-namespace:FinancialManagementProgram.kftcAPI"
              xmlns:converter="clr-namespace:FinancialManagementProgram.Converters"
+             xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
              d:DesignHeight="520" d:DesignWidth="760">
     <UserControl.Resources>
@@ -36,6 +37,9 @@
                     <CollectionViewSource.GroupDescriptions>
                         <PropertyGroupDescription PropertyName="FormattedTransDate"/>
                     </CollectionViewSource.GroupDescriptions>
+                    <CollectionViewSource.SortDescriptions>
+                        <componentmodel:SortDescription PropertyName="TransDateTime" Direction="Descending"/>
+                    </CollectionViewSource.SortDescriptions>
                 </CollectionViewSource>
             </md:Card.Resources>
             <ListBox Margin="4,64,4,0"
@@ -64,7 +68,7 @@
                 </ListBox.GroupStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
+                        <Grid Background="Transparent" ToolTip="{Binding FormattedTransDateTime}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"/>
                                 <ColumnDefinition Width="*"/>

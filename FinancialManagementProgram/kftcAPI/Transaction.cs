@@ -18,7 +18,11 @@ namespace FinancialManagementProgram.kftcAPI
             Amount = obj.Value<long>("tran_amt");
             Description = obj.Value<string>("branch_name");
             TransDate = obj.Value<string>("tran_date");
+            TransDateTime = DateTime.ParseExact(TransDate + obj.Value<string>("tran_time"), "yyyyMMddHHmmss", null);
             AfterBalanceAmount = obj.Value<long>("after_balance_amt");
+
+            if (obj.Value<string>("inout_type") == "출금")
+                Amount = -Amount;
         }
 
         public string Label { get; }
@@ -29,13 +33,18 @@ namespace FinancialManagementProgram.kftcAPI
 
         public string Description { get; }
         public string TransDate { get; }
+        public DateTime TransDateTime { get; }
         public long AfterBalanceAmount { get; }
 
 
-        // TODO Transaction보여줄 때 그룹은 날짜별로, 아이템은 시간별로 정렬하기.
         public string FormattedTransDate
         {
             get => string.Format("{0}.{1}.{2}", TransDate.Substring(0, 4), TransDate.Substring(4, 2), TransDate.Substring(6, 2));
+        }
+
+        public string FormattedTransDateTime
+        {
+            get => TransDateTime.ToString();
         }
     }
 }

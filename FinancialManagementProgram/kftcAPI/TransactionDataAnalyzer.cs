@@ -30,8 +30,7 @@ namespace FinancialManagementProgram.kftcAPI
                 _dayTransactions.Add(ent.Date, ent.Transactions);
                 foreach(Transaction t in ent.Transactions.Transactions)
                 {
-                    BankAccount acc = null;
-                    if (accounts.TryGetValue(t.FintechNum, out acc))
+                    if (accounts.TryGetValue(t.FintechNum, out BankAccount acc))
                         acc.Transactions.AddTransaction(t);
                     else
                         Logger.Warn("There is no account: " + t.BankName + "(" + t.FintechNum + ")");
@@ -49,8 +48,7 @@ namespace FinancialManagementProgram.kftcAPI
         /// </summary>
         public TransactionGroup GetDayTransaction(string date)
         {
-            TransactionGroup result;
-            if (_dayTransactions.TryGetValue(date, out result))
+            if (_dayTransactions.TryGetValue(date, out TransactionGroup result))
                 return result;
             return null;
         }
@@ -62,8 +60,7 @@ namespace FinancialManagementProgram.kftcAPI
             {
                 if (ent.Amount < 0)
                 {
-                    TransactionGroup categoryTrans;
-                    if (!_categorizedTransactions.TryGetValue(ent.Category, out categoryTrans))
+                    if (!_categorizedTransactions.TryGetValue(ent.Category, out TransactionGroup categoryTrans))
                         _categorizedTransactions.Add(ent.Category, categoryTrans = new TransactionGroup());
                     categoryTrans.AddTransaction(ent);
                 }

@@ -74,6 +74,11 @@ namespace FinancialManagementProgram.Controls
             ChartCategorizedCollectionView.SortDescriptions.Add(new SortDescription(nameof(ColoredChartCategory.Amount), ListSortDirection.Descending));
         }
 
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
 
         public IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>> CategorizedTransaction
         {
@@ -87,7 +92,8 @@ namespace FinancialManagementProgram.Controls
             set
             {
                 _categorizedCollectionView = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ChartCategorizedCollectionView)));
+                OnPropertyChanged(nameof(ChartCategorizedCollectionView));
+                OnPropertyChanged(nameof(ChartDatas));
             }
         }
 

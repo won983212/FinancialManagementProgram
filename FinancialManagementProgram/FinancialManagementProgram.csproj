@@ -105,6 +105,7 @@
     <Compile Include="Converters\BrushToColorConverter.cs" />
     <Compile Include="Converters\DayTotalSpendingConverter.cs" />
     <Compile Include="CommonUtil.cs" />
+    <Compile Include="Converters\ZeroToVisibilityConverter.cs" />
     <Compile Include="kftcAPI\APIDataManager.cs" />
     <Compile Include="kftcAPI\BankAccount.cs" />
     <Compile Include="kftcAPI\Transaction.cs" />

@@ -110,7 +110,7 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource HeaderTextColor}"
-                           Text="{Binding Analyzer.RemainingBudget, StringFormat={}{0:#,##원;;없음}}"/>
+                           Text="{Binding Analyzer.RemainingBudget, StringFormat={}{0:#,##원;-#,##원;없음}}"/>
 
                 <TextBlock Grid.Row="6"
                            VerticalAlignment="Center"
@@ -122,7 +122,7 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource HeaderTextColor}"
-                           Text="{Binding Analyzer.RecommendedSpendingInDay, StringFormat={}{0:#,##원;;0원}}"/>
+                           Text="{Binding Analyzer.RecommendedSpendingInDay, StringFormat={}{0:#,##원;\\0원;\\0원}}"/>
 
                 <TextBlock Grid.Row="7"
                            VerticalAlignment="Center"
@@ -134,7 +134,7 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource HeaderTextColor}"
-                           Text="{Binding Analyzer.PredictSpendingThisMonth, StringFormat={}{0:#,##원;;0원}}"/>
+                           Text="{Binding Analyzer.PredictSpendingThisMonth, StringFormat={}{0:#,##원;;\\0원}}"/>
             </Grid>
         </md:Card>
 
@@ -282,10 +282,21 @@
                         FontSize="9pt"
                         Padding="0"
                         Content="카테고리 설정" />
-                <control:TransactionChart ChartDatas="{Binding ChartDatas, ElementName=chartDataList}"
+                <TextBlock Grid.Row="3"
+                           Visibility="{Binding Analyzer.MonthlyTotalSpending, Converter={StaticResource ZeroToVisibilityConverter}}"
+                           Foreground="{DynamicResource TextColor}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontWeight="Light"
+                           Margin="0,64,0,0"
+                           FontSize="12pt"
+                           Text="표시할 지출이 없습니다." />
+                <StackPanel Visibility="{Binding Analyzer.MonthlyTotalSpending, Converter={StaticResource ZeroToVisibilityConverter}, ConverterParameter=Invert}">
+                    <control:TransactionChart ChartDatas="{Binding ChartDatas, ElementName=chartDataList}"
                                           Margin="0,16" />
-                <control:TransactionChartDataList x:Name="chartDataList"
+                    <control:TransactionChartDataList x:Name="chartDataList"
                                                   CategorizedTransaction="{Binding Analyzer.CategorizedTransactions}"/>
+                </StackPanel>
             </StackPanel>
         </md:Card>
     </Grid>

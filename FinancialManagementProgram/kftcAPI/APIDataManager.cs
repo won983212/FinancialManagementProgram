@@ -38,8 +38,7 @@ namespace FinancialManagementProgram.kftcAPI
 
         internal void AddTransactionData(Transaction transaction)
         {
-            TransactionGroup value;
-            if (!_allTransactions.TryGetValue(transaction.TransDate, out value))
+            if (!_allTransactions.TryGetValue(transaction.TransDate, out TransactionGroup value))
                 _allTransactions.Add(transaction.TransDate, value = new TransactionGroup());
             value.AddTransaction(transaction);
         }
@@ -55,7 +54,7 @@ namespace FinancialManagementProgram.kftcAPI
         public async void RefreshAccountData()
         {
             AccessToken = new UserAccessToken(JObject.Parse("{" +
-                "\"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMTAwNzczNDcxIiwic2NvcGUiOlsiaW5xdWlyeSIsImxvZ2luIl0sImlzcyI6Imh0dHBzOi8vd3d3Lm9wZW5iYW5raW5nLm9yLmtyIiwiZXhwIjoxNjMxMTk3NzIwLCJqdGkiOiIwMDQ5ODVlNC1hYmIzLTQwNjktOTJmNi05Njg3ZTQ2YjVmYWIifQ.bERqN3qBxgXF-xAI70iOCSKsjJreE8o3FB8mycbPKfM\", " +
+                "\"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMTAwNzczNDcxIiwic2NvcGUiOlsiaW5xdWlyeSIsImxvZ2luIl0sImlzcyI6Imh0dHBzOi8vd3d3Lm9wZW5iYW5raW5nLm9yLmtyIiwiZXhwIjoxNjMxMzcxODQ4LCJqdGkiOiJkMjYxMGJjZC0xYjdjLTQ4MjgtYWY5Zi1kNjgzYWYzMjZmNjgifQ.JAU5IjJbPCNO6N_d37LVxTrcMBjjGdbYRI7Lk9h7NX0\", " +
                 "\"token_type\": \"Bearer\", " +
                 "\"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMTAwNzczNDcxIiwic2NvcGUiOlsiaW5xdWlyeSIsImxvZ2luIl0sImlzcyI6Imh0dHBzOi8vd3d3Lm9wZW5iYW5raW5nLm9yLmtyIiwiZXhwIjoxNjMyMDYxNzIwLCJqdGkiOiIwZWVmNjI3MS1mMzFmLTRiYmYtOTE4YS04ODEyZjNlNmM3NGMifQ.yZOFcCEHDrrB4Eh8Aq3-O6H8bHF96Pm6hK4SQA-QkUM\", " +
                 "\"expires_in\": 7775999, " +
