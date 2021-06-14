@@ -57,7 +57,7 @@ namespace FinancialManagementProgram.Controls
 
         private void BuildCategoryEntites(IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>> data)
         {
-            _categorizedTotal.Clear();
+            _categorizedTotal = new List<ColoredChartCategory>();
             int i = 0;
             foreach (var ent in data)
             {

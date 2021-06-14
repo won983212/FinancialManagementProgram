@@ -9,7 +9,7 @@ namespace FinancialManagementProgram.kftcAPI
     public class TransactionDataAnalyzer : ObservableObject
     {
         private readonly Dictionary<string, TransactionGroup> _dayTransactions = new Dictionary<string, TransactionGroup>();
-        private readonly Dictionary<TransactionCategory, TransactionGroup> _categorizedTransactions = new Dictionary<TransactionCategory, TransactionGroup>();
+        private Dictionary<TransactionCategory, TransactionGroup> _categorizedTransactions = new Dictionary<TransactionCategory, TransactionGroup>();
         private TransactionGroup _monthTransactions = new TransactionGroup();
 
         private static long TotalSpendingBetween(DateTime from, DateTime to)
@@ -55,7 +55,7 @@ namespace FinancialManagementProgram.kftcAPI
 
         private void CategorizeTransaction()
         {
-            _categorizedTransactions.Clear();
+            _categorizedTransactions = new Dictionary<TransactionCategory, TransactionGroup>();
             foreach (Transaction ent in _monthTransactions.Transactions)
             {
                 if (ent.Amount < 0)
@@ -90,7 +90,7 @@ namespace FinancialManagementProgram.kftcAPI
 
         public IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>> CategorizedTransactions
         {
-            get => _categorizedTransactions.AsEnumerable();
+            get => _categorizedTransactions;
         }
 
         public IEnumerable<Transaction> MonthlyTransactions
