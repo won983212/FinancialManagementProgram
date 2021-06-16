@@ -24,6 +24,7 @@ namespace FinancialManagementProgram.kftcAPI
                 accounts.Add(account.FintechUseNum, account);
 
             _monthTransactions = new TransactionGroup();
+            _dayTransactions.Clear();
             foreach (var ent in APIDataManager.Current.GetTransactionsBetween(TargetDate, TargetDate.AddMonths(1)))
             {
                 _monthTransactions.AddTransactionGroup(ent.Transactions);

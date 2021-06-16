@@ -34,14 +34,8 @@ namespace FinancialManagementProgram.kftcAPI
         private readonly ObservableCollection<BankAccount> _accounts = new ObservableCollection<BankAccount>();
         private readonly SortedList<string, TransactionGroup> _allTransactions = new SortedList<string, TransactionGroup>();
         private readonly TransactionDataAnalyzer _analyzer = new TransactionDataAnalyzer();
+        private volatile bool usingAPISession = false;
 
-
-        internal void AddTransactionData(Transaction transaction)
-        {
-            if (!_allTransactions.TryGetValue(transaction.TransDate, out TransactionGroup value))
-                _allTransactions.Add(transaction.TransDate, value = new TransactionGroup());
-            value.AddTransaction(transaction);
-        }
 
         public IEnumerable<DayTransactions> GetTransactionsBetween(DateTime fromDate, DateTime toDate)
         {
@@ -51,57 +45,94 @@ namespace FinancialManagementProgram.kftcAPI
                 yield return new DayTransactions(_allTransactions, i);
         }
 
-        public async void RefreshAccountData()
+        public async void AddNewAccount()
         {
-            AccessToken = new UserAccessToken(JObject.Parse("{" +
-                "\"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMTAwNzczNDcxIiwic2NvcGUiOlsiaW5xdWlyeSIsImxvZ2luIl0sImlzcyI6Imh0dHBzOi8vd3d3Lm9wZW5iYW5raW5nLm9yLmtyIiwiZXhwIjoxNjMxMzcxODQ4LCJqdGkiOiJkMjYxMGJjZC0xYjdjLTQ4MjgtYWY5Zi1kNjgzYWYzMjZmNjgifQ.JAU5IjJbPCNO6N_d37LVxTrcMBjjGdbYRI7Lk9h7NX0\", " +
-                "\"token_type\": \"Bearer\", " +
-                "\"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMTAwNzczNDcxIiwic2NvcGUiOlsiaW5xdWlyeSIsImxvZ2luIl0sImlzcyI6Imh0dHBzOi8vd3d3Lm9wZW5iYW5raW5nLm9yLmtyIiwiZXhwIjoxNjMyMDYxNzIwLCJqdGkiOiIwZWVmNjI3MS1mMzFmLTRiYmYtOTE4YS04ODEyZjNlNmM3NGMifQ.yZOFcCEHDrrB4Eh8Aq3-O6H8bHF96Pm6hK4SQA-QkUM\", " +
-                "\"expires_in\": 7775999, " +
-                "\"scope\": \"inquiry login\", " +
-                "\"user_seq_no\": \"1100773471\"" +
-            "}"));
-
-            if (AccessToken != null)
+            if (!usingAPISession)
             {
-                Tuple<string, BankAccount[]> info = null;
-                try
-                {
-                    info = await APIs.GetUserInfo(AccessToken);
-                    _user_ci = info.Item1;
-
-                    // load account balance amount and transactions.
-                    int i = 0;
-                    await Task.Factory.StartNew(() => info.Item2.AsParallel().ForAll((acc) => acc.RetrieveAccountDetail(info.Item2, i++)));
-                } 
-                catch (Exception e)
-                {
-                    Logger.Error(e);
-                }
-
-                // merge loaded accounts to list
-                if (info != null)
-                {
-                    foreach (BankAccount account in info.Item2)
-                    {
-                        int idx = _accounts.IndexOf(account);
-                        if (idx != -1)
-                        {
-                            _accounts.RemoveAt(idx);
-                            _accounts.Insert(idx, account);
-                        }
-                        else
-                        {
-                            _accounts.Add(account);
-                        }
-                    }
-                }
-
-                Analyzer.Update();
-                OnPropertyChanged(nameof(BankAccounts));
+                usingAPISession = true;
+                AccessToken = await APIs.GenerateToken(false);
+                BinaryProperties.Save();
+                usingAPISession = false;
             }
         }
 
+        public async void RefreshAccountData()
+        {
+            if (usingAPISession)
+                return;
+
+            usingAPISession = true;
+            try
+            {
+                if (AccessToken == null) // accesstoken이 없을 때
+                    AccessToken = await APIs.GenerateToken(true); // TODO 회원등록 안한 상태에서 gentoken하면 어떻게 될까?
+
+                if (AccessToken != null && AccessToken.ExpiresAt - DateTime.Now < TimeSpan.FromDays(7)) // accesstoken이 만료되었을 때
+                    AccessToken = await APIs.RefreshAccessToken(AccessToken);
+
+                if (AccessToken == null) // accesstoken 생성 및 갱신에 실패했을 때
+                {
+                    usingAPISession = false;
+                    return;
+                }
+
+                Tuple<string, BankAccount[]> info = await APIs.GetUserInfo(AccessToken);
+                _user_ci = info.Item1;
+
+                List<int> account_indexes = new List<int>();
+                foreach (BankAccount account in info.Item2)
+                {
+                    int idx = _accounts.IndexOf(account);
+                    if (idx != -1)
+                        account.CopyMetadataFrom(_accounts[idx]);
+                    account_indexes.Add(idx);
+                }
+
+                // load account balance amount and transactions.
+                // TODO 지금은 API가 DAte반영을 안하지만, 나중에 date반영할 때 다시 테스트
+                int i = 0;
+                await Task.Factory.StartNew(() => info.Item2.AsParallel().ForAll((acc) =>
+                {
+                    string prevLastUpdate = acc.LastSyncDate.ToString("yyyyMMdd");
+                    acc.RetrieveAccountDetail(i++);
+
+                    foreach (Transaction t in acc.Transactions.Transactions)
+                    {
+                        if (!_allTransactions.TryGetValue(t.TransDate, out TransactionGroup value))
+                            _allTransactions.Add(t.TransDate, value = new TransactionGroup());
+                        if (prevLastUpdate != t.TransDate || !value.Transactions.Contains(t))
+                            value.AddTransaction(t);
+                    }
+                    acc.Transactions.ClearTransactions();
+                }));
+
+                for (i = 0; i < account_indexes.Count; i++)
+                {
+                    int idx = account_indexes[i];
+                    BankAccount acc = info.Item2[i];
+                    if (idx != -1)
+                    {
+                        _accounts.RemoveAt(idx);
+                        _accounts.Insert(idx, acc);
+                    }
+                    else
+                    {
+                        _accounts.Add(acc);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+
+            BinaryProperties.Save();
+            Analyzer.Update();
+            OnPropertyChanged(nameof(BankAccounts));
+            usingAPISession = false;
+        }
+
+        // UNDONE: Transactions도 저장하자
         public void Deserialize(BinaryReader reader)
         {
             // access token
@@ -115,7 +146,12 @@ namespace FinancialManagementProgram.kftcAPI
             if (reader.ReadBoolean())
                 _user_ci = reader.ReadString();
 
-            RefreshAccountData();
+            // accounts
+            int account_len = reader.ReadInt32();
+            _accounts.Clear();
+            for (int i = 0; i < account_len; i++)
+                _accounts.Add(new BankAccount(reader));
+            OnPropertyChanged(nameof(BankAccounts));
         }
 
         public void Serialize(BinaryWriter writer)
@@ -124,7 +160,7 @@ namespace FinancialManagementProgram.kftcAPI
             writer.Write(AccessToken != null);
             if (AccessToken != null)
                 AccessToken.Serialize(writer);
-            
+
             // budget
             writer.Write(Budget);
 
@@ -132,6 +168,11 @@ namespace FinancialManagementProgram.kftcAPI
             writer.Write(_user_ci != null);
             if (_user_ci != null)
                 writer.Write(_user_ci);
+
+            // accounts
+            writer.Write(_accounts.Count);
+            foreach (BankAccount account in _accounts)
+                account.Serialize(writer);
         }
 
 
@@ -145,11 +186,11 @@ namespace FinancialManagementProgram.kftcAPI
             get => _accessToken;
             private set => _accessToken = value;
         }
-        
+
         public long Budget
         {
             get => _budget;
-            private set 
+            private set
             {
                 if (_budget != value)
                 {
@@ -166,7 +207,7 @@ namespace FinancialManagementProgram.kftcAPI
         public DateTime TargetDate
         {
             get => _targetDate;
-            private set 
+            private set
             {
                 if (_targetDate != value)
                 {
@@ -185,7 +226,7 @@ namespace FinancialManagementProgram.kftcAPI
 
         public static APIDataManager Current
         {
-            get => _instance.Value; 
+            get => _instance.Value;
         }
     }
 }

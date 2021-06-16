@@ -9,10 +9,10 @@
         xmlns:tabvm="clr-namespace:FinancialManagementProgram.ViewModels.Tabs"
         xmlns:tab="clr-namespace:FinancialManagementProgram.Tabs"
         mc:Ignorable="d"
-        WindowStyle="None" ResizeMode="NoResize"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize"
         MouseDown="Window_MouseDown"
         Style="{StaticResource DefaultWindowStyle}"
-        Title="Account Book App" Height="520" Width="960">
+        Title="Account Book App" Height="540" Width="980">
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
@@ -33,7 +33,11 @@
             <tab:SettingsTab />
         </DataTemplate>
     </Window.Resources>
-    <Grid Background="{DynamicResource BackgroundColor}">
+    <Grid Background="{DynamicResource BackgroundColor}" Margin="8">
+        <Grid.Effect>
+            <DropShadowEffect Color="Gray" BlurRadius="8" Direction="-90"
+                              RenderingBias="Quality" ShadowDepth="0"/>
+        </Grid.Effect>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
@@ -70,14 +74,27 @@
             </StackPanel>
         </md:Card>
 
-        <!-- Exit button -->
-        <Button Style="{StaticResource MaterialDesignIconForegroundButton}" 
-                Width="40" Height="40" Margin="8" Grid.Column="1"
-                Foreground="{DynamicResource TextColor}"
-                HorizontalAlignment="Right" 
-                VerticalAlignment="Top" 
-                Click="ExitButton_Click">
-            <md:PackIcon Kind="Close" />
-        </Button>
+        <StackPanel Grid.Column="1" Margin="8"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right" >
+            
+            <!-- Synchronize button -->
+            <Button Style="{StaticResource MaterialDesignIconForegroundButton}" 
+                    Width="40" Height="40"
+                    Foreground="{DynamicResource TextColor}"
+                    Command="{Binding SyncCommand}"
+                    ToolTip="동기화">
+                <md:PackIcon Kind="Refresh" />
+            </Button>
+            
+            <!-- Exit button -->
+            <Button Style="{StaticResource MaterialDesignIconForegroundButton}" 
+                    Width="40" Height="40"
+                    Foreground="{DynamicResource TextColor}"
+                    Command="{Binding ExitCommand}">
+                <md:PackIcon Kind="Close" />
+            </Button>
+        </StackPanel>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
-﻿using FinancialManagementProgram.ViewModels.Tabs;
+﻿using FinancialManagementProgram.kftcAPI;
+using FinancialManagementProgram.ViewModels.Tabs;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,9 @@ namespace FinancialManagementProgram.ViewModels
             }
         }
 
+        public ICommand SyncCommand => new RelayCommand(() => APIDataManager.Current.RefreshAccountData());
+        public ICommand ExitCommand => new RelayCommand(() => App.Current.Shutdown());
+
         private readonly TabItem[] _tabs;
         public TabItem[] TabItems
         {
@@ -53,6 +57,7 @@ namespace FinancialManagementProgram.ViewModels
             SelectedTabItemIndex = 0;
         }
 
+        // TODO Snackbar 추가해서 logger.error, warn 처리하기
         static MainViewModel()
         {
             SnackMessageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(2));

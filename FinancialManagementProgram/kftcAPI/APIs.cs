@@ -20,7 +20,7 @@ namespace FinancialManagementProgram.kftcAPI
     static class APIs
     {
         private static readonly Random Rand = new Random();
-        private static readonly string Host = "https://testapi.openbanking.or.kr/";
+        private static readonly string Host = "https://openapi.openbanking.or.kr/";
         private static readonly string State = "wdWkTPVdX7aftsVKh4kheoajbdK4ei2Z"; // must be 32 bytes
         private static readonly string ClientID = "e897ea89-1499-4553-b058-740b58db251b";
         private static readonly string ClientSecret = "9f842eb0-c9d3-46d6-98ac-9aced3bda268";
@@ -63,6 +63,18 @@ namespace FinancialManagementProgram.kftcAPI
             }
         }
 
+        public static async Task<UserAccessToken> RefreshAccessToken(UserAccessToken token)
+        {
+            string param = string.Format("client_id={0}&client_secret={1}&refresh_token={2}&scope=login+inquiry&grant_type=refresh_token", 
+                ClientID, ClientSecret, token.RefreshToken);
+            string data = await Post(Host + "oauth/2.0/token", param);
+
+            JObject obj = JObject.Parse(data);
+            if (!obj.ContainsKey("access_token"))
+                throw new IOException(obj.Value<string>("rsp_message"));
+            return new UserAccessToken(obj);
+        }
+
         public static async Task<long> GetAccountDetails(BankAccount account, UserAccessToken userToken, int offset, string fromDate)
         {
             string currentDate = CurrentDate();
@@ -81,6 +93,12 @@ namespace FinancialManagementProgram.kftcAPI
 
         private static void OnAuthCallback(string query, TaskCompletionSource<UserAccessToken> tcs)
         {
+            if (query == null)
+            {
+                tcs.SetException(new IOException("예기치 못한 오류가 발생했습니다."));
+                return;
+            }
+
             Dictionary<string, string> parameters = ParseParameter(query);
             if (parameters.ContainsKey("error"))
             {

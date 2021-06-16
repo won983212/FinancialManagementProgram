@@ -29,6 +29,7 @@
                        Margin="0,0,4,0" />
             <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
                     Foreground="{DynamicResource TextColor}"
+                    Command="{Binding AddCommand}"
                     Width="30" Height="30">
                 <md:PackIcon Kind="Add"/>
             </Button>
@@ -124,7 +125,6 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Foreground="{DynamicResource HeaderTextColor}"
                                FontSize="12pt"
@@ -137,14 +137,12 @@
                     <TextBlock Grid.Row="1" Style="{StaticResource InfoValueText}" Text="{Binding AccountNum}" />
                     <TextBlock Grid.Row="2" Style="{StaticResource InfoTitleText}">잔액</TextBlock>
                     <TextBlock Grid.Row="2" Style="{StaticResource InfoValueText}" Text="{Binding BalanceAmount, StringFormat={}{0:#,##;-#,##;0} 원}"/>
-                    <TextBlock Grid.Row="3" Style="{StaticResource InfoTitleText}">계좌 별명</TextBlock>
-                    <TextBlock Grid.Row="3" Style="{StaticResource InfoValueText}" Text="{Binding AccountAlias}"/>
-                    <TextBlock Grid.Row="4" Style="{StaticResource InfoTitleText}">은행 이름</TextBlock>
-                    <TextBlock Grid.Row="4" Style="{StaticResource InfoValueText}" Text="{Binding BankName}"/>
-                    <TextBlock Grid.Row="5" Style="{StaticResource InfoTitleText}">마지막 동기화</TextBlock>
-                    <TextBlock Grid.Row="5" Style="{StaticResource InfoValueText}" Text="{Binding LastSyncDate, Converter={StaticResource DatetimeDifferenceConverter}}"/>
-                    <TextBlock Grid.Row="6" Style="{StaticResource InfoTitleText}">메모</TextBlock>
-                    <TextBlock Grid.Row="6" Style="{StaticResource InfoValueText}" Text="{Binding Memo}"/>
+                    <TextBlock Grid.Row="3" Style="{StaticResource InfoTitleText}">은행 이름</TextBlock>
+                    <TextBlock Grid.Row="3" Style="{StaticResource InfoValueText}" Text="{Binding BankName}"/>
+                    <TextBlock Grid.Row="4" Style="{StaticResource InfoTitleText}">마지막 동기화</TextBlock>
+                    <TextBlock Grid.Row="4" Style="{StaticResource InfoValueText}" Text="{Binding LastSyncDate, Converter={StaticResource DatetimeDifferenceConverter}}"/>
+                    <TextBlock Grid.Row="5" Style="{StaticResource InfoTitleText}">메모</TextBlock>
+                    <TextBlock Grid.Row="5" Style="{StaticResource InfoValueText}" Text="{Binding Memo}"/>
                 </Grid>
             </md:Card>
         

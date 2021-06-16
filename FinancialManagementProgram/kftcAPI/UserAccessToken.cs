@@ -11,14 +11,14 @@ namespace FinancialManagementProgram.kftcAPI
     public class UserAccessToken
     {
         public string AccessToken { get; }
-        public long ExpiresIn { get; }
+        public DateTime ExpiresAt { get; }
         public string RefreshToken { get; }
         public string UserSeqNo { get; }
 
         public UserAccessToken(BinaryReader reader)
         {
             AccessToken = reader.ReadString();
-            ExpiresIn = reader.ReadInt64();
+            ExpiresAt = new DateTime(reader.ReadInt64());
             RefreshToken = reader.ReadString();
             UserSeqNo = reader.ReadString();
         }
@@ -26,7 +26,7 @@ namespace FinancialManagementProgram.kftcAPI
         public UserAccessToken(JObject obj)
         {
             AccessToken = obj.Value<string>("access_token");
-            ExpiresIn = obj.Value<long>("expires_in");
+            ExpiresAt = DateTime.Now.AddSeconds(obj.Value<long>("expires_in"));
             RefreshToken = obj.Value<string>("refresh_token");
             UserSeqNo = obj.Value<string>("user_seq_no");
         }
@@ -34,7 +34,7 @@ namespace FinancialManagementProgram.kftcAPI
         public void Serialize(BinaryWriter writer)
         {
             writer.Write(AccessToken);
-            writer.Write(ExpiresIn);
+            writer.Write(ExpiresAt.Ticks);
             writer.Write(RefreshToken);
             writer.Write(UserSeqNo);
         }

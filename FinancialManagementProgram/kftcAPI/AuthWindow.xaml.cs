@@ -11,13 +11,20 @@ namespace FinancialManagementProgram.kftcAPI
     {
         public delegate void AuthCallback(string query);
 
-        private readonly AuthCallback callback;
+        private AuthCallback callback;
 
         public AuthWindow(string url, AuthCallback callback)
         {
             InitializeComponent();
             webBrowser.Source = new Uri(url);
+            Closed += AuthWindow_Closed;
             this.callback = callback;
+        }
+
+        private void AuthWindow_Closed(object sender, EventArgs e)
+        {
+            if (callback != null)
+                callback(null);
         }
 
         private void webBrowser_NavigationStarting(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs e)
@@ -25,11 +32,14 @@ namespace FinancialManagementProgram.kftcAPI
             Uri uri = new Uri(e.Uri);
             if (uri.Host == "localhost")
             {
+                if (callback != null)
+                {
+                    callback(uri.Query);
+                    callback = null;
+                }
+
                 e.Cancel = true;
                 Close();
-
-                if (callback != null)
-                    callback(uri.Query);
             }
         }
     }

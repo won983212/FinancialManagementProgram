@@ -36,6 +36,18 @@ namespace FinancialManagementProgram.kftcAPI
         public DateTime TransDateTime { get; }
         public long AfterBalanceAmount { get; }
 
+        public override bool Equals(object obj)
+        {
+            if (obj == null || obj is Transaction == false)
+                return false;
+            Transaction target = (Transaction)obj;
+            return TransDateTime == target.TransDateTime && Label == target.Label && Amount == target.Amount;
+        }
+
+        public override int GetHashCode()
+        {
+            return TransDateTime.GetHashCode();
+        }
 
         public string FormattedTransDate
         {
