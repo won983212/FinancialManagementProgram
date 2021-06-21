@@ -1,12 +1,7 @@
-﻿using FinancialManagementProgram.kftcAPI;
+﻿using FinancialManagementProgram.Data;
 using FinancialManagementProgram.ViewModels.Tabs;
 using MaterialDesignThemes.Wpf;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace FinancialManagementProgram.ViewModels
@@ -34,7 +29,6 @@ namespace FinancialManagementProgram.ViewModels
             }
         }
 
-        public ICommand SyncCommand => new RelayCommand(() => APIDataManager.Current.RefreshAccountData());
         public ICommand ExitCommand => new RelayCommand(() => App.Current.Shutdown());
 
         private readonly TabItem[] _tabs;
@@ -43,12 +37,12 @@ namespace FinancialManagementProgram.ViewModels
             get => _tabs;
         }
 
-        public MainViewModel()
+        public MainViewModel() : base(null, DataManager.Current)
         {
             _tabs = new TabItem[] // Tab이 만들어지면 여기에 추가
             {
                 new TabItem(){ Title = "대시보드", IconName = "ViewDashboard", ViewModel = new DashboardTabVM(this) },
-                new TabItem(){ Title = "통장 관리", IconName = "CreditCardOutline", ViewModel = new AccountManagementTabVM(this) },
+                new TabItem(){ Title = "자산 관리", IconName = "CreditCardOutline", ViewModel = new AccountManagementTabVM(this) },
                 new TabItem(){ Title = "수입 및 지출", IconName = "History", ViewModel = new TransactionTabVM(this) },
                 new TabItem(){ Title = "지출 분석", IconName = "ChartTimelineVariantShimmer", ViewModel = new AnalyzeTabVM(this) },
                 //new TabItem(){ Title = "설정", IconName = "Cog", ViewModel = new SettingsTabVM(this) }

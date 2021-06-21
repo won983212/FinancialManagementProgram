@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:control="clr-namespace:FinancialManagementProgram.Controls"
-             xmlns:api="clr-namespace:FinancialManagementProgram.kftcAPI"
              xmlns:converter="clr-namespace:FinancialManagementProgram.Converters"
              xmlns:componentmodel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
              mc:Ignorable="d" 
@@ -33,7 +32,7 @@
         <!-- Transaction History Panel -->
         <md:Card Grid.Row="1" Width="310" Margin="12,36,12,12">
             <md:Card.Resources>
-                <CollectionViewSource x:Key="view" Source="{Binding Analyzer.MonthlyTransactions, Source={x:Static api:APIDataManager.Current}}">
+                <CollectionViewSource x:Key="view" Source="{Binding DataManager.Analyzer.MonthlyTransactions}">
                     <CollectionViewSource.GroupDescriptions>
                         <PropertyGroupDescription PropertyName="FormattedTransDate"/>
                     </CollectionViewSource.GroupDescriptions>
@@ -97,7 +96,7 @@
                                        HorizontalAlignment="Right"
                                        Margin="0,0,0,4"
                                        Foreground="{Binding Amount, Converter={StaticResource BalanceToBrushConverter}}"
-                                       Text="{Binding Amount, StringFormat={}{0:+#,##원;-#,##원;0}}" />
+                                       Text="{Binding Amount, StringFormat='{}{0:+#,##원;-#,##원;0}'}" />
                             <TextBlock Grid.Column="2" Grid.Row="1"
                                        FontSize="7.5pt"
                                        HorizontalAlignment="Right"
@@ -125,17 +124,17 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.ColumnSpan="2" FontSize="15pt" Text="{Binding TargetDate, Source={x:Static api:APIDataManager.Current}, StringFormat=MMMM}"/>
+                <TextBlock Grid.ColumnSpan="2" FontSize="15pt" Text="{Binding DataManager.TargetDate, StringFormat=MMMM}"/>
                 <TextBlock Grid.Row="1" Opacity="0.5" Text="수입"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Analyzer.MonthlyTotalIncoming, Source={x:Static api:APIDataManager.Current}, StringFormat={}{0:#,##원;;없음}}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataManager.Analyzer.MonthlyTotalIncoming, StringFormat='{}{0:#,##원;;없음}'}"/>
                 <TextBlock Grid.Row="2" Opacity="0.5" Margin="0,6,4,0" Text="지출"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" Text="{Binding Analyzer.MonthlyTotalSpending, Source={x:Static api:APIDataManager.Current}, StringFormat={}{0:#,##원;;없음}}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Bottom" Text="{Binding DataManager.Analyzer.MonthlyTotalSpending, StringFormat='{}{0:#,##원;;없음}'}"/>
                 <StackPanel Grid.Column="2" Grid.RowSpan="3"
                             HorizontalAlignment="Right" 
                             VerticalAlignment="Center"
                             Margin="0,0,4,0">
                     <TextBlock Opacity="0.5" Text="예산 사용률"/>
-                    <TextBlock HorizontalAlignment="Right" FontSize="18pt" FontWeight="Light" Text="{Binding Analyzer.BudgetUsagePercent, StringFormat={}{0}%, Source={x:Static api:APIDataManager.Current}}"/>
+                    <TextBlock HorizontalAlignment="Right" FontSize="18pt" FontWeight="Light" Text="{Binding DataManager.Analyzer.BudgetUsagePercent, StringFormat='{}{0}%'}"/>
                 </StackPanel>
             </Grid>
         </md:Card>
@@ -143,7 +142,7 @@
         <!-- Transaction Calendar View -->
         <md:Card Grid.Row="1" Grid.Column="1" Margin="0,0,12,12">
             <Grid>
-                <control:TransactionCalendar Date="{Binding TargetDate, Source={x:Static api:APIDataManager.Current}}" Margin="8"/>
+                <control:TransactionCalendar Date="{Binding DataManager.TargetDate}" Margin="8"/>
             </Grid>
         </md:Card>
     </Grid>

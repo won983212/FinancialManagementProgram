@@ -1,21 +1,11 @@
-﻿using FinancialManagementProgram.kftcAPI;
-using System;
+﻿using FinancialManagementProgram.Data;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FinancialManagementProgram.Controls
 {
@@ -52,7 +42,8 @@ namespace FinancialManagementProgram.Controls
         {
             TransactionChartDataList obj = d as TransactionChartDataList;
             var value = e.NewValue as IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>>;
-            obj.BuildCategoryEntites(value);
+            if (value != null)
+                obj.BuildCategoryEntites(value);
         }
 
         private void BuildCategoryEntites(IEnumerable<KeyValuePair<TransactionCategory, TransactionGroup>> data)

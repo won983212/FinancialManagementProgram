@@ -1,19 +1,10 @@
-﻿using FinancialManagementProgram.kftcAPI;
+﻿using FinancialManagementProgram.Data;
 using MaterialDesignThemes.Wpf;
 using System;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FinancialManagementProgram.Controls
 {
@@ -124,7 +115,7 @@ namespace FinancialManagementProgram.Controls
 
         private void UpdateCalendar(DateTime firstDate)
         {
-            int offset = (int) firstDate.DayOfWeek;
+            int offset = (int)firstDate.DayOfWeek;
             int days = CommonUtil.GetTotalDays(firstDate);
             int lastMonthDays = CommonUtil.GetTotalDays(firstDate.Year, 12 - ((13 - firstDate.Month) % 12));
 
@@ -141,12 +132,12 @@ namespace FinancialManagementProgram.Controls
             {
                 int index = 7 + offset + d;
                 DateTime date = new DateTime(firstDate.Year, firstDate.Month, d + 1);
-                TransactionGroup transaction = APIDataManager.Current.Analyzer.GetDayTransaction(date.ToString("yyyyMMdd"));
+                TransactionGroup transaction = DataManager.Current.Analyzer.GetDayTransaction(CommonUtil.GetIntegerDate(date));
 
                 // set digit number
                 TextBlock label = GetTextblockAt(index, 0);
                 Border border = (Border)((Ripple)Children[index]).Content;
-                if(date == DateTime.Today)
+                if (date == DateTime.Today)
                 {
                     border.BorderThickness = new Thickness(2);
                     label.Foreground = TodayBrush;

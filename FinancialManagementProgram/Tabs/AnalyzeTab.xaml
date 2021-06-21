@@ -5,7 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:api="clr-namespace:FinancialManagementProgram.kftcAPI"
              xmlns:control="clr-namespace:FinancialManagementProgram.Controls"
              xmlns:converter="clr-namespace:FinancialManagementProgram.Converters"
              mc:Ignorable="d"
@@ -14,7 +13,7 @@
         <converter:IncreasingRateToBrushConverter x:Key="IncreasingRateToBrushConverter" />
         <converter:SimplifyBudgetUnitConverter x:Key="SimplifyBudgetUnitConverter" />
     </UserControl.Resources>
-    <Grid DataContext="{Binding Source={x:Static api:APIDataManager.Current}}">
+    <Grid DataContext="{Binding DataManager}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
@@ -27,8 +26,8 @@
         <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TextblockTabHeader}" Margin="20" Text="지출 분석"/>
 
         <!-- status of budget panel -->
-        <md:Card Grid.Row="1" Margin="8,0,8,8">
-            <Grid Margin="16,20">
+        <md:Card Grid.Row="1" Margin="12,0,12,12">
+            <Grid Margin="16,16">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
@@ -48,7 +47,7 @@
                            HorizontalAlignment="Center"
                            FontSize="14pt"
                            Foreground="{DynamicResource HeaderTextColor}"
-                           Text="{Binding TargetDate, StringFormat=MMMM}"/>
+                           Text="{Binding TargetDate, StringFormat='MMMM'}"/>
                 <Separator Grid.Row="1"
                            Grid.ColumnSpan="2"
                            Margin="0,20"
@@ -59,7 +58,7 @@
                     <TextBlock HorizontalAlignment="Right"
                                Margin="0,0,0,8"
                                Foreground="{DynamicResource TextColor}"
-                               Text="{Binding Budget, StringFormat={}{0:#,##원}}"/>
+                               Text="{Binding Budget, StringFormat='{}{0:#,##원}'}"/>
                     <ProgressBar Height="6"
                                  Foreground="{DynamicResource Primary}"
                                  Background="{DynamicResource BorderColor}"
@@ -77,7 +76,7 @@
                            Margin="0,8,0,28"
                            Foreground="{DynamicResource TextColor}">
                     <Run>지출</Run>
-                    <Run FontWeight="Bold" Text="{Binding Analyzer.MonthlyTotalSpending, Mode=OneWay, StringFormat={}{0:#,##원;;없음}}"/>
+                    <Run FontWeight="Bold" Text="{Binding Analyzer.MonthlyTotalSpending, Mode=OneWay, StringFormat='{}{0:#,##원;;없음}'}"/>
                 </TextBlock>
                 <Button Grid.Row="3"
                         Grid.Column="1"
@@ -98,7 +97,7 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource HeaderTextColor}"
-                           Text="{Binding Analyzer.MonthlyTotalSpending, StringFormat={}{0:#,##원;;없음}}"/>
+                           Text="{Binding Analyzer.MonthlyTotalSpending, StringFormat='{}{0:#,##원;;없음}'}"/>
                 
                 <TextBlock Grid.Row="5"
                            VerticalAlignment="Center"
@@ -110,7 +109,7 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource HeaderTextColor}"
-                           Text="{Binding Analyzer.RemainingBudget, StringFormat={}{0:#,##원;-#,##원;없음}}"/>
+                           Text="{Binding Analyzer.RemainingBudget, StringFormat='{}{0:#,##원;-#,##원;없음}'}"/>
 
                 <TextBlock Grid.Row="6"
                            VerticalAlignment="Center"
@@ -122,7 +121,7 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource HeaderTextColor}"
-                           Text="{Binding Analyzer.RecommendedSpendingInDay, StringFormat={}{0:#,##원;\\0원;\\0원}}"/>
+                           Text="{Binding Analyzer.RecommendedSpendingInDay, StringFormat='{}{0:#,##원;\\0원;\\0원}'}"/>
 
                 <TextBlock Grid.Row="7"
                            VerticalAlignment="Center"
@@ -134,12 +133,12 @@
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{DynamicResource HeaderTextColor}"
-                           Text="{Binding Analyzer.PredictSpendingThisMonth, StringFormat={}{0:#,##원;;\\0원}}"/>
+                           Text="{Binding Analyzer.PredictSpendingThisMonth, StringFormat='{}{0:#,##원;;\\0원}'}"/>
             </Grid>
         </md:Card>
 
         <!-- analyzing total transaction changes panel -->
-        <md:Card Grid.Row="2" Margin="8,0,8,8">
+        <md:Card Grid.Row="2" Margin="12,0,12,12">
             <Grid Margin="16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
@@ -271,7 +270,7 @@
         
         <!-- categorized transaction pie chart -->
         <md:Card Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" 
-                 Margin="0,0,8,8" Width="300">
+                 Margin="0,0,12,12" Width="300">
             <StackPanel Margin="20,16">
                 <TextBlock FontSize="12pt" 
                        Foreground="{DynamicResource HeaderTextColor}"

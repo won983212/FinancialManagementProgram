@@ -6,13 +6,10 @@
              xmlns:control="clr-namespace:FinancialManagementProgram.Controls"
              xmlns:converter="clr-namespace:FinancialManagementProgram.Converters"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:api="clr-namespace:FinancialManagementProgram.kftcAPI"
+             xmlns:api="clr-namespace:FinancialManagementProgram.Data"
              mc:Ignorable="d" 
              d:DesignHeight="520" d:DesignWidth="760">
-    <UserControl.Resources>
-        <converter:AccountTotalAmountConverter x:Key="AccountTotalAmountConverter" />
-    </UserControl.Resources>
-    <Grid Margin="20" DataContext="{Binding Source={x:Static api:APIDataManager.Current}}">
+    <Grid Margin="20" DataContext="{Binding DataManager}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -28,15 +25,15 @@
         <UniformGrid Grid.Row="1" Rows="1" Columns="4" Margin="0,0,-12,12">
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource Primary}"
-                                   Title="총 자산 합계"
-                                   ValueText="{Binding BankAccounts, Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;\\0}원}"
-                                   SubIconKind="Wallet"
+                                   Title="남은 예산"
+                                   ValueText="{Binding Analyzer.RemainingBudget, StringFormat='{}{0:#,##;-#,##;\\0}원'}"
+                                   SubIconKind="PiggyBank"
                                    IconKind="CurrencyUsd"
-                                   SubcontentText="{Binding Items.Count, ElementName=listAccounts, StringFormat=추가된 계좌 {0}개}"/>
+                                   SubcontentText="{Binding Budget, StringFormat='총 예산 {0:#,##;-#,##;\\0}원'}"/>
             <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource ErrorColor}"
                                    Title="이번달 예상 지출"
-                                   ValueText="{Binding Analyzer.PredictSpendingThisMonth, StringFormat={}{0:#,##;-#,##;\\0}원}"
+                                   ValueText="{Binding Analyzer.PredictSpendingThisMonth, StringFormat='{}{0:#,##;-#,##;\\0}원'}"
                                    SubIconKind="TrendingUp"
                                    IconKind="CartOutline">
                 <control:DashboardCard.SubcontentText>
@@ -47,19 +44,19 @@
                 </control:DashboardCard.SubcontentText>
             </control:DashboardCard>
             <control:DashboardCard Margin="0,0,12,0"
-                                   IconBackgroundBrush="{DynamicResource SuccessfulColor}"
-                                   Title="남은 예산"
-                                   ValueText="{Binding Analyzer.RemainingBudget, StringFormat={}{0:#,##;-#,##;\\0}원}"
-                                   SubIconKind="PiggyBank"
-                                   IconKind="CashMultiple"
-                                   SubcontentText="{Binding Budget, StringFormat=총 예산 {0:#,##;-#,##;\\0}원}"/>
-            <control:DashboardCard Margin="0,0,12,0"
                                    IconBackgroundBrush="{DynamicResource WarningColor}"
                                    Title="하루 권장 지출"
-                                   ValueText="{Binding Analyzer.RecommendedSpendingInDay, StringFormat={}{0:#,##;\\0;\\0}원}"
+                                   ValueText="{Binding Analyzer.RecommendedSpendingInDay, StringFormat='{}{0:#,##;\\0;\\0}원'}"
                                    SubIconKind="TimerSand"
                                    IconKind="ClipboardCheckOutline"
                                    SubcontentText="남은 예산 기준임"/>
+            <control:DashboardCard Margin="0,0,12,0"
+                                   IconBackgroundBrush="{DynamicResource SuccessfulColor}"
+                                   Title="이번달 수입"
+                                   ValueText="{Binding Analyzer.MonthlyTotalIncoming, Mode=OneWay, StringFormat='{}{0:#,##원;;없음}'}"
+                                   SubIconKind="Wallet"
+                                   IconKind="CashMultiple"
+                                   SubcontentText="{Binding Items.Count, ElementName=listAccounts, StringFormat='추가된 계좌 {0}개'}"/>
         </UniformGrid>
 
         <Grid Grid.Row="2">
@@ -85,7 +82,7 @@
                     <TextBlock Grid.ColumnSpan="2" 
                                Foreground="{DynamicResource HeaderTextColor}"
                                FontSize="12pt"
-                               Text="자산별 잔액 현황" />
+                               Text="자산별 지출 현황" />
                     <Separator Grid.Row="1" Grid.ColumnSpan="2" 
                                Margin="0,16,0,8"
                                Background="{DynamicResource BorderColor}"/>
@@ -126,7 +123,7 @@
                                                Text="{Binding Label}" />
                                     <TextBlock Grid.Column="2" 
                                                Foreground="{DynamicResource HeaderTextColor}"
-                                               Text="{Binding BalanceAmount, StringFormat={}{0:#,##;-#,##;0}원}" />
+                                               Text="{Binding MonthlyTransactions.TotalSpending, StringFormat='{}{0:#,##;-#,##;0} 원'}" />
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
@@ -140,7 +137,7 @@
                     <TextBlock Grid.Row="4" Grid.Column="1" 
                                FontWeight="Bold"
                                Foreground="{DynamicResource HeaderTextColor}"
-                               Text="{Binding BankAccounts, Converter={StaticResource AccountTotalAmountConverter}, StringFormat={}{0:#,##;-#,##;0}원}"/>
+                               Text="{Binding Analyzer.MonthlyTotalSpending, Mode=OneWay, StringFormat='{}{0:#,## 원;;0 원}'}"/>
                 </Grid>
             </md:Card>
             
@@ -161,7 +158,7 @@
                                Foreground="{DynamicResource HeaderTextColor}"
                                FontWeight="Light"
                                FontSize="18pt"
-                               Text="{Binding Analyzer.MonthlyTotalSpending, Mode=OneWay, StringFormat={}{0:#,##원;;없음}}" />
+                               Text="{Binding Analyzer.MonthlyTotalSpending, Mode=OneWay, StringFormat='{}{0:#,##원;;없음}'}" />
                     <Separator Grid.Row="2" 
                                Grid.ColumnSpan="2" 
                                Margin="0,12"
@@ -184,7 +181,7 @@
                                                           Grid.Column="1"
                                                           Margin="16,0,0,0"
                                                           VerticalAlignment="Center"
-                                                          CategorizedTransaction="{Binding Analyzer.CategorizedTransactions, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                          CategorizedTransaction="{Binding Analyzer.CategorizedTransactions, Mode=OneWay}"/>
                         <control:TransactionChart ChartDatas="{Binding ChartDatas, Mode=OneWay, ElementName=chartDataList}" />
                     </Grid>
                 </Grid>

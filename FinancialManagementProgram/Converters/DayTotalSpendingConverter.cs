@@ -1,10 +1,6 @@
-﻿using FinancialManagementProgram.kftcAPI;
+﻿using FinancialManagementProgram.Data;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace FinancialManagementProgram.Converters
@@ -17,7 +13,7 @@ namespace FinancialManagementProgram.Converters
             if (value == null || value is string == false)
                 return null;
 
-            TransactionGroup transaction = APIDataManager.Current.Analyzer.GetDayTransaction((string)value);
+            TransactionGroup transaction = DataManager.Current.Analyzer.GetDayTransaction(int.Parse((string)value));
             if (transaction == null)
                 return "0원";
 

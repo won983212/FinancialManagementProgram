@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
@@ -20,7 +16,7 @@ namespace FinancialManagementProgram.Converters
             long lastWeekSpending = (long)values[1];
             string colorResource = "Primary";
 
-            if (lastWeekSpending != 0 && spending > lastWeekSpending)
+            if (lastWeekSpending == 0 || spending > lastWeekSpending)
                 colorResource = "ErrorColor";
 
             return App.Current.FindResource(colorResource);

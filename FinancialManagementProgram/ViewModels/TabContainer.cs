@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FinancialManagementProgram.Data;
 
 namespace FinancialManagementProgram.ViewModels
 {
@@ -20,12 +16,12 @@ namespace FinancialManagementProgram.ViewModels
             }
         }
 
-        public TabContainer()
-            : this(null)
-        { }
-
         public TabContainer(TabContainer parent)
             : base(parent)
+        { }
+
+        public TabContainer(TabContainer parent, DataManager dataManager)
+            : base(parent, dataManager)
         { }
     }
 }

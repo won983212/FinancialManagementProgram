@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace FinancialManagementProgram
 {
@@ -32,6 +31,16 @@ namespace FinancialManagementProgram
         public static bool IsLeapYear(int year)
         {
             return year % 400 == 0 || year % 4 == 0 && year % 100 > 0;
+        }
+
+        public static int GetIntegerDate(DateTime date)
+        {
+            return date.Year * 10000 + date.Month * 100 + date.Day;
+        }
+
+        public static DateTime ParseDatetimeFromIntDate(int date)
+        {
+            return new DateTime(date / 10000, (date / 100) % 100, date % 100);
         }
 
         #endregion

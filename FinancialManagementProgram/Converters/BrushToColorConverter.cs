@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -16,8 +12,8 @@ namespace FinancialManagementProgram.Converters
         {
             if (value == null)
                 return null;
-            
-            if(value is SolidColorBrush)
+
+            if (value is SolidColorBrush)
                 return ((SolidColorBrush)value).Color;
 
             throw new InvalidOperationException("Unsupported brush type: " + value.GetType());

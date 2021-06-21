@@ -5,14 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:ctrl="clr-namespace:FinancialManagementProgram.Controls"
-             xmlns:api="clr-namespace:FinancialManagementProgram.kftcAPI"
              xmlns:converter="clr-namespace:FinancialManagementProgram.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="520" d:DesignWidth="760">
     <UserControl.Resources>
         <converter:DatetimeDifferenceConverter x:Key="DatetimeDifferenceConverter" />
     </UserControl.Resources>
-    <Grid>
+    <Grid x:Name="pnlContent">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
@@ -23,7 +22,7 @@
                     Grid.ColumnSpan="2"
                     Margin="20,20,20,40"
                     VerticalAlignment="Top">
-            <TextBlock Text="통장 관리"
+            <TextBlock Text="자산 관리"
                        Style="{StaticResource TextblockTabHeader}"
                        VerticalAlignment="Center"
                        Margin="0,0,4,0" />
@@ -42,66 +41,68 @@
                    Foreground="{DynamicResource TextColor}"
                    FontWeight="Light"
                    FontSize="20pt"
-                   Visibility="{Binding BankAccounts.Count, Source={x:Static api:APIDataManager.Current}, Converter={StaticResource ZeroToVisibilityConverter}}"
+                   Visibility="{Binding DataManager.BankAccounts.Count, Converter={StaticResource ZeroToVisibilityConverter}}"
                    Text="등록된 통장이 없습니다." />
 
         <Grid Grid.Row="1" 
-              Visibility="{Binding BankAccounts.Count, Source={x:Static api:APIDataManager.Current}, Converter={StaticResource ZeroToVisibilityConverter}, ConverterParameter=Invert}">
+              Visibility="{Binding DataManager.BankAccounts.Count, Converter={StaticResource ZeroToVisibilityConverter}, ConverterParameter=Invert}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
             <!-- Card Control Panel -->
-            <md:Card Margin="12,56,12,12" Width="230">
-                <Grid Margin="16,95,16,0">
+            <md:Card Grid.Row="1" Margin="12,0,0,12">
+                <Grid Margin="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Grid Margin="0,0,0,16">
-                        <TextBlock VerticalAlignment="Center">이번달 수입</TextBlock>
-                        <TextBlock HorizontalAlignment="Right"
-                                   FontWeight="Bold"
-                                   FontSize="10.5pt"
-                                   Foreground="{DynamicResource Primary}"
-                                   Text="{Binding AccountTotalIncoming, StringFormat={}{0:+ #,##원;;없음}}"/>
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <TextBlock VerticalAlignment="Center">이번달 지출</TextBlock>
-                        <TextBlock HorizontalAlignment="Right"
-                                   FontWeight="Bold"
-                                   FontSize="10.5pt"
-                                   Foreground="{DynamicResource ErrorColor}"
-                                   Text="{Binding AccountTotalSpending, StringFormat={}{0:- #,##원;;없음}}"/>
-                    </Grid>
-                    <StackPanel Orientation="Horizontal" 
-                                Grid.Row="2"
-                                Margin="0,0,0,8"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom">
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                FontSize="9pt" Padding="0" Margin="0,0,16,0">
-                            메모편집
-                        </Button>
-                        <Button Style="{StaticResource MaterialDesignFlatButton}"
-                                FontSize="9pt" Padding="0">
-                            계좌삭제
-                        </Button>
-                    </StackPanel>
+                    <ctrl:PayCard Grid.RowSpan="2"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Center"
+                                  Margin="0,8"
+                                  BankAccount="{Binding SelectedItem, Mode=OneWay, ElementName=listAccount}"/>
+
+                    <TextBlock Grid.Column="1"
+                               FontSize="12pt" 
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right">이번달 수입</TextBlock>
+                    <TextBlock Grid.Column="2"
+                               VerticalAlignment="Center"
+                               FontWeight="Bold"
+                               FontSize="12pt"
+                               Margin="20,0,32,0"
+                               Foreground="{DynamicResource Primary}"
+                               Text="{Binding AccountTotalIncoming, StringFormat='{}{0:+ #,##원;;없음}'}"/>
+
+                    <TextBlock Grid.Column="1" Grid.Row="1"
+                               FontSize="12pt" 
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Right">이번달 지출</TextBlock>
+                    <TextBlock Grid.Column="2"
+                               Grid.Row="1"
+                               VerticalAlignment="Center"
+                               FontWeight="Bold"
+                               FontSize="12pt"
+                               Margin="20,0,32,0"
+                               Foreground="{DynamicResource ErrorColor}"
+                               Text="{Binding AccountTotalSpending, StringFormat='{}{0:- #,##원;;없음}'}"/>
                 </Grid>
             </md:Card>
-            <ctrl:PayCard VerticalAlignment="Top"
-                          BankAccount="{Binding SelectedValue, Mode=OneWay, ElementName=listAccount}"/>
-        
+
             <!-- Card Information Panel -->
-            <md:Card Grid.Column="1" Margin="0,0,12,12">
-                <Grid Margin="20,20,20,20" DataContext="{Binding SelectedValue, ElementName=listAccount}">
+            <md:Card Margin="12,0,0,12">
+                <Grid Margin="20,28,20,20" DataContext="{Binding SelectedItem, ElementName=listAccount}">
                     <Grid.Resources>
                         <Style x:Key="InfoTitleText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -110,8 +111,16 @@
                         <Style x:Key="InfoValueText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                             <Setter Property="VerticalAlignment" Value="Center"/>
                             <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="Visibility" Value="{Binding DataContext.IsEditing, Converter={StaticResource InverseBoolToVisConverter}, ElementName=pnlContent}" />
                             <Setter Property="Foreground" Value="{DynamicResource HeaderTextColor}"/>
                             <Setter Property="Grid.Column" Value="1"/>
+                        </Style>
+                        <Style x:Key="InfoValueEdit" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="Visibility" Value="{Binding DataContext.IsEditing, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=pnlContent}" />
+                            <Setter Property="Grid.Column" Value="1"/>
+                            <Setter Property="MinWidth" Value="160"/>
                         </Style>
                     </Grid.Resources>
                     <Grid.ColumnDefinitions>
@@ -124,7 +133,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Foreground="{DynamicResource HeaderTextColor}"
                                FontSize="12pt"
@@ -133,44 +142,73 @@
                         <Run Text="{Binding Label, Mode=OneWay}"/>
                         <Run>정보</Run>
                     </TextBlock>
-                    <TextBlock Grid.Row="1" Style="{StaticResource InfoTitleText}">계좌 번호</TextBlock>
-                    <TextBlock Grid.Row="1" Style="{StaticResource InfoValueText}" Text="{Binding AccountNum}" />
-                    <TextBlock Grid.Row="2" Style="{StaticResource InfoTitleText}">잔액</TextBlock>
-                    <TextBlock Grid.Row="2" Style="{StaticResource InfoValueText}" Text="{Binding BalanceAmount, StringFormat={}{0:#,##;-#,##;0} 원}"/>
-                    <TextBlock Grid.Row="3" Style="{StaticResource InfoTitleText}">은행 이름</TextBlock>
-                    <TextBlock Grid.Row="3" Style="{StaticResource InfoValueText}" Text="{Binding BankName}"/>
-                    <TextBlock Grid.Row="4" Style="{StaticResource InfoTitleText}">마지막 동기화</TextBlock>
-                    <TextBlock Grid.Row="4" Style="{StaticResource InfoValueText}" Text="{Binding LastSyncDate, Converter={StaticResource DatetimeDifferenceConverter}}"/>
-                    <TextBlock Grid.Row="5" Style="{StaticResource InfoTitleText}">메모</TextBlock>
-                    <TextBlock Grid.Row="5" Style="{StaticResource InfoValueText}" Text="{Binding Memo}"/>
+                    <TextBlock Grid.Row="1" Style="{StaticResource InfoTitleText}">계좌 별명</TextBlock>
+                    <TextBlock Grid.Row="1" Style="{StaticResource InfoValueText}" Text="{Binding Label}" />
+                    <TextBox Grid.Row="1" Style="{StaticResource InfoValueEdit}" Text="{Binding Label}"/>
+                    <TextBlock Grid.Row="2" Style="{StaticResource InfoTitleText}">은행 이름</TextBlock>
+                    <TextBlock Grid.Row="2" Style="{StaticResource InfoValueText}" Text="{Binding BankName}"/>
+                    <TextBox Grid.Row="2" Style="{StaticResource InfoValueEdit}" Text="{Binding BankName}"/>
+                    <TextBlock Grid.Row="3" Style="{StaticResource InfoTitleText}">메모</TextBlock>
+                    <TextBlock Grid.Row="3" Style="{StaticResource InfoValueText}" Text="{Binding Memo}"/>
+                    <TextBox Grid.Row="3" Style="{StaticResource InfoValueEdit}" Text="{Binding Memo}"/>
+                    <TextBlock Grid.Row="4" Style="{StaticResource InfoTitleText}">색상</TextBlock>
+                    <StackPanel Orientation="Horizontal"
+                                Grid.Column="1" Grid.Row="4"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                Visibility="{Binding DataContext.IsEditing, Converter={StaticResource InverseBoolToVisConverter}, ElementName=pnlContent}">
+                        <Ellipse Width="8" Height="8" Margin="0,0,8,0" Fill="{Binding Color, Converter={StaticResource AccountColorToBrushConverter}}"/>
+                        <TextBlock Foreground="{DynamicResource HeaderTextColor}" Text="{Binding Color}"/>
+                    </StackPanel>
+                    <ComboBox Grid.Column="1" Grid.Row="4"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Right"
+                              MinWidth="160"
+                              SelectedIndex="{Binding DataContext.SelectedAccountColor, ElementName=pnlContent}"
+                              ItemsSource="{Binding DataContext.AccountColorItems, ElementName=pnlContent}"
+                              Visibility="{Binding DataContext.IsEditing, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=pnlContent}" />
+
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Right" 
+                                Margin="0,40,0,0"
+                                Grid.Row="5"
+                                Grid.ColumnSpan="2">
+                        <Button FontSize="9pt"
+                                Command="{Binding DataContext.EditCommand, ElementName=pnlContent}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatButton}">
+                                    <Setter Property="Content" Value="편집"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.IsEditing, ElementName=pnlContent}" Value="True">
+                                            <Setter Property="Content" Value="변경적용"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button Style="{StaticResource MaterialDesignFlatAccentButton}"
+                                Padding="0"
+                                FontSize="9pt">
+                            계좌삭제
+                        </Button>
+                    </StackPanel>
                 </Grid>
             </md:Card>
         
             <!-- Card Listbox -->
-            <ListBox x:Name="listAccount"
-                     Grid.Row="1" 
-                     Grid.ColumnSpan="2"
-                     Margin="12,0,0,12"
-                     SelectedIndex="{Binding SelectedAccountIndex}"
-                     ItemsSource="{Binding BankAccounts, Source={x:Static api:APIDataManager.Current}}">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel IsItemsHost="True" Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.Template>
-                    <ControlTemplate>
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                            <ItemsPresenter />
-                        </ScrollViewer>
-                    </ControlTemplate>
-                </ListBox.Template>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <ctrl:PayCard Grid.Row="1" VerticalAlignment="Top" BankAccount="{Binding Mode=OneWay}" />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <md:Card Grid.Column="1" Grid.RowSpan="2" Margin="12,0,12,12">
+                <ListBox x:Name="listAccount"
+                         Margin="4"
+                         SelectedIndex="{Binding SelectedAccountIndex}"
+                         HorizontalContentAlignment="Stretch"
+                         ItemsSource="{Binding DataManager.BankAccounts}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ctrl:PayCard Grid.Row="1" VerticalAlignment="Top" BankAccount="{Binding Mode=OneWay}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </md:Card>
         </Grid>
     </Grid>
 </UserControl>

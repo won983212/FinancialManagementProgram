@@ -6,43 +6,53 @@
              xmlns:local="clr-namespace:FinancialManagementProgram.Controls"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="120" d:DesignWidth="200">
+             d:DesignHeight="60" d:DesignWidth="220">
     <UserControl.Resources>
         <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="Foreground" Value="White"/>
         </Style>
     </UserControl.Resources>
-    <md:Card Width="200" Height="120" 
-             Padding="12,16,12,12"
+    <md:Card Width="220" Height="60" 
+             Padding="12"
              DataContext="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:PayCard}}}"
              Background="{Binding BankAccount.Color, Converter={StaticResource AccountColorToBrushConverter}}" >
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.ColumnSpan="2" FontSize="10pt" Text="{Binding BankAccount.Label}"/>
-            <TextBlock Grid.Row="1" 
-                       Grid.ColumnSpan="2" 
-                       FontSize="14pt"
-                       VerticalAlignment="Center" Text="{Binding BankAccount.AccountNum}"/>
-            <TextBlock Grid.Row="2" 
+            <TextBlock Grid.RowSpan="2" 
+                       VerticalAlignment="Center" 
+                       FontSize="10pt" 
+                       TextTrimming="CharacterEllipsis"
+                       Margin="0,0,8,0"
+                       Text="{Binding BankAccount.Label}"/>
+
+            <TextBlock Grid.Column="1" 
                        FontSize="7pt" 
                        FontWeight="Light"
-                       Margin="0,0,0,2"
-                       Opacity="0.5">Amount</TextBlock>
-            <TextBlock Grid.Row="3" FontSize="8pt" Text="{Binding BankAccount.BalanceAmount, StringFormat={}{0:C0}}"/>
-            <TextBlock Grid.Row="2" Grid.Column="1" 
+                       VerticalAlignment="Center"
+                       Opacity="0.5">Bank</TextBlock>
+            <TextBlock Grid.Column="3" 
+                       FontSize="8pt" 
+                       VerticalAlignment="Center" 
+                       Text="{Binding BankAccount.BankName}"/>
+
+            <TextBlock Grid.Column="1" Grid.Row="1" 
                        FontSize="7pt" 
                        FontWeight="Light" 
-                       Opacity="0.5">Bank</TextBlock>
-            <TextBlock Grid.Row="3" Grid.Column="1" FontSize="8pt" Text="{Binding BankAccount.BankName}"/>
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,0"
+                       Opacity="0.5">Spends</TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="2" 
+                       FontSize="8pt" 
+                       VerticalAlignment="Center" 
+                       Text="{Binding BankAccount.MonthlyTransactions.TotalSpending, StringFormat='{}{0:#,##;;\\0}원'}"/>
         </Grid>
     </md:Card>
 </UserControl>

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.IO;
 
-namespace FinancialManagementProgram.kftcAPI
+namespace FinancialManagementProgram.Data
 {
-    public class TransactionGroup
+    public class TransactionGroup : IPropertiesSerializable
     {
         internal void AddTransaction(Transaction transaction)
         {
@@ -29,6 +26,21 @@ namespace FinancialManagementProgram.kftcAPI
             Transactions.Clear();
             TotalIncoming = 0;
             TotalSpending = 0;
+        }
+
+        public void Deserialize(BinaryReader reader)
+        {
+            ClearTransactions();
+            int len = reader.ReadInt32();
+            for (int i = 0; i < len; i++)
+                AddTransaction(new Transaction(reader));
+        }
+
+        public void Serialize(BinaryWriter writer)
+        {
+            writer.Write(Transactions.Count);
+            foreach (Transaction t in Transactions)
+                t.Serialize(writer);
         }
 
         public List<Transaction> Transactions { get; } = new List<Transaction>();

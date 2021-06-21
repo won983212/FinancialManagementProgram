@@ -1,22 +1,10 @@
-﻿using FinancialManagementProgram.kftcAPI;
+﻿using FinancialManagementProgram.Data;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FinancialManagementProgram
 {
-    public interface IPropertiesSerializable
-    {
-        void Deserialize(BinaryReader reader);
-
-        void Serialize(BinaryWriter writer);
-    }
-
     public static class BinaryProperties
     {
         public const int ConfigVersion = 2;
@@ -30,7 +18,7 @@ namespace FinancialManagementProgram
             _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "fmp_cfg.dat");
             properties = new IPropertiesSerializable[]
             {
-                APIDataManager.Current
+                DataManager.Current
             };
         }
 

@@ -1,40 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FinancialManagementProgram.kftcAPI
+namespace FinancialManagementProgram.Data
 {
     public class TransactionDataAnalyzer : ObservableObject
     {
-        private readonly Dictionary<string, TransactionGroup> _dayTransactions = new Dictionary<string, TransactionGroup>();
+        private readonly DataManager _dataManager;
+        private readonly Dictionary<int, TransactionGroup> _dayTransactions = new Dictionary<int, TransactionGroup>();
         private Dictionary<TransactionCategory, TransactionGroup> _categorizedTransactions = new Dictionary<TransactionCategory, TransactionGroup>();
         private TransactionGroup _monthTransactions = new TransactionGroup();
 
-        private static long TotalSpendingBetween(DateTime from, DateTime to)
+        public TransactionDataAnalyzer(DataManager datamanager)
         {
-            return APIDataManager.Current.GetTransactionsBetween(from, to).Sum((e) => e.Transactions.TotalSpending);
+            _dataManager = datamanager;
+        }
+
+        private long TotalSpendingBetween(DateTime from, DateTime to)
+        {
+            return _dataManager.GetTransactionsBetween(from, to).Sum((e) => e.Transactions.TotalSpending);
         }
 
         private void PrepareMonthTransaction()
         {
-            Dictionary<string, BankAccount> accounts = new Dictionary<string, BankAccount>();
-            foreach (BankAccount account in APIDataManager.Current.BankAccounts)
-                accounts.Add(account.FintechUseNum, account);
+            Dictionary<long, BankAccount> accounts = new Dictionary<long, BankAccount>();
+            foreach (BankAccount account in _dataManager.BankAccounts)
+            {
+                account.MonthlyTransactions.ClearTransactions();
+                accounts.Add(account.ID, account);
+            }
 
             _monthTransactions = new TransactionGroup();
             _dayTransactions.Clear();
-            foreach (var ent in APIDataManager.Current.GetTransactionsBetween(TargetDate, TargetDate.AddMonths(1)))
+            foreach (var ent in _dataManager.GetTransactionsBetween(TargetDate, TargetDate.AddMonths(1)))
             {
                 _monthTransactions.AddTransactionGroup(ent.Transactions);
                 _dayTransactions.Add(ent.Date, ent.Transactions);
-                foreach(Transaction t in ent.Transactions.Transactions)
+                foreach (Transaction t in ent.Transactions.Transactions)
                 {
-                    if (accounts.TryGetValue(t.FintechNum, out BankAccount acc))
-                        acc.Transactions.AddTransaction(t);
+                    if (accounts.TryGetValue(t.AccountID, out BankAccount acc))
+                        acc.MonthlyTransactions.AddTransaction(t);
                     else
-                        Logger.Warn("There is no account: " + t.BankName + "(" + t.FintechNum + ")");
+                        Logger.Warn("There is no account: " + t.BankName + "(" + t.Label + "#" + t.AccountID + ")");
                 }
             }
 
@@ -43,11 +50,7 @@ namespace FinancialManagementProgram.kftcAPI
             OnPropertyChanged(nameof(MonthlyTotalIncoming));
         }
 
-        /// <summary>
-        /// Date format must be yyyymmdd<br/>
-        /// Can get transaction in <b>this month</b> only
-        /// </summary>
-        public TransactionGroup GetDayTransaction(string date)
+        public TransactionGroup GetDayTransaction(int date)
         {
             if (_dayTransactions.TryGetValue(date, out TransactionGroup result))
                 return result;
@@ -67,6 +70,7 @@ namespace FinancialManagementProgram.kftcAPI
                 }
             }
 
+            Console.WriteLine("Rebuild");
             OnPropertyChanged(nameof(CategorizedTransactions));
         }
 
@@ -111,12 +115,12 @@ namespace FinancialManagementProgram.kftcAPI
 
         public long RemainingBudget
         {
-            get => APIDataManager.Current.Budget - MonthlyTotalSpending;
+            get => _dataManager.Budget - MonthlyTotalSpending;
         }
 
         public int BudgetUsagePercent
         {
-            get => (int)(MonthlyTotalSpending * 100.0 / APIDataManager.Current.Budget);
+            get => (int)(MonthlyTotalSpending * 100.0 / _dataManager.Budget);
         }
 
         public long RecommendedSpendingInDay
@@ -174,7 +178,7 @@ namespace FinancialManagementProgram.kftcAPI
 
         private DateTime TargetDate
         {
-            get => APIDataManager.Current.TargetDate;
+            get => _dataManager.TargetDate;
         }
     }
 }
