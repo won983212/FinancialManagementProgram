@@ -5,6 +5,17 @@ namespace FinancialManagementProgram.Data
 {
     public class Transaction
     {
+        public Transaction(string label, long amount, string description, DateTime datetime, TransactionCategory category, BankAccount account)
+        {
+            Label = label;
+            Category = category;
+            Amount = amount;
+            AccountID = account.ID;
+            Description = description;
+            TransDate = datetime.ToString("yyyyMMdd");
+            TransDateTime = datetime;
+        }
+
         public Transaction(BinaryReader reader)
         {
             Label = reader.ReadString();

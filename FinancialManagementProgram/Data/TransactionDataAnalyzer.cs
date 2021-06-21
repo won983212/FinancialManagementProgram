@@ -70,7 +70,6 @@ namespace FinancialManagementProgram.Data
                 }
             }
 
-            Console.WriteLine("Rebuild");
             OnPropertyChanged(nameof(CategorizedTransactions));
         }
 

@@ -32,52 +32,55 @@
             <tab:SettingsTab />
         </DataTemplate>
     </Window.Resources>
-    <Grid Background="{DynamicResource BackgroundColor}" Margin="8">
-        <Grid.Effect>
-            <DropShadowEffect Color="Gray" BlurRadius="8" Direction="-90"
+    <md:DialogHost Identifier="RootDialogHost"
+                   DialogTheme="Inherit">
+        <Grid Background="{DynamicResource BackgroundColor}" Margin="8">
+            <Grid.Effect>
+                <DropShadowEffect Color="Gray" BlurRadius="8" Direction="-90"
                               RenderingBias="Quality" ShadowDepth="0"/>
-        </Grid.Effect>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="auto"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        
-        <!-- Content -->
-        <ContentControl Grid.Column="1" Content="{Binding CurrentPage}" />
-        
-        <!-- Sidemenu bar -->
-        <md:Card Width="200" HorizontalAlignment="Left" Background="{DynamicResource CardColor}" UniformCornerRadius="0">
-            <StackPanel>
-                <TextBlock HorizontalAlignment="Center" Margin="0,24" FontSize="13pt" Text="전자가계부"/>
-                <Separator Background="{DynamicResource BorderColor}" Margin="12,0"/>
-                <ListBox ItemsSource="{Binding TabItems}" 
+            </Grid.Effect>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Content -->
+            <ContentControl Grid.Column="1" Content="{Binding CurrentPage}" />
+
+            <!-- Sidemenu bar -->
+            <md:Card Width="200" HorizontalAlignment="Left" Background="{DynamicResource CardColor}" UniformCornerRadius="0">
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Center" Margin="0,24" FontSize="13pt" Text="전자가계부"/>
+                    <Separator Background="{DynamicResource BorderColor}" Margin="12,0"/>
+                    <ListBox ItemsSource="{Binding TabItems}" 
                          SelectedIndex="{Binding SelectedTabItemIndex}"
                          Style="{StaticResource CardListBox}"
                          Margin="10">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="12,6">
-                                <md:PackIcon Kind="{Binding IconName}" Width="24" Height="24" Margin="0,0,16,0" />
-                                <TextBlock Text="{Binding Title}" VerticalAlignment="Center" FontSize="9pt"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </StackPanel>
-        </md:Card>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="12,6">
+                                    <md:PackIcon Kind="{Binding IconName}" Width="24" Height="24" Margin="0,0,16,0" />
+                                    <TextBlock Text="{Binding Title}" VerticalAlignment="Center" FontSize="9pt"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </md:Card>
 
-        <StackPanel Grid.Column="1" Margin="8"
+            <StackPanel Grid.Column="1" Margin="8"
                     Orientation="Horizontal"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Right" >
 
-            <!-- Exit button -->
-            <Button Style="{StaticResource MaterialDesignIconForegroundButton}" 
+                <!-- Exit button -->
+                <Button Style="{StaticResource MaterialDesignIconForegroundButton}" 
                     Width="40" Height="40"
                     Foreground="{DynamicResource TextColor}"
                     Command="{Binding ExitCommand}">
-                <md:PackIcon Kind="Close" />
-            </Button>
-        </StackPanel>
-    </Grid>
+                    <md:PackIcon Kind="Close" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </md:DialogHost>
 </Window>

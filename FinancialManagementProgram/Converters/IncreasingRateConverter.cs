@@ -15,7 +15,7 @@ namespace FinancialManagementProgram.Converters
             long spending = (long)values[0];
             long lastSpending = (long)values[1];
             if (lastSpending == 0)
-                return "+" + SimplifyBudgetUnitConverter.SimplifyBudgetUnit(spending, true);
+                return SimplifyBudgetUnitConverter.SimplifyBudgetUnit(spending, true);
 
             double value = spending * 100.0 / lastSpending - 100;
             int percent = (int)value;

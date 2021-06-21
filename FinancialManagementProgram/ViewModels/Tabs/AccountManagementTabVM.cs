@@ -1,4 +1,6 @@
 ﻿using FinancialManagementProgram.Data;
+using FinancialManagementProgram.Dialog;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Windows.Input;
@@ -17,9 +19,18 @@ namespace FinancialManagementProgram.ViewModels.Tabs
         private BankAccount GetSelectedAccount()
         {
             IList<BankAccount> accounts = DataManager.BankAccounts;
-            if (accounts.Count == 0)
+            if (accounts.Count == 0 || SelectedAccountIndex < 0)
                 return null;
             return accounts[SelectedAccountIndex];
+        }
+
+        private void OnDeleteDialogClosed(object o, DialogClosingEventArgs e)
+        {
+            if ((bool)e.Parameter)
+            {
+                DataManager.DeleteAccount(GetSelectedAccount());
+                SelectedAccountIndex = 0;
+            }
         }
 
         public long AccountTotalSpending
@@ -87,7 +98,9 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             get => Enum.GetNames(typeof(AccountColor));
         }
 
-        public ICommand AddCommand => new RelayCommand(() => Console.WriteLine("ADD")); // TODO implement
+        public ICommand AddCommand => new RelayCommand(() => Console.WriteLine("ADD"));
         public ICommand EditCommand => new RelayCommand(() => IsEditing = !IsEditing);
+        public ICommand DeleteCommand => new RelayCommand(() => CommonUtil.ShowDialog(
+            new MessageDialog("자산을 삭제합니다.", "자산과 관련 거래내역이 영구적으로 삭제되며, 통계에 영향을 줄 수 있습니다. 그래도 삭제하시겠습니까?"), OnDeleteDialogClosed));
     }
 }

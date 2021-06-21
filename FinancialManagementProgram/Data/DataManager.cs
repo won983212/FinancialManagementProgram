@@ -31,27 +31,28 @@ namespace FinancialManagementProgram.Data
 
         private DataManager()
         {
-            _targetDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             _accounts = new ObservableCollection<BankAccount>();
             _allTransactions = new SortedList<int, TransactionGroup>();
             _analyzer = new TransactionDataAnalyzer(this);
 
             // TODO: Test
-            _accounts.Add(new BankAccount(GenerateUniqueAccountID())
+            var b1 = new BankAccount(GenerateUniqueAccountID())
             {
                 Label = "우리은행주계좌",
                 BankName = "우리은행",
                 Color = AccountColor.Blue,
                 Memo = "Test Memo"
-            });
+            };
+            _accounts.Add(b1);
 
-            _accounts.Add(new BankAccount(GenerateUniqueAccountID())
+            var b2 = new BankAccount(GenerateUniqueAccountID())
             {
                 Label = "농협은행",
                 BankName = "농협은행",
                 Color = AccountColor.Green,
                 Memo = "농협은행이다"
-            });
+            };
+            _accounts.Add(b2);
 
             _accounts.Add(new BankAccount(GenerateUniqueAccountID())
             {
@@ -60,6 +61,38 @@ namespace FinancialManagementProgram.Data
                 Color = AccountColor.Yellow,
                 Memo = "청약저축할 계좌다"
             });
+
+            AddTransaction(new Transaction("바이브PC방", -6000, "", new DateTime(2021, 6, 21, 12, 15, 16), new TransactionCategory("게임"), b1));
+            AddTransaction(new Transaction("바이브PC방", -6000, "", new DateTime(2021, 6, 17, 12, 15, 16), new TransactionCategory("게임"), b1));
+            AddTransaction(new Transaction("바이브PC방", -12000, "", new DateTime(2021, 6, 16, 12, 15, 16), new TransactionCategory("게임"), b1));
+            AddTransaction(new Transaction("바이브PC방", -6000, "", new DateTime(2021, 6, 15, 12, 15, 16), new TransactionCategory("게임"), b1));
+            AddTransaction(new Transaction("바이브PC방", -12000, "", new DateTime(2021, 6, 15, 11, 15, 16), new TransactionCategory("게임"), b2));
+            AddTransaction(new Transaction("바이브PC방", -6000, "", new DateTime(2021, 6, 14, 12, 15, 16), new TransactionCategory("게임"), b2));
+            AddTransaction(new Transaction("바이브PC방", -6000, "", new DateTime(2021, 6, 12, 12, 15, 16), new TransactionCategory("게임"), b2));
+
+            TargetDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+        }
+
+        private void AddTransaction(Transaction t)
+        {
+            int date = CommonUtil.GetIntegerDate(t.TransDateTime);
+            if (!_allTransactions.TryGetValue(date, out TransactionGroup group))
+                _allTransactions.Add(date, group = new TransactionGroup());
+            group.AddTransaction(t);
+        }
+
+        public void DeleteAccount(BankAccount account)
+        {
+            _accounts.Remove(account);
+            List<int> deletionList = new List<int>();
+            foreach (var ent in _allTransactions)
+            {
+                if (ent.Value.DeleteTransactionsByAccount(account))
+                    deletionList.Add(ent.Key);
+            }
+            foreach (int key in deletionList)
+                _allTransactions.Remove(key);
+            Analyzer.Update();
         }
 
         private bool ContainsIDInAccount(long id)
@@ -114,7 +147,7 @@ namespace FinancialManagementProgram.Data
             OnPropertyChanged(nameof(BankAccounts));*/
 
             // transactions
-            int transaction_len = reader.ReadInt32();
+            /*int transaction_len = reader.ReadInt32();
             _allTransactions.Clear();
             for (int i = 0; i < transaction_len; i++)
             {
@@ -122,7 +155,7 @@ namespace FinancialManagementProgram.Data
                 TransactionGroup value = new TransactionGroup();
                 value.Deserialize(reader);
                 _allTransactions.Add(key, value);
-            }
+            }*/
         }
 
         public void Serialize(BinaryWriter writer)

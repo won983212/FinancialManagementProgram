@@ -81,9 +81,9 @@
                                VerticalAlignment="Center"
                                FontWeight="Bold"
                                FontSize="12pt"
-                               Margin="20,0,32,0"
+                               Margin="20,0"
                                Foreground="{DynamicResource Primary}"
-                               Text="{Binding AccountTotalIncoming, StringFormat='{}{0:+ #,##원;;없음}'}"/>
+                               Text="{Binding AccountTotalIncoming, StringFormat='{}{0:#,##원;;없음}'}"/>
 
                     <TextBlock Grid.Column="1" Grid.Row="1"
                                FontSize="12pt" 
@@ -94,9 +94,9 @@
                                VerticalAlignment="Center"
                                FontWeight="Bold"
                                FontSize="12pt"
-                               Margin="20,0,32,0"
+                               Margin="20,0"
                                Foreground="{DynamicResource ErrorColor}"
-                               Text="{Binding AccountTotalSpending, StringFormat='{}{0:- #,##원;;없음}'}"/>
+                               Text="{Binding AccountTotalSpending, StringFormat='{}{0:#,##원;;없음}'}"/>
                 </Grid>
             </md:Card>
 
@@ -188,6 +188,7 @@
                         </Button>
                         <Button Style="{StaticResource MaterialDesignFlatAccentButton}"
                                 Padding="0"
+                                Command="{Binding DataContext.DeleteCommand, ElementName=pnlContent}"
                                 FontSize="9pt">
                             계좌삭제
                         </Button>

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace FinancialManagementProgram
 {
@@ -10,7 +12,7 @@ namespace FinancialManagementProgram
         private static readonly int[] MonthDays = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 
-        #region Date Utils
+        #region Date
 
         public static int GetTotalDays(int year, int month)
         {
@@ -46,7 +48,7 @@ namespace FinancialManagementProgram
         #endregion
 
 
-        #region List Utils
+        #region List
 
         public static int FindSortedInsertionIndex<T>(IList<T> list, T value, IComparer<T> comparer = null)
         {
@@ -71,6 +73,21 @@ namespace FinancialManagementProgram
             }
 
             return left;
+        }
+
+        #endregion
+
+
+        #region Dialog
+
+        public static T GetDialog<T>(object o)
+        {
+            return (T)((DialogHost)o).DialogContent;
+        }
+
+        public static Task<object> ShowDialog(object content, DialogClosingEventHandler closingHandler)
+        {
+            return DialogHost.Show(content, "RootDialogHost", closingHandler);
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace FinancialManagementProgram.Data
@@ -26,6 +27,25 @@ namespace FinancialManagementProgram.Data
             Transactions.Clear();
             TotalIncoming = 0;
             TotalSpending = 0;
+        }
+
+        /// <returns>삭제후에 이 Group이 비었을 경우 true리턴</returns>
+        internal bool DeleteTransactionsByAccount(BankAccount account)
+        {
+            Transaction t;
+            for(int i = Transactions.Count - 1; i >= 0; i--)
+            {
+                t = Transactions[i];
+                if(t.AccountID == account.ID)
+                {
+                    Transactions.RemoveAt(i);
+                    if (t.Amount < 0)
+                        TotalSpending += t.Amount;
+                    else
+                        TotalIncoming -= t.Amount;
+                }
+            }
+            return Transactions.Count == 0;
         }
 
         public void Deserialize(BinaryReader reader)

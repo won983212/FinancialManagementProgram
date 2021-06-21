@@ -111,6 +111,9 @@
     <Compile Include="Data\TransactionCategory.cs" />
     <Compile Include="Data\TransactionDataAnalyzer.cs" />
     <Compile Include="Data\TransactionGroup.cs" />
+    <Compile Include="Dialog\MessageDialog.xaml.cs">
+      <DependentUpon>MessageDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Logger.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="PropertiesSerializable.cs" />
@@ -155,6 +158,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TransactionChartDataList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\MessageDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

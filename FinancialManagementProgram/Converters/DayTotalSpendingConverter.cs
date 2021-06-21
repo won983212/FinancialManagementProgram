@@ -13,7 +13,7 @@ namespace FinancialManagementProgram.Converters
             if (value == null || value is string == false)
                 return null;
 
-            TransactionGroup transaction = DataManager.Current.Analyzer.GetDayTransaction(int.Parse((string)value));
+            TransactionGroup transaction = DataManager.Current.Analyzer.GetDayTransaction(int.Parse(((string)value).Replace(".", "")));
             if (transaction == null)
                 return "0원";
 
