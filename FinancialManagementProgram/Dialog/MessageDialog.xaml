@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              x:Name="dialogRoot"
              mc:Ignorable="d" 
              FontFamily="{StaticResource PrimaryFont}"
@@ -26,14 +27,14 @@
             <Button Style="{StaticResource MaterialDesignFlatButton}" 
                     Command="{x:Static md:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
-                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">False</system:Boolean>
+                    <system:Boolean>False</system:Boolean>
                 </Button.CommandParameter>
                 취소
             </Button>
             <Button Style="{StaticResource MaterialDesignFlatButton}" 
                     Command="{x:Static md:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>
-                    <system:Boolean xmlns:system="clr-namespace:System;assembly=mscorlib">True</system:Boolean>
+                    <system:Boolean>True</system:Boolean>
                 </Button.CommandParameter>
                 확인
             </Button>

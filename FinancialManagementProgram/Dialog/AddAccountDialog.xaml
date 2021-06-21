@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="FinancialManagementProgram.Dialog.AddAccountDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:root="clr-namespace:FinancialManagementProgram"
+             xmlns:data="clr-namespace:FinancialManagementProgram.Data"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             x:Name="dialogRoot"
+             mc:Ignorable="d" >
+    <StackPanel Margin="28,16" DataContext="{Binding ElementName=dialogRoot}">
+        <TextBlock FontSize="12pt"
+                   Margin="0,0,0,16" 
+                   Text="자산 추가"/>
+        <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 Width="200"
+                 Margin="0,0,0,24"
+                 md:HintAssist.Hint="자산 이름">
+            <TextBox.Text>
+                <Binding Path="Label" UpdateSourceTrigger="PropertyChanged">    
+                    <Binding.ValidationRules>
+                        <root:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+        <ComboBox Width="200"
+                  Margin="0,0,0,24"
+                  md:HintAssist.Hint="은행 이름"
+                  IsEditable="True">
+            <ComboBox.Text>
+                <Binding Path="BankName" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <root:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </ComboBox.Text>
+            <ComboBoxItem>산업은행</ComboBoxItem>
+            <ComboBoxItem>기업은행</ComboBoxItem>
+            <ComboBoxItem>국민은행</ComboBoxItem>
+            <ComboBoxItem>전북은행</ComboBoxItem>
+            <ComboBoxItem>수협은행</ComboBoxItem>
+            <ComboBoxItem>농협은행</ComboBoxItem>
+            <ComboBoxItem>우리은행</ComboBoxItem>
+            <ComboBoxItem>제일은행</ComboBoxItem>
+            <ComboBoxItem>제일은행</ComboBoxItem>
+            <ComboBoxItem>한국씨티은행</ComboBoxItem>
+            <ComboBoxItem>대구은행</ComboBoxItem>
+            <ComboBoxItem>부산은행</ComboBoxItem>
+            <ComboBoxItem>광주은행</ComboBoxItem>
+            <ComboBoxItem>제주은행</ComboBoxItem>
+            <ComboBoxItem>경남은행</ComboBoxItem>
+            <ComboBoxItem>하나은행</ComboBoxItem>
+            <ComboBoxItem>신한은행</ComboBoxItem>
+            <ComboBoxItem>케이뱅크</ComboBoxItem>
+            <ComboBoxItem>카카오뱅크</ComboBoxItem>
+        </ComboBox>
+        <ComboBox Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                  Width="200"
+                  Margin="0,0,0,24"
+                  md:HintAssist.Hint="색상"
+                  SelectedIndex="{Binding ColorIndex}"
+                  ItemsSource="{Binding Source={x:Static data:BankAccount.AccountColorItems}}">
+        </ComboBox>
+        <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                 Width="200"
+                 Margin="0,0,0,24"
+                 md:HintAssist.Hint="메모"
+                 Text="{Binding Memo}" />
+        <StackPanel Orientation="Horizontal" 
+                    HorizontalAlignment="Right">
+            <Button Style="{StaticResource MaterialDesignFlatButton}" 
+                    Command="{x:Static md:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:Boolean>False</system:Boolean>
+                </Button.CommandParameter>
+                취소
+            </Button>
+            <Button Style="{StaticResource MaterialDesignFlatButton}" 
+                    Command="{x:Static md:DialogHost.CloseDialogCommand}">
+                <Button.CommandParameter>
+                    <system:Boolean>True</system:Boolean>
+                </Button.CommandParameter>
+                확인
+            </Button>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

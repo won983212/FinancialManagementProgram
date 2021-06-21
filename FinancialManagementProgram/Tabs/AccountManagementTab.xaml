@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:ctrl="clr-namespace:FinancialManagementProgram.Controls"
+             xmlns:data="clr-namespace:FinancialManagementProgram.Data"
              xmlns:converter="clr-namespace:FinancialManagementProgram.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="520" d:DesignWidth="760">
@@ -165,7 +166,7 @@
                               HorizontalAlignment="Right"
                               MinWidth="160"
                               SelectedIndex="{Binding DataContext.SelectedAccountColor, ElementName=pnlContent}"
-                              ItemsSource="{Binding DataContext.AccountColorItems, ElementName=pnlContent}"
+                              ItemsSource="{Binding Source={x:Static data:BankAccount.AccountColorItems}}"
                               Visibility="{Binding DataContext.IsEditing, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=pnlContent}" />
 
                     <StackPanel Orientation="Horizontal" 

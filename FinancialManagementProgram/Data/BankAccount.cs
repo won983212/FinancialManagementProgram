@@ -103,5 +103,10 @@ namespace FinancialManagementProgram.Data
         }
 
         public TransactionGroup MonthlyTransactions { get; } = new TransactionGroup();
+
+        public static string[] AccountColorItems
+        {
+            get => Enum.GetNames(typeof(AccountColor));
+        }
     }
 }

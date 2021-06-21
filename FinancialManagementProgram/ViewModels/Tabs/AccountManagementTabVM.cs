@@ -33,6 +33,24 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             }
         }
 
+        private void OnAddDialogClosed(object o, DialogClosingEventArgs e)
+        {
+            if ((bool)e.Parameter)
+            {
+                AddAccountDialog dialog = CommonUtil.GetDialog<AddAccountDialog>(o);
+                if (string.IsNullOrWhiteSpace(dialog.Label) || string.IsNullOrWhiteSpace(dialog.BankName))
+                    return;
+
+                DataManager.AddAccount(new BankAccount(DataManager.GenerateUniqueAccountID())
+                {
+                    Label = dialog.Label,
+                    BankName = dialog.BankName,
+                    Color = (AccountColor)dialog.ColorIndex,
+                    Memo = dialog.Memo
+                });
+            }
+        }
+
         public long AccountTotalSpending
         {
             get
@@ -93,12 +111,7 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             }
         }
 
-        public string[] AccountColorItems
-        {
-            get => Enum.GetNames(typeof(AccountColor));
-        }
-
-        public ICommand AddCommand => new RelayCommand(() => Console.WriteLine("ADD"));
+        public ICommand AddCommand => new RelayCommand(() => CommonUtil.ShowDialog(new AddAccountDialog(), OnAddDialogClosed));
         public ICommand EditCommand => new RelayCommand(() => IsEditing = !IsEditing);
         public ICommand DeleteCommand => new RelayCommand(() => CommonUtil.ShowDialog(
             new MessageDialog("자산을 삭제합니다.", "자산과 관련 거래내역이 영구적으로 삭제되며, 통계에 영향을 줄 수 있습니다. 그래도 삭제하시겠습니까?"), OnDeleteDialogClosed));

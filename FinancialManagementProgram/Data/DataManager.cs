@@ -25,6 +25,7 @@ namespace FinancialManagementProgram.Data
         private long _budget = 100000;
         private DateTime _targetDate;
         private readonly ObservableCollection<BankAccount> _accounts;
+        private readonly ReadOnlyObservableCollection<BankAccount> _accountsReadonly;
         private readonly SortedList<int, TransactionGroup> _allTransactions;
         private readonly TransactionDataAnalyzer _analyzer;
 
@@ -32,10 +33,11 @@ namespace FinancialManagementProgram.Data
         private DataManager()
         {
             _accounts = new ObservableCollection<BankAccount>();
+            _accountsReadonly = new ReadOnlyObservableCollection<BankAccount>(_accounts);
             _allTransactions = new SortedList<int, TransactionGroup>();
             _analyzer = new TransactionDataAnalyzer(this);
 
-            // TODO: Test
+            // TODO: Test. Add Dummy BankAccounts
             var b1 = new BankAccount(GenerateUniqueAccountID())
             {
                 Label = "우리은행주계좌",
@@ -81,6 +83,14 @@ namespace FinancialManagementProgram.Data
             group.AddTransaction(t);
         }
 
+        public void AddAccount(BankAccount account)
+        {
+            _accounts.Add(account);
+            
+            // TODO: Test. Not Saving
+            // BinaryProperties.Save();
+        }
+
         public void DeleteAccount(BankAccount account)
         {
             _accounts.Remove(account);
@@ -93,6 +103,9 @@ namespace FinancialManagementProgram.Data
             foreach (int key in deletionList)
                 _allTransactions.Remove(key);
             Analyzer.Update();
+
+            // TODO: Test. Not Saving
+            // BinaryProperties.Save();
         }
 
         private bool ContainsIDInAccount(long id)
@@ -139,7 +152,7 @@ namespace FinancialManagementProgram.Data
             Budget = reader.ReadInt64();
 
             // accounts
-            // TODO: Test
+            // TODO: Test. Not Serialize
             /*int account_len = reader.ReadInt32();
             _accounts.Clear();
             for (int i = 0; i < account_len; i++)
@@ -216,7 +229,7 @@ namespace FinancialManagementProgram.Data
 
         public IList<BankAccount> BankAccounts
         {
-            get => _accounts;
+            get => _accountsReadonly;
         }
 
         public static DataManager Current
