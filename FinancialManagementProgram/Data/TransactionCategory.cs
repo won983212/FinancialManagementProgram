@@ -41,6 +41,11 @@ namespace FinancialManagementProgram.Data
             _iconMap["게임"] = "GamepadVariantOutline";
         }
 
+        public static IEnumerable<string> CategoryNames
+        {
+            get => _iconMap.Keys;
+        }
+
         public string Label { get; }
         public string IconName { get; }
     }

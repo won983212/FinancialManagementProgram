@@ -111,16 +111,21 @@
     <Compile Include="Data\TransactionCategory.cs" />
     <Compile Include="Data\TransactionDataAnalyzer.cs" />
     <Compile Include="Data\TransactionGroup.cs" />
+    <Compile Include="DatetimeValidationRule.cs" />
     <Compile Include="Dialog\AddAccountDialog.xaml.cs">
       <DependentUpon>AddAccountDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialog\MessageDialog.xaml.cs">
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\TransactionModifyDialog.xaml.cs">
+      <DependentUpon>TransactionModifyDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NotEmptyValidationRule.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="NumericalValidationRule.cs" />
     <Compile Include="ObservableObject.cs" />
-    <Compile Include="PropertiesSerializable.cs" />
+    <Compile Include="IPropertiesSerializable.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Tabs\AccountManagementTab.xaml.cs">
       <DependentUpon>AccountManagementTab.xaml</DependentUpon>
@@ -170,6 +175,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialog\MessageDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\TransactionModifyDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

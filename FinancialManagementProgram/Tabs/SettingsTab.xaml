@@ -3,10 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:FinancialManagementProgram.Tabs"
+             xmlns:root="clr-namespace:FinancialManagementProgram"
              mc:Ignorable="d" 
              d:DesignHeight="520" d:DesignWidth="760">
-    <Grid>
-            
-    </Grid>
+    <StackPanel VerticalAlignment="Center" 
+                HorizontalAlignment="Center">
+        <TextBlock Text="{Binding TestProperty}" Margin="0,16" />
+        <TextBox Width="200">
+            <TextBox.Text>
+                <Binding Path="TestProperty" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <root:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+    </StackPanel>
 </UserControl>

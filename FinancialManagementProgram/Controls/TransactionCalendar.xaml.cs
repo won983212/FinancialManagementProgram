@@ -1,6 +1,7 @@
 ﻿using FinancialManagementProgram.Data;
 using MaterialDesignThemes.Wpf;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,7 +12,9 @@ namespace FinancialManagementProgram.Controls
     public partial class TransactionCalendar : Grid
     {
         private static readonly DependencyProperty DateProperty =
-            DependencyProperty.Register("Date", typeof(DateTime), typeof(TransactionCalendar), new PropertyMetadata(OnDateChanged));
+            DependencyProperty.Register(nameof(Date), typeof(DateTime), typeof(TransactionCalendar), new PropertyMetadata(OnDateChanged));
+        private static readonly DependencyProperty TransactionDataProperty =
+            DependencyProperty.Register(nameof(TransactionData), typeof(IEnumerable<Transaction>), typeof(TransactionCalendar), new PropertyMetadata(OnTransactionDataChanged));
 
         private static readonly Pen linePen;
         private static readonly Brush OtherMonthBrush;
@@ -24,6 +27,12 @@ namespace FinancialManagementProgram.Controls
         {
             get => (DateTime)GetValue(DateProperty);
             set => SetValue(DateProperty, value);
+        }
+
+        public IEnumerable<Transaction> TransactionData
+        {
+            get => (IEnumerable<Transaction>)GetValue(TransactionDataProperty);
+            set => SetValue(TransactionDataProperty, value);
         }
 
 
@@ -149,23 +158,32 @@ namespace FinancialManagementProgram.Controls
                 }
                 label.Text = (d + 1).ToString();
 
+                TextBlock incomingText = GetTextblockAt(index, 1);
+                TextBlock spendingText = GetTextblockAt(index, 2);
                 if (transaction != null)
                 {
                     // set income text
                     if (transaction.TotalIncoming > 0)
                     {
-                        TextBlock text = GetTextblockAt(index, 1);
-                        text.Visibility = Visibility.Visible;
-                        text.Text = string.Format("{0:+#,##}", transaction.TotalIncoming);
+                        incomingText.Visibility = Visibility.Visible;
+                        incomingText.Text = string.Format("{0:+#,##}", transaction.TotalIncoming);
                     }
+                    else
+                        incomingText.Visibility = Visibility.Collapsed;
 
                     // set spending text
                     if (transaction.TotalSpending > 0)
                     {
-                        TextBlock text = GetTextblockAt(index, 2);
-                        text.Visibility = Visibility.Visible;
-                        text.Text = string.Format("{0:-#,##}", transaction.TotalSpending);
+                        spendingText.Visibility = Visibility.Visible;
+                        spendingText.Text = string.Format("{0:-#,##}", transaction.TotalSpending);
                     }
+                    else
+                        spendingText.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    incomingText.Visibility = Visibility.Collapsed;
+                    spendingText.Visibility = Visibility.Collapsed;
                 }
             }
 
@@ -206,6 +224,12 @@ namespace FinancialManagementProgram.Controls
         {
             TransactionCalendar obj = d as TransactionCalendar;
             obj.UpdateCalendar((DateTime)e.NewValue);
+        }
+
+        private static void OnTransactionDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            TransactionCalendar obj = d as TransactionCalendar;
+            obj.UpdateCalendar(obj.Date);
         }
 
         static TransactionCalendar()

@@ -23,12 +23,8 @@ namespace FinancialManagementProgram.Data
 
         private void PrepareMonthTransaction()
         {
-            Dictionary<long, BankAccount> accounts = new Dictionary<long, BankAccount>();
             foreach (BankAccount account in _dataManager.BankAccounts)
-            {
                 account.MonthlyTransactions.ClearTransactions();
-                accounts.Add(account.ID, account);
-            }
 
             _monthTransactions = new TransactionGroup();
             _dayTransactions.Clear();
@@ -38,10 +34,10 @@ namespace FinancialManagementProgram.Data
                 _dayTransactions.Add(ent.Date, ent.Transactions);
                 foreach (Transaction t in ent.Transactions.Transactions)
                 {
-                    if (accounts.TryGetValue(t.AccountID, out BankAccount acc))
-                        acc.MonthlyTransactions.AddTransaction(t);
+                    if (t.Account != null)
+                        t.Account.MonthlyTransactions.AddTransaction(t);
                     else
-                        Logger.Warn("There is no account: " + t.BankName + "(" + t.Label + "#" + t.AccountID + ")");
+                        Logger.Warn("Account가 NULL입니다: " + t.Label);
                 }
             }
 

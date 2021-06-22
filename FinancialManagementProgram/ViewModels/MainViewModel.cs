@@ -44,8 +44,8 @@ namespace FinancialManagementProgram.ViewModels
                 new TabItem(){ Title = "대시보드", IconName = "ViewDashboard", ViewModel = new DashboardTabVM(this) },
                 new TabItem(){ Title = "자산 관리", IconName = "CreditCardOutline", ViewModel = new AccountManagementTabVM(this) },
                 new TabItem(){ Title = "수입 및 지출", IconName = "History", ViewModel = new TransactionTabVM(this) },
-                new TabItem(){ Title = "지출 분석", IconName = "ChartTimelineVariantShimmer", ViewModel = new AnalyzeTabVM(this) },
-                //new TabItem(){ Title = "설정", IconName = "Cog", ViewModel = new SettingsTabVM(this) }
+                new TabItem(){ Title = "지출 분석", IconName = "ChartTimelineVariantShimmer", ViewModel = new AnalyzeTabVM(this) }
+                //, new TabItem(){ Title = "설정", IconName = "Cog", ViewModel = new SettingsTabVM(this) }
             };
 
             SelectedTabItemIndex = 0;

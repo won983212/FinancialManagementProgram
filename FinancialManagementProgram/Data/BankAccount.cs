@@ -10,7 +10,7 @@ namespace FinancialManagementProgram.Data
         Blue, Red, Yellow, Green, Black
     }
 
-    public class BankAccount : INotifyPropertyChanged
+    public class BankAccount : INotifyPropertyChanged, IPropertiesSerializable
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -26,11 +26,7 @@ namespace FinancialManagementProgram.Data
 
         public BankAccount(BinaryReader reader)
         {
-            ID = reader.ReadInt64();
-            Label = reader.ReadString();
-            BankName = reader.ReadString();
-            Color = (AccountColor)reader.ReadInt16();
-            Memo = reader.ReadString();
+            Deserialize(reader);
         }
 
         public void Serialize(BinaryWriter writer)
@@ -39,7 +35,16 @@ namespace FinancialManagementProgram.Data
             writer.Write(Label);
             writer.Write(BankName);
             writer.Write((short)Color);
-            writer.Write(Memo);
+            writer.Write(Memo ?? "");
+        }
+
+        public void Deserialize(BinaryReader reader)
+        {
+            ID = reader.ReadInt64();
+            Label = reader.ReadString();
+            BankName = reader.ReadString();
+            Color = (AccountColor)reader.ReadInt16();
+            Memo = reader.ReadString();
         }
 
         public override bool Equals(object obj)
@@ -54,13 +59,18 @@ namespace FinancialManagementProgram.Data
             return ID.GetHashCode();
         }
 
+        public override string ToString()
+        {
+            return Label;
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
 
-        public long ID { get; }
+        public long ID { get; private set; }
 
         public string Label
         {
