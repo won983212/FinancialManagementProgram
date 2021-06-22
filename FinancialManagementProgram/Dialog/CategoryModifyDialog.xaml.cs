@@ -1,4 +1,5 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using FinancialManagementProgram.Data;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,18 +18,15 @@ using System.Windows.Shapes;
 
 namespace FinancialManagementProgram.Dialog
 {
-    public partial class CategoryModifyDialog : UserControl, INotifyPropertyChanged
+    public partial class CategoryModifyDialog : UserControl
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public CategoryModifyDialog()
-            : this("", PackIconKind.HelpCircle)
+            : this(TransactionCategory.RegisterCategory("새 카테고리", PackIconKind.HelpCircle))
         { }
 
-        public CategoryModifyDialog(string label, PackIconKind icon)
+        public CategoryModifyDialog(TransactionCategory category)
         {
-            Label = label;
-            Icon = icon;
+            Category = category;
             InitializeComponent();
         }
 
@@ -36,9 +34,7 @@ namespace FinancialManagementProgram.Dialog
         {
             if ((bool)e.Parameter)
             {
-                PackIconKind icon = CommonUtil.GetDialog<IconSelectionDialog>(o).SelectedIcon.PackIcon;
-                Icon = icon;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Icon)));
+                Category.Icon = CommonUtil.GetDialog<IconSelectionDialog>(o).SelectedIcon.PackIcon;
             }
         }
 
@@ -47,9 +43,7 @@ namespace FinancialManagementProgram.Dialog
             get => Validation.GetHasError(tbxLabel);
         }
 
-        public string Label { get; set; }
-
-        public PackIconKind Icon { get; set; }
+        public TransactionCategory Category { get; }
 
         public ICommand PickIconCommand => new RelayCommand(() => CommonUtil.ShowDialog(new IconSelectionDialog(), "CategoryModifyDialogHost", OnIconSelectionDialogClosed));
     }

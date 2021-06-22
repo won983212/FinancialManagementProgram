@@ -48,8 +48,7 @@ namespace FinancialManagementProgram.ViewModels
                 //, new TabItem(){ Title = "설정", Icon = PackIconKind.Cog, ViewModel = new SettingsTabVM(this) }
             };
 
-            // TODO Test. 임시로 바꿔둔다?
-            SelectedTabItemIndex = 3;
+            SelectedTabItemIndex = 0;
         }
 
         // TODO Snackbar 추가해서 logger.error, warn 처리하기

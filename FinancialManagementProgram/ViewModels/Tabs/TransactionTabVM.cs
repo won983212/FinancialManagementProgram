@@ -52,12 +52,21 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             }
             catch (InvalidOperationException e)
             {
-                CommonUtil.ShowDialog(new MessageDialog("오류", e.Message), null);
+                Logger.Error(e);
             }
         });
 
-        public ICommand EditCommand => new RelayCommand<Transaction>((t) => CommonUtil.ShowDialog(new TransactionModifyDialog(DataManager, t),
-            (o, e) => OnEditDialogClosed(o, e, t)));
+        public ICommand EditCommand => new RelayCommand<Transaction>((t) => 
+        {
+            try
+            {
+                CommonUtil.ShowDialog(new TransactionModifyDialog(DataManager, t), (o, e) => OnEditDialogClosed(o, e, t));
+            }
+            catch (InvalidOperationException e)
+            {
+                Logger.Error(e);
+            }
+        });
 
         public ICommand DeleteCommand => new RelayCommand<Transaction>((t) => CommonUtil.ShowDialog(
             new MessageDialog("자산을 삭제합니다.", "자산과 관련 거래내역이 영구적으로 삭제되며, 통계에 영향을 줄 수 있습니다. 그래도 삭제하시겠습니까?"), 

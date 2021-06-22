@@ -10,10 +10,8 @@ namespace FinancialManagementProgram.Data
         Blue, Red, Yellow, Green, Black
     }
 
-    public class BankAccount : INotifyPropertyChanged, IPropertiesSerializable
+    public class BankAccount : ObservableObject, IPropertiesSerializable
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private string _label;
         private string _bankName;
         private AccountColor _color;
@@ -62,11 +60,6 @@ namespace FinancialManagementProgram.Data
         public override string ToString()
         {
             return Label;
-        }
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
 

@@ -12,7 +12,20 @@ namespace FinancialManagementProgram
     public static class CommonUtil
     {
         private static readonly int[] MonthDays = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        private static readonly Random random = new Random();
 
+
+        public static long GenerateUniqueID(Predicate<long> confilctCondition)
+        {
+            long x;
+            do
+            {
+                x = random.Next() << sizeof(int) * 8;
+                x += random.Next();
+            }
+            while (confilctCondition(x));
+            return x;
+        }
 
         #region Date
 

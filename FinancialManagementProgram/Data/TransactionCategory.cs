@@ -1,24 +1,33 @@
 ﻿using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 
 namespace FinancialManagementProgram.Data
 {
-    public class TransactionCategory
+    public class TransactionCategory : ObservableObject, INotifyPropertyChanged
     {
-        // TODO 동일내역 유지
-        public static readonly string UnknownCategoryLabel = "미분류";
-        public static Dictionary<string, PackIconKind> CategoryMap { get; } = new Dictionary<string, PackIconKind>();
+        public static readonly long UnknownCategoryID = 0;
+        private static ObservableCollection<TransactionCategory> _categoryValues = new ObservableCollection<TransactionCategory>();
+        private static Dictionary<long, TransactionCategory> _categoryMap { get; } = new Dictionary<long, TransactionCategory>();
+
+        private string _label;
+        private PackIconKind _icon;
 
 
-        public TransactionCategory(string categoryName)
+        private TransactionCategory(string label, PackIconKind icon)
+            : this(GenerateUniqueID(), label, icon)
+        { }
+
+        private TransactionCategory(long id, string label, PackIconKind icon)
         {
-            if (!CategoryMap.ContainsKey(categoryName))
-                throw new InvalidOperationException("Unknown category: " + categoryName);
-
-            Label = categoryName;
-            Icon = CategoryMap[categoryName];
+            ID = id;
+            Label = label;
+            Icon = icon;
         }
 
 
@@ -37,58 +46,129 @@ namespace FinancialManagementProgram.Data
             return Label;
         }
 
-        public string Label { get; }
-        public PackIconKind Icon { get; }
+        internal static void Deserialize(BinaryReader reader)
+        {
+            int len = reader.ReadInt32();
+            for (int i = 0; i < len; i++)
+            {
+                long id = reader.ReadInt64();
+                string label = reader.ReadString();
+                int icon = reader.ReadInt32();
+                _categoryMap.Add(id, new TransactionCategory(id, label, (PackIconKind)icon));
+            }
+
+            if (len == 0)
+                AddDefaults();
+
+            FireNotifyCategoryValues();
+        }
+
+        internal static void Serialize(BinaryWriter writer)
+        {
+            if (_categoryMap.Count == 0)
+                AddDefaults();
+
+            writer.Write(_categoryMap.Count);
+            foreach (var ent in _categoryMap)
+            {
+                writer.Write(ent.Key);
+                writer.Write(ent.Value.Label);
+                writer.Write((int)ent.Value.Icon);
+            }
+        }
+
+        private static long GenerateUniqueID()
+        {
+            return CommonUtil.GenerateUniqueID((x) => _categoryMap.ContainsKey(x));
+        }
+
+        private static void AddDefaults()
+        {
+            TransactionCategory category = new TransactionCategory(UnknownCategoryID, "미분류", PackIconKind.HelpCircle);
+            _categoryMap.Add(UnknownCategoryID, category);
+
+            Assembly asm = Assembly.GetExecutingAssembly();
+            using (Stream stream = asm.GetManifestResourceStream("FinancialManagementProgram.DefaultCategories.txt"))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string line = null;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    string[] args = line.Split(',');
+                    RegisterCategory(args[0], (PackIconKind) Enum.Parse(typeof(PackIconKind), args[1]));
+                }
+            }
+        }
+
+        public static TransactionCategory GetCategory(long id)
+        {
+            if (_categoryMap.TryGetValue(id, out TransactionCategory category))
+                return category;
+            return null;
+        }
+
+        public static TransactionCategory RegisterCategory(string label, PackIconKind icon)
+        {
+            TransactionCategory category = new TransactionCategory(label, icon);
+            _categoryMap.Add(category.ID, category);
+            FireNotifyCategoryValues();
+            return category;
+        }
+
+        public static bool UnregisterCategory(long id)
+        {
+            bool result = _categoryMap.Remove(id);
+            FireNotifyCategoryValues();
+            return result;
+        }
+
+        private static void FireNotifyCategoryValues() 
+        {
+            _categoryValues.Clear();
+            foreach (TransactionCategory ent in _categoryMap.Values)
+                _categoryValues.Add(ent);
+            OnStaticPropertyChanged(nameof(Categories));
+        }
+
+
+        public long ID { get; }
+
+        public string Label
+        {
+            get => _label;
+            set
+            {
+                _label = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public PackIconKind Icon
+        {
+            get => _icon;
+            set
+            {
+                _icon = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public static IEnumerable<TransactionCategory> Categories
+        {
+            get => _categoryValues;
+        }
     }
 
     public class CategorySerializer : IPropertiesSerializable
     {
         public void Deserialize(BinaryReader reader)
         {
-            int len = reader.ReadInt32();
-            for (int i = 0; i < len; i++)
-                TransactionCategory.CategoryMap.Add(reader.ReadString(), (PackIconKind)reader.ReadInt32());
-            if (len == 0)
-                AddDefaults();
+            TransactionCategory.Deserialize(reader);
         }
 
         public void Serialize(BinaryWriter writer)
         {
-            if (TransactionCategory.CategoryMap.Count == 0)
-                AddDefaults();
-            writer.Write(TransactionCategory.CategoryMap.Count);
-            foreach (var ent in TransactionCategory.CategoryMap)
-            {
-                writer.Write(ent.Key);
-                writer.Write((int)ent.Value);
-            }
-        }
-
-        private void AddDefaults()
-        {
-            Dictionary<string, PackIconKind> map = TransactionCategory.CategoryMap;
-            map[TransactionCategory.UnknownCategoryLabel] = PackIconKind.HelpCircle;
-            map["식비"] = PackIconKind.Food;
-            map["카페"] = PackIconKind.Coffee;
-            map["쇼핑"] = PackIconKind.Basket;
-            map["뷰티"] = PackIconKind.Brush;
-            map["교통"] = PackIconKind.TrainCar;
-            map["생활"] = PackIconKind.HomeCity;
-            map["편의점"] = PackIconKind.CartOutline;
-            map["술"] = PackIconKind.GlassMugVariant;
-            map["주유"] = PackIconKind.Oil;
-            map["세차"] = PackIconKind.CarWash;
-            map["주거"] = PackIconKind.Building;
-            map["통신"] = PackIconKind.SignalVariant;
-            map["의료"] = PackIconKind.HospitalBox;
-            map["금융"] = PackIconKind.Finance;
-            map["문화"] = PackIconKind.Ticket;
-            map["여가"] = PackIconKind.GamepadVariantOutline;
-            map["여행"] = PackIconKind.WalletTravel;
-            map["학습"] = PackIconKind.BookOpenVariant;
-            map["경조"] = PackIconKind.Email;
-            map["선물"] = PackIconKind.GiftOutline;
-            map["운동"] = PackIconKind.Dumbbell;
+            TransactionCategory.Serialize(writer);
         }
     }
 }

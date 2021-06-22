@@ -32,7 +32,8 @@
             <tab:SettingsTab />
         </DataTemplate>
     </Window.Resources>
-    <md:DialogHost Identifier="RootDialogHost"
+    <md:DialogHost Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
+                   Identifier="RootDialogHost"
                    DialogTheme="Inherit">
         <Grid Background="{DynamicResource BackgroundColor}" Margin="8">
             <Grid.Effect>

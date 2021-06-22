@@ -21,14 +21,14 @@
                         Foreground="Black"
                         VerticalAlignment="Bottom"
                         Command="{Binding PickIconCommand}">
-                    <md:PackIcon Kind="{Binding Icon}" />
+                    <md:PackIcon Kind="{Binding Category.Icon}" />
                 </Button>
                 <TextBox x:Name="tbxLabel"
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      Width="200"
                      md:HintAssist.Hint="카테고리 이름">
                     <TextBox.Text>
-                        <Binding Path="Label" UpdateSourceTrigger="PropertyChanged">
+                        <Binding Path="Category.Label" UpdateSourceTrigger="PropertyChanged">
                             <Binding.ValidationRules>
                                 <root:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
                             </Binding.ValidationRules>
@@ -38,13 +38,6 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" 
                     HorizontalAlignment="Right">
-                <Button Style="{StaticResource MaterialDesignFlatButton}" 
-                    Command="{x:Static md:DialogHost.CloseDialogCommand}">
-                    <Button.CommandParameter>
-                        <system:Boolean>False</system:Boolean>
-                    </Button.CommandParameter>
-                    취소
-                </Button>
                 <Button Style="{StaticResource MaterialDesignFlatButton}" 
                     Command="{x:Static md:DialogHost.CloseDialogCommand}">
                     <Button.CommandParameter>

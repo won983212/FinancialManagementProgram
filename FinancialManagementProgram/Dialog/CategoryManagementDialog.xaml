@@ -7,7 +7,8 @@
              xmlns:data="clr-namespace:FinancialManagementProgram.Data"
              x:Name="dialogRoot"
              mc:Ignorable="d" >
-    <md:DialogHost Identifier="CategoryDialogHost"
+    <md:DialogHost Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
+                   Identifier="CategoryDialogHost"
                    DialogTheme="Inherit">
         <StackPanel DataContext="{Binding ElementName=dialogRoot}" Margin="16">
             <StackPanel Orientation="Horizontal">
@@ -19,7 +20,7 @@
                 </Button>
             </StackPanel>
             <ListBox x:Name="listCategories"
-                     ItemsSource="{Binding CategoryViewList}" 
+                     ItemsSource="{Binding Source={x:Static data:TransactionCategory.Categories}}" 
                      MaxHeight="250"
                      Width="250"
                      HorizontalContentAlignment="Stretch"
@@ -31,14 +32,14 @@
                                 Background="Transparent">
                             <StackPanel.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="{Binding Key}" IsEnabled="False" />
+                                    <MenuItem Header="{Binding Label}" IsEnabled="False" />
                                     <Separator />
                                     <MenuItem Header="편집" Command="{Binding EditCommand, Source={x:Reference dialogRoot}}" CommandParameter="{Binding}" />
                                     <MenuItem Header="삭제" Command="{Binding DeleteCommand, Source={x:Reference dialogRoot}}" CommandParameter="{Binding}" />
                                 </ContextMenu>
                             </StackPanel.ContextMenu>
-                            <md:PackIcon Kind="{Binding Value}" Margin="0,0,8,0"/>
-                            <TextBlock Text="{Binding Key}" />
+                            <md:PackIcon Kind="{Binding Icon}" Margin="0,0,8,0"/>
+                            <TextBlock Text="{Binding Label}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

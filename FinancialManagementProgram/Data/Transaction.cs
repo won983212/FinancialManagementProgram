@@ -5,10 +5,8 @@ using System.Runtime.CompilerServices;
 
 namespace FinancialManagementProgram.Data
 {
-    public class Transaction : INotifyPropertyChanged
+    public class Transaction : ObservableObject
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private string _label;
         private TransactionCategory _category;
         private long _amount;
@@ -23,22 +21,17 @@ namespace FinancialManagementProgram.Data
         public Transaction(DataManager dataManager, BinaryReader reader)
         {
             Label = reader.ReadString();
-            Category = new TransactionCategory(reader.ReadString());
+            Category = TransactionCategory.GetCategory(reader.ReadInt64());
             Amount = reader.ReadInt64();
             Account = dataManager.FindAccount(reader.ReadInt64());
             Description = reader.ReadString();
             TransDateTime = new DateTime(reader.ReadInt64());
         }
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public void Serialize(BinaryWriter writer)
         {
             writer.Write(Label);
-            writer.Write(Category.Label);
+            writer.Write(Category.ID);
             writer.Write(Amount);
             writer.Write(_account.ID);
             writer.Write(Description);
@@ -52,7 +45,7 @@ namespace FinancialManagementProgram.Data
         public void Copy(Transaction src)
         {
             Label = src.Label;
-            Category = new TransactionCategory(src.Category.Label);
+            Category = src.Category;
             Amount = src.Amount;
             Account = src.Account;
             Description = src.Description;

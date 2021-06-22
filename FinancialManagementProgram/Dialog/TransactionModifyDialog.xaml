@@ -16,7 +16,7 @@
                    Text="거래내역"/>
         <TextBox x:Name="tbxLabel"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 Width="200"
+                 Width="300"
                  Margin="0,0,0,24"
                  md:HintAssist.Hint="거래명">
             <TextBox.Text>
@@ -29,7 +29,7 @@
         </TextBox>
         <TextBox x:Name="tbxAmount"
                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 Width="200"
+                 Width="300"
                  Margin="0,0,0,24"
                  md:HintAssist.Hint="수익 (지출이면 음수로 기입)">
             <TextBox.Text>
@@ -41,13 +41,13 @@
             </TextBox.Text>
         </TextBox>
         <TextBox Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 Width="200"
+                 Width="300"
                  Margin="0,0,0,24"
                  md:HintAssist.Hint="메모"
-                 Text="{Binding TransactionObj.Description, UpdateSourceTrigger=PropertyChanged}"/>
-        <Grid Margin="0,0,0,24">
+                 Text="{Binding TransactionObj.Description}"/>
+        <Grid Margin="0,0,0,32">
             <DatePicker Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
-                        Width="90"
+                        Width="140"
                         HorizontalAlignment="Left"
                         md:HintAssist.Hint="거래 날짜">
                 <DatePicker.SelectedDate>
@@ -59,7 +59,7 @@
                 </DatePicker.SelectedDate>
             </DatePicker>
             <md:TimePicker Style="{StaticResource MaterialDesignFloatingHintTimePicker}"
-                           Width="90"
+                           Width="140"
                            md:HintAssist.Hint="거래 시각"
                            VerticalAlignment="Bottom"
                            HorizontalAlignment="Right"
@@ -74,24 +74,36 @@
                 </md:TimePicker.SelectedTime>
             </md:TimePicker>
         </Grid>
-        <ComboBox x:Name="cbxCategory"
-                  Width="200"
-                  Margin="0,0,0,24"
-                  md:HintAssist.Hint="거래 유형"
-                  SelectedItem="{Binding SelectedCategoryEntry}"
-                  ItemsSource="{Binding Source={x:Static data:TransactionCategory.CategoryMap}}">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <md:PackIcon Kind="{Binding Value}" Margin="0,0,8,0" />
-                        <TextBlock Text="{Binding Key}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox x:Name="cbxCategory"
+                      Width="140"
+                      HorizontalAlignment="Left"
+                      md:HintAssist.Hint="거래 유형"
+                      SelectedItem="{Binding TransactionObj.Category}"
+                      ItemsSource="{Binding Source={x:Static data:TransactionCategory.Categories}}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <md:PackIcon Kind="{Binding Icon}" Margin="0,0,8,0" />
+                            <TextBlock Text="{Binding Label}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <CheckBox Grid.Column="1"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Center"
+                      ToolTip="거래명이 같은, 모든 거래 내역의 유형을 이 유형으로 통일합니다. 앞으로 거래내역을 추가할 때도 기본값으로 설정됩니다." 
+                      Content="모든 거래에 적용"
+                      IsChecked="{Binding ApplySameTypeAllTransaction}"/>
+        </Grid>
         <ComboBox x:Name="cbxAccount"
                   Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                  Width="200"
+                  Width="300"
                   Margin="0,0,0,24"
                   md:HintAssist.Hint="거래한 자산"
                   SelectedItem="{Binding TransactionObj.Account}"

@@ -22,7 +22,6 @@ namespace FinancialManagementProgram.Dialog
     /// </summary>
     public partial class TransactionModifyDialog : UserControl
     {
-        // TODO 이상하게 AddDialog들에서 IME가 동작하지 않음??
         private DataManager _dataManager;
         private int _errorCount = 0;
 
@@ -31,14 +30,14 @@ namespace FinancialManagementProgram.Dialog
             if (dataManager.BankAccounts.Count == 0)
                 throw new InvalidOperationException("가용한 자산이 없습니다.");
 
-            if (TransactionCategory.CategoryMap.Count() == 0)
+            if (TransactionCategory.Categories.Count() == 0)
                 throw new InvalidOperationException("가용한 카테고리가 없습니다.");
 
             _dataManager = dataManager;
             TransactionObj = new Transaction()
             {
                 TransDateTime = DateTime.Now,
-                Category = new TransactionCategory(TransactionCategory.CategoryMap.Keys.First()),
+                Category = TransactionCategory.Categories.First(),
                 Account = dataManager.BankAccounts.First()
             };
 
@@ -64,6 +63,8 @@ namespace FinancialManagementProgram.Dialog
 
         public Transaction TransactionObj { get; }
 
+        public bool ApplySameTypeAllTransaction { get; set; }
+
         public DateTime TransDate
         {
             get => TransactionObj.TransDateTime;
@@ -82,12 +83,6 @@ namespace FinancialManagementProgram.Dialog
                 DateTime prev = TransactionObj.TransDateTime;
                 TransactionObj.TransDateTime = new DateTime(prev.Year, prev.Month, prev.Day, value.Hour, value.Minute, value.Second);
             }
-        }
-
-        public KeyValuePair<string, PackIconKind> SelectedCategoryEntry
-        {
-            get => new KeyValuePair<string, PackIconKind>(TransactionObj.Category.Label, TransactionObj.Category.Icon);
-            set => TransactionObj.Category = new TransactionCategory(value.Key);
         }
 
         public IEnumerable<BankAccount> AccountsList

@@ -50,7 +50,7 @@
                      md:HintAssist.Hint="검색..."
                      VerticalAlignment="Center"
                      HorizontalAlignment="Left"
-                     KeyDown="SearchingBox_KeyDown"/>
+                     Text="{Binding SearchBoxText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <TextBlock VerticalAlignment="Center"

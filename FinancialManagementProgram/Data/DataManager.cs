@@ -21,11 +21,12 @@ namespace FinancialManagementProgram.Data
     {
         private static readonly Lazy<DataManager> _instance = new Lazy<DataManager>(() => new DataManager());
 
-        private Random random = new Random();
         private long _budget = 100000;
         private DateTime _targetDate;
-        private readonly ObservableCollection<BankAccount> _accounts;
+
         private readonly Dictionary<long, BankAccount> _accountsIDMap;
+
+        private readonly ObservableCollection<BankAccount> _accounts;
         private readonly ReadOnlyObservableCollection<BankAccount> _accountsReadonly;
         private readonly SortedList<int, TransactionGroup> _allTransactions;
         private readonly TransactionDataAnalyzer _analyzer;
@@ -92,21 +93,9 @@ namespace FinancialManagementProgram.Data
                 ent.Value.RevalidateTotalSum();
         }
 
-        private bool ContainsIDInAccount(long id)
-        {
-            return _accountsIDMap.ContainsKey(id);
-        }
-
         public long GenerateUniqueAccountID()
         {
-            long x;
-            do
-            {
-                x = random.Next() << sizeof(int) * 8;
-                x += random.Next();
-            } 
-            while (ContainsIDInAccount(x));
-            return x;
+            return CommonUtil.GenerateUniqueID((x) => _accountsIDMap.ContainsKey(x));
         }
 
         public IEnumerable<DayTransactions> GetTransactionsBetween(DateTime fromDate, DateTime toDate)
