@@ -59,7 +59,7 @@
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" Margin="12,6">
-                                    <md:PackIcon Kind="{Binding IconName}" Width="24" Height="24" Margin="0,0,16,0" />
+                                    <md:PackIcon Kind="{Binding Icon}" Width="24" Height="24" Margin="0,0,16,0" />
                                     <TextBlock Text="{Binding Title}" VerticalAlignment="Center" FontSize="9pt"/>
                                 </StackPanel>
                             </DataTemplate>

@@ -18,7 +18,7 @@ namespace FinancialManagementProgram
             _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "fmp_cfg.dat");
             properties = new IPropertiesSerializable[]
             {
-                DataManager.Current
+                new CategorySerializer(), DataManager.Current
             };
         }
 

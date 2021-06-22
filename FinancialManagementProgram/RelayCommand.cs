@@ -6,13 +6,13 @@ namespace FinancialManagementProgram
     public class RelayCommand<T> : ICommand
     {
         private readonly Action<T> execute;
-        private readonly Predicate<object> canExecute;
+        private readonly Predicate<T> canExecute;
 
         public RelayCommand(Action<T> execute)
             : this(execute, null)
         { }
 
-        public RelayCommand(Action<T> execute, Predicate<object> canExecute)
+        public RelayCommand(Action<T> execute, Predicate<T> canExecute)
         {
             this.execute = execute ?? throw new ArgumentNullException("execute");
             this.canExecute = canExecute;
@@ -26,7 +26,7 @@ namespace FinancialManagementProgram
 
         public bool CanExecute(object parameter)
         {
-            return canExecute == null || canExecute(parameter);
+            return canExecute == null || parameter == null || canExecute((T)parameter);
         }
 
         public void Execute(object parameter)

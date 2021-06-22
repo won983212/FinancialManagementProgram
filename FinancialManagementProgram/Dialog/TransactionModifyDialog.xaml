@@ -35,7 +35,7 @@
             <TextBox.Text>
                 <Binding Path="TransactionObj.Amount" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
-                        <root:NumericalValidationRule ValidatesOnTargetUpdated="True" />
+                        <root:NumericalLongValidationRule ValidatesOnTargetUpdated="True" />
                     </Binding.ValidationRules>
                 </Binding>
             </TextBox.Text>
@@ -78,8 +78,16 @@
                   Width="200"
                   Margin="0,0,0,24"
                   md:HintAssist.Hint="거래 유형"
-                  SelectedItem="{Binding SelectedCategoryName}"
-                  ItemsSource="{Binding Source={x:Static data:TransactionCategory.CategoryNames}}">
+                  SelectedItem="{Binding SelectedCategoryEntry}"
+                  ItemsSource="{Binding Source={x:Static data:TransactionCategory.CategoryMap}}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <md:PackIcon Kind="{Binding Value}" Margin="0,0,8,0" />
+                        <TextBlock Text="{Binding Key}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
         </ComboBox>
         <ComboBox x:Name="cbxAccount"
                   Style="{StaticResource MaterialDesignFloatingHintComboBox}"

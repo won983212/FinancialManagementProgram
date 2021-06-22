@@ -7,7 +7,6 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              x:Name="dialogRoot"
              mc:Ignorable="d" 
-             FontFamily="{StaticResource PrimaryFont}"
              Width="350">
     <Grid DataContext="{Binding ElementName=dialogRoot}" Margin="16">
         <Grid.RowDefinitions>

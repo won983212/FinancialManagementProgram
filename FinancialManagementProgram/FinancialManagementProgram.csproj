@@ -70,6 +70,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="VirtualizingWrapPanel, Version=1.5.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VirtualizingWrapPanel.1.5.4\lib\net45\VirtualizingWrapPanel.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -115,6 +118,18 @@
     <Compile Include="Dialog\AddAccountDialog.xaml.cs">
       <DependentUpon>AddAccountDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\BudgetModifyDialog.xaml.cs">
+      <DependentUpon>BudgetModifyDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\CategoryManagementDialog.xaml.cs">
+      <DependentUpon>CategoryManagementDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\CategoryModifyDialog.xaml.cs">
+      <DependentUpon>CategoryModifyDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\IconSelectionDialog.xaml.cs">
+      <DependentUpon>IconSelectionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\MessageDialog.xaml.cs">
       <DependentUpon>MessageDialog.xaml</DependentUpon>
     </Compile>
@@ -123,7 +138,7 @@
     </Compile>
     <Compile Include="NotEmptyValidationRule.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="NumericalValidationRule.cs" />
+    <Compile Include="NumericalLongValidationRule.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="IPropertiesSerializable.cs" />
     <Compile Include="RelayCommand.cs" />
@@ -171,6 +186,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialog\AddAccountDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\BudgetModifyDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\CategoryManagementDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\CategoryModifyDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialog\IconSelectionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

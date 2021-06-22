@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Web.UI;
+using System.Windows;
 
 namespace FinancialManagementProgram
 {
@@ -85,9 +87,19 @@ namespace FinancialManagementProgram
             return (T)((DialogHost)o).DialogContent;
         }
 
+        public static ViewModelType GetDialogViewModel<ViewModelType>(object o)
+        {
+            return (ViewModelType)((FrameworkElement)((DialogHost)o).DialogContent).DataContext;
+        }
+
         public static Task<object> ShowDialog(object content, DialogClosingEventHandler closingHandler)
         {
-            return DialogHost.Show(content, "RootDialogHost", closingHandler);
+            return ShowDialog(content, "RootDialogHost", closingHandler);
+        }
+
+        public static Task<object> ShowDialog(object content, string dialog, DialogClosingEventHandler closingHandler)
+        {
+            return DialogHost.Show(content, dialog, closingHandler);
         }
 
         #endregion

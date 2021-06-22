@@ -181,7 +181,7 @@ namespace FinancialManagementProgram.Data
         public long Budget
         {
             get => _budget;
-            private set
+            set
             {
                 if (_budget != value)
                 {

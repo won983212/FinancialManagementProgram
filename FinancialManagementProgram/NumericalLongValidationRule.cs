@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace FinancialManagementProgram
 {
-    class NumericalValidationRule : ValidationRule
+    class NumericalLongValidationRule : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
@@ -17,7 +17,7 @@ namespace FinancialManagementProgram
             if (string.IsNullOrWhiteSpace(input))
                 return new ValidationResult(false, "이 필드는 반드시 입력해야합니다.");
 
-            if (!int.TryParse(input, out int result))
+            if (!long.TryParse(input, out long _))
                 return new ValidationResult(false, "정수로 기입하세요");
 
             return ValidationResult.ValidResult;

@@ -94,7 +94,7 @@
                                     <MenuItem Header="삭제" Command="{Binding DataContext.DeleteCommand, Source={x:Reference pnlContent}}" CommandParameter="{Binding}"/>
                                 </ContextMenu>
                             </Grid.ContextMenu>
-                            <md:PackIcon Kind="{Binding Category.IconName}" 
+                            <md:PackIcon Kind="{Binding Category.Icon}" 
                                          Width="24" Height="24" Grid.RowSpan="2"
                                          VerticalAlignment="Center"
                                          Margin="0,0,8,0"
