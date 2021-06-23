@@ -51,7 +51,6 @@ namespace FinancialManagementProgram.ViewModels
             SelectedTabItemIndex = 0;
         }
 
-        // TODO Snackbar 추가해서 logger.error, warn 처리하기
         static MainViewModel()
         {
             SnackMessageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(2));

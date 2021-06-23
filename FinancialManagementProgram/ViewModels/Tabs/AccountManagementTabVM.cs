@@ -39,7 +39,10 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             {
                 AddAccountDialog dialog = CommonUtil.GetDialog<AddAccountDialog>(o);
                 if (string.IsNullOrWhiteSpace(dialog.Label) || string.IsNullOrWhiteSpace(dialog.BankName))
+                {
+                    Logger.Error(new InvalidOperationException("빈칸을 모두 알맞게 채워주세요."));
                     return;
+                }
 
                 DataManager.AddAccount(new BankAccount(DataManager.GenerateUniqueAccountID())
                 {

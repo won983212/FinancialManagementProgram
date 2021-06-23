@@ -24,6 +24,7 @@ namespace FinancialManagementProgram.Dialog
     /// </summary>
     public partial class TransactionModifyDialog : UserControl, INotifyPropertyChanged
     {
+        // TODO Dialog도 전부 VM만들어봐
         public event PropertyChangedEventHandler PropertyChanged;
 
         private DataManager _dataManager;

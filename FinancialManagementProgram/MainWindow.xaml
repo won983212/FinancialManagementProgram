@@ -82,6 +82,11 @@
                     <md:PackIcon Kind="Close" />
                 </Button>
             </StackPanel>
+
+            <md:Snackbar Grid.Column="1"
+                         HorizontalAlignment="Right" 
+                         Margin="8"
+                         MessageQueue="{Binding SnackMessageQueue}"/>
         </Grid>
     </md:DialogHost>
 </Window>

@@ -45,6 +45,8 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Separator Margin="0,0,0,16"
+                   Background="{StaticResource BorderColor}"/>
         <Grid Margin="0,0,0,8">
             <TextBox Width="180" 
                      md:HintAssist.Hint="검색..."

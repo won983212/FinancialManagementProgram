@@ -34,6 +34,8 @@ namespace FinancialManagementProgram.Dialog
             {
                 if (!CommonUtil.GetDialog<CategoryModifyDialog>(o).HasError)
                     BinaryProperties.Save();
+                else
+                    Logger.Error(new InvalidOperationException("빈칸을 모두 올바르게 채워주세요."));
             }
         }
 
