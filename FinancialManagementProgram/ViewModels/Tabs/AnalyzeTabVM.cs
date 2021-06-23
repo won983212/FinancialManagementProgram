@@ -1,4 +1,5 @@
 ﻿using FinancialManagementProgram.Dialog;
+using FinancialManagementProgram.Dialog.ViewModel;
 using System;
 using System.Windows.Input;
 
@@ -10,8 +11,8 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             : base(parent)
         { }
 
-        public ICommand EditBudgetCommand => new RelayCommand(() => CommonUtil.ShowDialog(new BudgetModifyDialog(DataManager), null));
+        public ICommand EditBudgetCommand => new RelayCommand(() => CommonUtil.ShowDialog(new BudgetModifyVM(DataManager), null));
 
-        public ICommand EditCategoryCommand => new RelayCommand(() => CommonUtil.ShowDialog(new CategoryManagementDialog(DataManager), null));
+        public ICommand EditCategoryCommand => new RelayCommand(() => CommonUtil.ShowDialog(new CategoryManagementVM(DataManager), null));
     }
 }

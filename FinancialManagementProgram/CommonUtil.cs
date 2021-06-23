@@ -1,4 +1,5 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using FinancialManagementProgram.Dialog.ViewModel;
+using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,6 +12,8 @@ namespace FinancialManagementProgram
 {
     public static class CommonUtil
     {
+        public delegate void DialogCompleteEventHandler<T>(T vm, DialogClosingEventArgs eventArgs) where T : DialogViewModel;
+
         private static readonly int[] MonthDays = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
         private static readonly Random random = new Random();
 
@@ -95,24 +98,14 @@ namespace FinancialManagementProgram
 
         #region Dialog
 
-        public static T GetDialog<T>(object o)
-        {
-            return (T)((DialogHost)o).DialogContent;
-        }
-
-        public static ViewModelType GetDialogViewModel<ViewModelType>(object o)
-        {
-            return (ViewModelType)((FrameworkElement)((DialogHost)o).DialogContent).DataContext;
-        }
-
-        public static Task<object> ShowDialog(object content, DialogClosingEventHandler closingHandler)
+        public static Task<object> ShowDialog<T>(T content, DialogCompleteEventHandler<T> closingHandler) where T : DialogViewModel
         {
             return ShowDialog(content, "RootDialogHost", closingHandler);
         }
 
-        public static Task<object> ShowDialog(object content, string dialog, DialogClosingEventHandler closingHandler)
+        public static Task<object> ShowDialog<T>(T content, string dialog, DialogCompleteEventHandler<T> closingHandler) where T : DialogViewModel
         {
-            return DialogHost.Show(content, dialog, closingHandler);
+            return DialogHost.Show(content, dialog, (o, e) => closingHandler?.Invoke((T)((DialogHost)o).DialogContent, e));
         }
 
         #endregion

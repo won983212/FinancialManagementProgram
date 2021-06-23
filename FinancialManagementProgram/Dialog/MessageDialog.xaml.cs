@@ -17,14 +17,9 @@ namespace FinancialManagementProgram.Dialog
 {
     public partial class MessageDialog : UserControl
     {
-        public MessageDialog(string title, string message)
+        public MessageDialog()
         {
-            Title = title;
-            Message = message;
             InitializeComponent();
         }
-
-        public string Title { get; }
-        public string Message { get; }
     }
 }

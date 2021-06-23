@@ -7,9 +7,9 @@
              xmlns:root="clr-namespace:FinancialManagementProgram"
              xmlns:data="clr-namespace:FinancialManagementProgram.Data"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             x:Name="dialogRoot"
+             Validation.Error="UserControl_Error"
              mc:Ignorable="d" >
-    <StackPanel Margin="28,16" DataContext="{Binding ElementName=dialogRoot}">
+    <StackPanel Margin="28,16">
         <TextBlock FontSize="12pt"
                    Margin="0,0,0,16" 
                    Text="자산 추가"/>
@@ -18,7 +18,7 @@
                  Margin="0,0,0,24"
                  md:HintAssist.Hint="자산 이름">
             <TextBox.Text>
-                <Binding Path="Label" UpdateSourceTrigger="PropertyChanged">    
+                <Binding Path="Label" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">    
                     <Binding.ValidationRules>
                         <root:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
                     </Binding.ValidationRules>

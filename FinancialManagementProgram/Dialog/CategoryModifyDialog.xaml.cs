@@ -1,4 +1,5 @@
 ﻿using FinancialManagementProgram.Data;
+using FinancialManagementProgram.Dialog.ViewModel;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
@@ -21,30 +22,14 @@ namespace FinancialManagementProgram.Dialog
     public partial class CategoryModifyDialog : UserControl
     {
         public CategoryModifyDialog()
-            : this(TransactionCategory.RegisterCategory("새 카테고리", PackIconKind.HelpCircle))
-        { }
-
-        public CategoryModifyDialog(TransactionCategory category)
         {
-            Category = category;
             InitializeComponent();
         }
 
-        private void OnIconSelectionDialogClosed(object o, DialogClosingEventArgs e)
+        private void UserControl_Error(object sender, ValidationErrorEventArgs e)
         {
-            if ((bool)e.Parameter)
-            {
-                Category.Icon = CommonUtil.GetDialog<IconSelectionDialog>(o).SelectedIcon.PackIcon;
-            }
+            if (DataContext != null && DataContext is CategoryModifyVM vm)
+                vm.HasError = e.Action == ValidationErrorEventAction.Added;
         }
-
-        public bool HasError
-        {
-            get => Validation.GetHasError(tbxLabel);
-        }
-
-        public TransactionCategory Category { get; }
-
-        public ICommand PickIconCommand => new RelayCommand(() => CommonUtil.ShowDialog(new IconSelectionDialog(), "CategoryModifyDialogHost", OnIconSelectionDialogClosed));
     }
 }

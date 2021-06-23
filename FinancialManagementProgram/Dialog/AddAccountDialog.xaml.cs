@@ -1,4 +1,5 @@
 ﻿using FinancialManagementProgram.Data;
+using FinancialManagementProgram.Dialog.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,10 @@ namespace FinancialManagementProgram.Dialog
             InitializeComponent();
         }
 
-        public string Label { get; set; }
-        public string BankName { get; set; }
-        public int ColorIndex { get; set; } = 0;
-        public string Memo { get; set; }
+        private void UserControl_Error(object sender, ValidationErrorEventArgs e)
+        {
+            if (DataContext != null && DataContext is AddAccountVM vm)
+                vm.HasError = e.Action == ValidationErrorEventAction.Added;
+        }
     }
 }

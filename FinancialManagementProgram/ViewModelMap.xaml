@@ -1,0 +1,48 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:tabvm="clr-namespace:FinancialManagementProgram.ViewModels.Tabs"
+                    xmlns:tab="clr-namespace:FinancialManagementProgram.Tabs"
+                    xmlns:dialogvm="clr-namespace:FinancialManagementProgram.Dialog.ViewModel" 
+                    xmlns:dialog="clr-namespace:FinancialManagementProgram.Dialog">
+    
+    <!-- Tab View Models -->
+    <DataTemplate DataType="{x:Type tabvm:DashboardTabVM}">
+        <tab:DashboardTab />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type tabvm:AccountManagementTabVM}">
+        <tab:AccountManagementTab />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type tabvm:TransactionTabVM}">
+        <tab:TransactionTab />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type tabvm:AnalyzeTabVM}">
+        <tab:AnalyzeTab />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type tabvm:SettingsTabVM}">
+        <tab:SettingsTab />
+    </DataTemplate>
+
+    <!-- Dialog View Models -->
+    <DataTemplate DataType="{x:Type dialogvm:AddAccountVM}">
+        <dialog:AddAccountDialog />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type dialogvm:BudgetModifyVM}">
+        <dialog:BudgetModifyDialog />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type dialogvm:CategoryManagementVM}">
+        <dialog:CategoryManagementDialog />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type dialogvm:CategoryModifyVM}">
+        <dialog:CategoryModifyDialog />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type dialogvm:IconSelectionVM}">
+        <dialog:IconSelectionDialog />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type dialogvm:MessageVM}">
+        <dialog:MessageDialog />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type dialogvm:TransactionModifyVM}">
+        <dialog:TransactionModifyDialog />
+    </DataTemplate>
+    
+</ResourceDictionary>

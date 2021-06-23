@@ -198,7 +198,7 @@ namespace FinancialManagementProgram.Data
             len = reader.ReadInt32();
             _transactionCategoryMap.Clear();
             for (int i = 0; i < len; i++)
-                _transactionCategoryMap.Add(reader.ReadString(), TransactionCategory.GetCategory(reader.ReadInt64()));
+                _transactionCategoryMap.Add(reader.ReadString(), TransactionCategory.GetCategory(reader.ReadInt64())); // TODO 가끔 NULL로 되는 버그있는데 추적해보자?
             Analyzer.Update();
         }
 

@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="Theme/Theme.Light.xaml" />
                 <ResourceDictionary Source="Theme/Theme.Scrollbar.xaml" />
                 <ResourceDictionary Source="Theme/Theme.ListBox.xaml" />
+                <ResourceDictionary Source="ViewModelMap.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Common Converters -->

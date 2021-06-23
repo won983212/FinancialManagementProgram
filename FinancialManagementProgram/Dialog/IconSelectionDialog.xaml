@@ -6,9 +6,8 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             x:Name="dialogRoot"
              mc:Ignorable="d" >
-    <StackPanel DataContext="{Binding ElementName=dialogRoot}" Margin="16">
+    <StackPanel Margin="16">
         <TextBlock FontSize="14pt" Text="아이콘 선택" />
         <ListBox ItemsSource="{Binding Icons}"
                  SelectedItem="{Binding SelectedIcon}"
@@ -52,7 +51,7 @@
                      md:HintAssist.Hint="검색..."
                      VerticalAlignment="Center"
                      HorizontalAlignment="Left"
-                     Text="{Binding SearchBoxText, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
+                     Text="{Binding SearchBoxText, UpdateSourceTrigger=PropertyChanged}"/>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <TextBlock VerticalAlignment="Center"

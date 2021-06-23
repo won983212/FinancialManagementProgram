@@ -1,5 +1,6 @@
 ﻿using FinancialManagementProgram.Data;
 using FinancialManagementProgram.Dialog;
+using FinancialManagementProgram.Dialog.ViewModel;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             return accounts[SelectedAccountIndex];
         }
 
-        private void OnDeleteDialogClosed(object o, DialogClosingEventArgs e)
+        private void OnDeleteDialogClosed(MessageVM vm, DialogClosingEventArgs e)
         {
             if ((bool)e.Parameter)
             {
@@ -33,12 +34,11 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             }
         }
 
-        private void OnAddDialogClosed(object o, DialogClosingEventArgs e)
+        private void OnAddDialogClosed(AddAccountVM model, DialogClosingEventArgs e)
         {
             if ((bool)e.Parameter)
             {
-                AddAccountDialog dialog = CommonUtil.GetDialog<AddAccountDialog>(o);
-                if (string.IsNullOrWhiteSpace(dialog.Label) || string.IsNullOrWhiteSpace(dialog.BankName))
+                if (model.HasError)
                 {
                     Logger.Error(new InvalidOperationException("빈칸을 모두 알맞게 채워주세요."));
                     return;
@@ -46,10 +46,10 @@ namespace FinancialManagementProgram.ViewModels.Tabs
 
                 DataManager.AddAccount(new BankAccount(DataManager.GenerateUniqueAccountID())
                 {
-                    Label = dialog.Label,
-                    BankName = dialog.BankName,
-                    Color = (AccountColor)dialog.ColorIndex,
-                    Memo = dialog.Memo
+                    Label = model.Label,
+                    BankName = model.BankName,
+                    Color = (AccountColor)model.ColorIndex,
+                    Memo = model.Memo
                 });
             }
         }
@@ -114,9 +114,9 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             }
         }
 
-        public ICommand AddCommand => new RelayCommand(() => CommonUtil.ShowDialog(new AddAccountDialog(), OnAddDialogClosed));
+        public ICommand AddCommand => new RelayCommand(() => CommonUtil.ShowDialog(new AddAccountVM(), OnAddDialogClosed));
         public ICommand EditCommand => new RelayCommand(() => IsEditing = !IsEditing);
         public ICommand DeleteCommand => new RelayCommand(() => CommonUtil.ShowDialog(
-            new MessageDialog("자산을 삭제합니다.", "자산과 관련 거래내역이 영구적으로 삭제되며, 통계에 영향을 줄 수 있습니다. 그래도 삭제하시겠습니까?"), OnDeleteDialogClosed));
+            new MessageVM("자산을 삭제합니다.", "자산과 관련 거래내역이 영구적으로 삭제되며, 통계에 영향을 줄 수 있습니다. 그래도 삭제하시겠습니까?"), OnDeleteDialogClosed));
     }
 }

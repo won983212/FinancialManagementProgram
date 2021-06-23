@@ -18,18 +18,9 @@ namespace FinancialManagementProgram.Dialog
 {
     public partial class BudgetModifyDialog : UserControl
     {
-        private DataManager _dataManager;
-
-        public BudgetModifyDialog(DataManager dataManager)
+        public BudgetModifyDialog()
         {
-            _dataManager = dataManager;
             InitializeComponent();
-        }
-
-        public string Budget
-        {
-            get => _dataManager.Budget.ToString();
-            set => _dataManager.Budget = long.Parse(value);
         }
     }
 }

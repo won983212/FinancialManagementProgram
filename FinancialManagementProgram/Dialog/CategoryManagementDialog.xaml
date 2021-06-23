@@ -10,7 +10,7 @@
     <md:DialogHost Style="{StaticResource MaterialDesignEmbeddedDialogHost}"
                    Identifier="CategoryDialogHost"
                    DialogTheme="Inherit">
-        <StackPanel DataContext="{Binding ElementName=dialogRoot}" Margin="16">
+        <StackPanel Margin="16">
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="14pt" VerticalAlignment="Center" Text="카테고리 설정" />
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
@@ -34,8 +34,8 @@
                                 <ContextMenu>
                                     <MenuItem Header="{Binding Label}" IsEnabled="False" />
                                     <Separator />
-                                    <MenuItem Header="편집" Command="{Binding EditCommand, Source={x:Reference dialogRoot}}" CommandParameter="{Binding}" />
-                                    <MenuItem Header="삭제" Command="{Binding DeleteCommand, Source={x:Reference dialogRoot}}" CommandParameter="{Binding}" />
+                                    <MenuItem Header="편집" Command="{Binding DataContext.EditCommand, Source={x:Reference dialogRoot}}" CommandParameter="{Binding}" />
+                                    <MenuItem Header="삭제" Command="{Binding DataContext.DeleteCommand, Source={x:Reference dialogRoot}}" CommandParameter="{Binding}" />
                                 </ContextMenu>
                             </StackPanel.ContextMenu>
                             <md:PackIcon Kind="{Binding Icon}" Margin="0,0,8,0"/>

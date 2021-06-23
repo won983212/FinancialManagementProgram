@@ -7,10 +7,9 @@
              xmlns:root="clr-namespace:FinancialManagementProgram"
              xmlns:data="clr-namespace:FinancialManagementProgram.Data"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             x:Name="dialogRoot"
              Validation.Error="DialogRoot_Error"
              mc:Ignorable="d" >
-    <StackPanel Margin="28,16" DataContext="{Binding ElementName=dialogRoot}">
+    <StackPanel Margin="28,16">
         <TextBlock FontSize="12pt"
                    Margin="0,0,0,16" 
                    Text="거래내역"/>

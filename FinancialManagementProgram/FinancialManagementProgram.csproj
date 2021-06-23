@@ -136,6 +136,14 @@
     <Compile Include="Dialog\TransactionModifyDialog.xaml.cs">
       <DependentUpon>TransactionModifyDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\ViewModel\AddAccountVM.cs" />
+    <Compile Include="Dialog\ViewModel\BudgetModifyVM.cs" />
+    <Compile Include="Dialog\ViewModel\CategoryManagementVM.cs" />
+    <Compile Include="Dialog\ViewModel\CategoryModifyVM.cs" />
+    <Compile Include="Dialog\ViewModel\DialogViewModel.cs" />
+    <Compile Include="Dialog\ViewModel\IconSelectionVM.cs" />
+    <Compile Include="Dialog\ViewModel\MessageVM.cs" />
+    <Compile Include="Dialog\ViewModel\TransactionModifyVM.cs" />
     <Compile Include="NotEmptyValidationRule.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="NumericalLongValidationRule.cs" />
@@ -250,6 +258,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Theme\Theme.Light.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ViewModelMap.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

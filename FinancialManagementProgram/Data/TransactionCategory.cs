@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace FinancialManagementProgram.Data
 {
-    public class TransactionCategory : ObservableObject, INotifyPropertyChanged
+    public class TransactionCategory : ObservableObject
     {
         public static readonly long UnknownCategoryID = 0;
         private static ObservableCollection<TransactionCategory> _categoryValues = new ObservableCollection<TransactionCategory>();
@@ -104,6 +104,7 @@ namespace FinancialManagementProgram.Data
         {
             if (_categoryMap.TryGetValue(id, out TransactionCategory category))
                 return category;
+            Logger.Error(new InvalidOperationException("알 수 없는 Category ID: " + id));
             return null;
         }
 

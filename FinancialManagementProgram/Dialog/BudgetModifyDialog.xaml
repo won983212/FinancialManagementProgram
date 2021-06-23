@@ -5,9 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:root="clr-namespace:FinancialManagementProgram"
-             x:Name="dialogRoot"
              mc:Ignorable="d" >
-    <Grid DataContext="{Binding ElementName=dialogRoot}" Margin="16">
+    <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
