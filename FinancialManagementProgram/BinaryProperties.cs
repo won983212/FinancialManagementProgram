@@ -7,10 +7,10 @@ namespace FinancialManagementProgram
 {
     public static class BinaryProperties
     {
-        public const int ConfigVersion = 2;
+        public const int ConfigVersion = 3; // ConfigVersion이 다르면 Reset하니 주의.
         private static string _filePath;
         private static IPropertiesSerializable[] properties;
-        private static object _lock = new object();
+        private static readonly object _lock = new object();
         private static bool _loadedOnce = false;
 
         static BinaryProperties()

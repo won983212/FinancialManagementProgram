@@ -108,6 +108,16 @@ namespace FinancialManagementProgram.Data
             return null;
         }
 
+        public static TransactionCategory GetCategory(string label)
+        {
+            foreach (TransactionCategory c in _categoryMap.Values)
+            {
+                if (c.Label == label)
+                    return c;
+            }
+            return null;
+        }
+
         public static TransactionCategory RegisterCategory(string label, PackIconKind icon)
         {
             TransactionCategory category = new TransactionCategory(label, icon);

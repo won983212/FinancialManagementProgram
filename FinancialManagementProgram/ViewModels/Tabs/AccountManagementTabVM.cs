@@ -30,6 +30,8 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             if ((bool)e.Parameter)
             {
                 DataManager.DeleteAccount(GetSelectedAccount());
+                DataManager.Analyzer.Update();
+                BinaryProperties.Save();
                 SelectedAccountIndex = 0;
             }
         }
@@ -51,6 +53,8 @@ namespace FinancialManagementProgram.ViewModels.Tabs
                     Color = (AccountColor)model.ColorIndex,
                     Memo = model.Memo
                 });
+
+                BinaryProperties.Save();
             }
         }
 

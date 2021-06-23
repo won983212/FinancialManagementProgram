@@ -53,7 +53,7 @@ namespace FinancialManagementProgram.ViewModels
 
         static MainViewModel()
         {
-            SnackMessageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(2));
+            SnackMessageQueue = new SnackbarMessageQueue(TimeSpan.FromSeconds(4));
         }
     }
 }

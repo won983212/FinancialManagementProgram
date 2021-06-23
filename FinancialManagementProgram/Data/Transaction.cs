@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace FinancialManagementProgram.Data
 {
@@ -24,7 +25,7 @@ namespace FinancialManagementProgram.Data
 
             long categoryId = reader.ReadInt64();
             Category = TransactionCategory.GetCategory(categoryId);
-            if(Category == null)
+            if (Category == null)
                 Logger.Error(new InvalidOperationException("알 수 없는 CategoryID입니다. (" + categoryId + ")"));
 
             Amount = reader.ReadInt64();
@@ -57,6 +58,97 @@ namespace FinancialManagementProgram.Data
             TransDateTime = src.TransDateTime;
         }
 
+        public void DeserializeFromCSVLine(DataManager dataManager, string line)
+        {
+            StringBuilder sb = new StringBuilder();
+            bool inText = false;
+            int index = 0;
+            char c;
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                c = line[i];
+                if (c == '\"')
+                {
+                    if (inText)
+                    {
+                        if (i < line.Length - 1 && line[i + 1] == '\"') // if next char is also -> "
+                        {
+                            sb.Append('\"');
+                            i++;
+                        }
+                        else
+                        {
+                            inText = false;
+                        }
+                    }
+                    else
+                    {
+                        inText = true;
+                    }
+                }
+                else if(c == ',')
+                {
+                    if(inText)
+                        throw new InvalidDataException("따옴표가 완전히 닫히지 않았습니다: " + line);
+                    ApplyProperty(dataManager, index++, sb.ToString());
+                    sb.Clear();
+                }
+                else
+                {
+                    sb.Append(c);
+                }
+            }
+            ApplyProperty(dataManager, index, sb.ToString());
+        }
+
+        private void ApplyProperty(DataManager dataManager, int index, string text)
+        {
+            switch (index)
+            {
+                case 0:
+                    Label = text;
+                    if(string.IsNullOrWhiteSpace(Label))
+                        throw new InvalidDataException("거래명은 반드시 입력되어야합니다: " + text);
+                    break;
+                case 1:
+                    TransactionCategory _category = TransactionCategory.GetCategory(text);
+                    if (_category == null)
+                        throw new InvalidDataException("찾을 수 없는 카테고리입니다: " + text);
+                    else
+                        Category = _category;
+                    break;
+                case 2:
+                    if(long.TryParse(text, out long _amount))
+                        Amount = _amount;
+                    else
+                        throw new InvalidDataException("거래량은 정수로 입력해야합니다: " + text);
+                    break;
+                case 3:
+                    Account = dataManager.FindAccount(text);
+                    if (Account == null)
+                        throw new InvalidDataException("찾을 수 없는 자산명입니다: " + text);
+                    break;
+                case 4:
+                    if (DateTime.TryParse(text, out DateTime _date))
+                        TransDateTime = _date;
+                    else
+                        throw new InvalidDataException("날짜 포맷을 읽을 수 없습니다: " + text);
+                    break;
+                case 5:
+                    if (DateTime.TryParse(text, out DateTime _time))
+                        TransDateTime = new DateTime(TransDateTime.Year, TransDateTime.Month, TransDateTime.Day, _time.Hour, _time.Minute, _time.Second);
+                    else
+                        throw new InvalidDataException("시각 포맷을 읽을 수 없습니다: " + text);
+                    break;
+                case 6:
+                    Description = text;
+                    break;
+                default:
+                    throw new InvalidDataException("CSV라인에 데이터가 너무 많습니다: " + (index + 1) + "번째 라인");
+            }
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || obj is Transaction == false)
@@ -87,6 +179,11 @@ namespace FinancialManagementProgram.Data
             set
             {
                 _category = value;
+                if (_category == null)
+                {
+                    Logger.Error(new ArgumentNullException("Category 데이터가 손실되었습니다:" + Label));
+                    _category = TransactionCategory.GetCategory(TransactionCategory.UnknownCategoryID);
+                }
                 OnPropertyChanged();
             }
         }
@@ -121,7 +218,7 @@ namespace FinancialManagementProgram.Data
             }
         }
 
-        public string TransDate { get; set; }
+        public string TransDate { get; private set; }
 
         public DateTime TransDateTime
         {

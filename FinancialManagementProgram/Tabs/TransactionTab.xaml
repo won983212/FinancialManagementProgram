@@ -35,8 +35,16 @@
             <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
                     Foreground="{DynamicResource TextColor}"
                     Command="{Binding AddCommand}"
+                    ToolTip="거래내역 직접 추가"
                     Width="30" Height="30">
                 <md:PackIcon Kind="Add"/>
+            </Button>
+            <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                    Foreground="{DynamicResource TextColor}"
+                    Command="{Binding AddCSVCommand}"
+                    ToolTip="CSV파일로 거래내역 추가"
+                    Width="30" Height="30">
+                <md:PackIcon Kind="BooksAdd"/>
             </Button>
         </StackPanel>
 

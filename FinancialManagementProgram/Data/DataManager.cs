@@ -52,8 +52,6 @@ namespace FinancialManagementProgram.Data
             if (!_allTransactions.TryGetValue(date, out TransactionGroup group))
                 _allTransactions.Add(date, group = new TransactionGroup());
             group.AddTransaction(t);
-            Analyzer.Update();
-            BinaryProperties.Save();
         }
 
         public void DeleteTransaction(Transaction t)
@@ -64,15 +62,12 @@ namespace FinancialManagementProgram.Data
                 if (group.DeleteTransaction(t))
                     _allTransactions.Remove(date);
             }
-            Analyzer.Update();
-            BinaryProperties.Save();
         }
 
         public void AddAccount(BankAccount account)
         {
             _accounts.Add(account);
             _accountsIDMap.Add(account.ID, account);
-            BinaryProperties.Save();
         }
 
         public void DeleteAccount(BankAccount account)
@@ -87,8 +82,6 @@ namespace FinancialManagementProgram.Data
             }
             foreach (int key in deletionList)
                 _allTransactions.Remove(key);
-            Analyzer.Update();
-            BinaryProperties.Save();
         }
 
         public void MarkAsAllCategoryAffect(string affectLabel, long categoryId)
@@ -96,12 +89,23 @@ namespace FinancialManagementProgram.Data
             TransactionCategory newCategory = TransactionCategory.GetCategory(categoryId);
             _transactionCategoryMap[affectLabel] = newCategory;
             ReplaceAllMatchedCategory((t) => t.Label == affectLabel, newCategory);
-            Analyzer.Update();
         }
 
         public void UnmarkAsAllCategoryAffect(string affectLabel)
         {
             _transactionCategoryMap.Remove(affectLabel);
+        }
+
+        public void RemoveLabelCategoryCache(long categoryId)
+        {
+            List<string> removeKeys = new List<string>();
+            foreach (var ent in _transactionCategoryMap)
+            {
+                if(ent.Value.ID == categoryId)
+                    removeKeys.Add(ent.Key);
+            }
+            foreach (string key in removeKeys)
+                _transactionCategoryMap.Remove(key);
         }
 
         public bool HasCategoryMark(string label)
@@ -122,7 +126,6 @@ namespace FinancialManagementProgram.Data
         {
             TransactionCategory newCategory = TransactionCategory.GetCategory(newCategoryId);
             ReplaceAllMatchedCategory((t) => t.Category.ID == oldCategoryId, newCategory);
-            Analyzer.Update();
         }
 
         private void ReplaceAllMatchedCategory(Predicate<Transaction> condition, TransactionCategory newCategory)
@@ -167,6 +170,16 @@ namespace FinancialManagementProgram.Data
             return null;
         }
 
+        public BankAccount FindAccount(string accountLabel)
+        {
+            foreach (BankAccount account in _accountsIDMap.Values)
+            {
+                if (account.Label == accountLabel)
+                    return account;
+            }
+            return null;
+        }
+
         public void Deserialize(BinaryReader reader)
         {
             // budget
@@ -198,7 +211,7 @@ namespace FinancialManagementProgram.Data
             len = reader.ReadInt32();
             _transactionCategoryMap.Clear();
             for (int i = 0; i < len; i++)
-                _transactionCategoryMap.Add(reader.ReadString(), TransactionCategory.GetCategory(reader.ReadInt64())); // TODO 가끔 NULL로 되는 버그있는데 추적해보자?
+                _transactionCategoryMap.Add(reader.ReadString(), TransactionCategory.GetCategory(reader.ReadInt64()));
             Analyzer.Update();
         }
 

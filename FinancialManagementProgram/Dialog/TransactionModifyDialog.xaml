@@ -62,7 +62,6 @@
                            md:HintAssist.Hint="거래 시각"
                            VerticalAlignment="Bottom"
                            HorizontalAlignment="Right"
-                           Is24Hours="True"
                            WithSeconds="True" >
                 <md:TimePicker.SelectedTime>
                     <Binding Path="TransTime" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">

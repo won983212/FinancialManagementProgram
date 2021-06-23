@@ -35,6 +35,8 @@ namespace FinancialManagementProgram.Dialog.ViewModel
             {
                 TransactionCategory.UnregisterCategory(prevKey);
                 _dataManager.ReplaceAllCategory(prevKey, 0);
+                _dataManager.RemoveLabelCategoryCache(prevKey);
+                _dataManager.Analyzer.Update();
                 BinaryProperties.Save();
             }
         }
