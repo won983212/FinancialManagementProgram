@@ -28,6 +28,12 @@ namespace FinancialManagementProgram.Controls
         public static readonly DependencyProperty ChartDatasProperty =
             DependencyProperty.Register(nameof(ChartDatas), typeof(IEnumerable<ColoredChartCategory>), typeof(TransactionChartDataList));
 
+        // TODO Color Addition
+        private static Brush[] _categoryFills = new Brush[]
+        {
+            Brushes.Tomato, Brushes.LightSeaGreen, Brushes.DodgerBlue, Brushes.Coral, Brushes.Cornsilk, Brushes.Khaki, Brushes.LightPink
+        };
+
         private ICollectionView _categorizedCollectionView;
         private List<ColoredChartCategory> _categorizedTotal = new List<ColoredChartCategory>();
         public event PropertyChangedEventHandler PropertyChanged;
@@ -56,7 +62,7 @@ namespace FinancialManagementProgram.Controls
                 {
                     CategoryName = ent.Key.Label,
                     Amount = ent.Value.TotalSpending,
-                    Fill = i++ == 0 ? Brushes.Tomato : Brushes.Green
+                    Fill = _categoryFills[i++ % _categoryFills.Length]
                 });
             }
 

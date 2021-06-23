@@ -2,7 +2,9 @@
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,9 +22,12 @@ namespace FinancialManagementProgram.Dialog
     /// <summary>
     /// 반드시 Account와 TransactionCategory가 1개 이상 존재해야 한다.
     /// </summary>
-    public partial class TransactionModifyDialog : UserControl
+    public partial class TransactionModifyDialog : UserControl, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private DataManager _dataManager;
+        private bool _applySameTypeAllTransaction = false;
         private int _errorCount = 0;
 
         public TransactionModifyDialog(DataManager dataManager, Transaction transaction)
@@ -37,14 +42,20 @@ namespace FinancialManagementProgram.Dialog
             TransactionObj = new Transaction()
             {
                 TransDateTime = DateTime.Now,
-                Category = TransactionCategory.Categories.First(),
+                Category = TransactionCategory.GetCategory(TransactionCategory.UnknownCategoryID),
                 Account = dataManager.BankAccounts.First()
             };
 
             if (transaction != null)
                 TransactionObj.Copy(transaction);
 
+            ApplySameTypeAllTransaction = dataManager.HasCategoryMark(TransactionObj.Label);
             InitializeComponent();
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string name = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         private void DialogRoot_Error(object sender, ValidationErrorEventArgs e)
@@ -61,9 +72,30 @@ namespace FinancialManagementProgram.Dialog
             get => _errorCount > 0;
         }
 
+        public string Label 
+        { 
+            get => TransactionObj.Label;
+            set
+            {
+                TransactionObj.Label = value;
+                ApplySameTypeAllTransaction = _dataManager.HasCategoryMark(value);
+                if (ApplySameTypeAllTransaction)
+                    TransactionObj.Category = _dataManager.GetDefaultCategory(value);
+                OnPropertyChanged();
+            }
+        }
+
         public Transaction TransactionObj { get; }
 
-        public bool ApplySameTypeAllTransaction { get; set; }
+        public bool ApplySameTypeAllTransaction
+        {
+            get => _applySameTypeAllTransaction;
+            set
+            {
+                _applySameTypeAllTransaction = value;
+                OnPropertyChanged();
+            }
+        }
 
         public DateTime TransDate
         {

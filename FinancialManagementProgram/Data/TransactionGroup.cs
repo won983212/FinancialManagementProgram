@@ -76,7 +76,7 @@ namespace FinancialManagementProgram.Data
                 t.Serialize(writer);
         }
 
-        public void RevalidateTotalSum()
+        internal void RevalidateTotalSum()
         {
             TotalSpending = 0;
             TotalIncoming = 0;

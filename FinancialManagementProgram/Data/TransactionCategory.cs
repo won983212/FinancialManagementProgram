@@ -33,12 +33,12 @@ namespace FinancialManagementProgram.Data
 
         public override bool Equals(object obj)
         {
-            return obj is TransactionCategory target && Label.Equals(target.Label);
+            return obj is TransactionCategory target && ID.Equals(target.ID);
         }
 
         public override int GetHashCode()
         {
-            return Label.GetHashCode();
+            return ID.GetHashCode();
         }
 
         public override string ToString()
@@ -127,7 +127,6 @@ namespace FinancialManagementProgram.Data
             _categoryValues.Clear();
             foreach (TransactionCategory ent in _categoryMap.Values)
                 _categoryValues.Add(ent);
-            OnStaticPropertyChanged(nameof(Categories));
         }
 
 

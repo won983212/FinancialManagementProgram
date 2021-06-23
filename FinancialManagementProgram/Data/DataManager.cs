@@ -25,20 +25,24 @@ namespace FinancialManagementProgram.Data
         private DateTime _targetDate;
 
         private readonly Dictionary<long, BankAccount> _accountsIDMap;
+        private readonly ReadOnlyObservableCollection<BankAccount> _accountsReadonly;
+        private readonly Dictionary<string, TransactionCategory> _transactionCategoryMap;
 
         private readonly ObservableCollection<BankAccount> _accounts;
-        private readonly ReadOnlyObservableCollection<BankAccount> _accountsReadonly;
         private readonly SortedList<int, TransactionGroup> _allTransactions;
         private readonly TransactionDataAnalyzer _analyzer;
 
 
         private DataManager()
         {
-            _accounts = new ObservableCollection<BankAccount>();
             _accountsIDMap = new Dictionary<long, BankAccount>();
+            _transactionCategoryMap = new Dictionary<string, TransactionCategory>();
+
+            _accounts = new ObservableCollection<BankAccount>();
             _accountsReadonly = new ReadOnlyObservableCollection<BankAccount>(_accounts);
             _allTransactions = new SortedList<int, TransactionGroup>();
             _analyzer = new TransactionDataAnalyzer(this);
+
             TargetDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
         }
 
@@ -87,6 +91,56 @@ namespace FinancialManagementProgram.Data
             BinaryProperties.Save();
         }
 
+        public void MarkAsAllCategoryAffect(string affectLabel, long categoryId)
+        {
+            TransactionCategory newCategory = TransactionCategory.GetCategory(categoryId);
+            _transactionCategoryMap[affectLabel] = newCategory;
+            ReplaceAllMatchedCategory((t) => t.Label == affectLabel, newCategory);
+            Analyzer.Update();
+        }
+
+        public void UnmarkAsAllCategoryAffect(string affectLabel)
+        {
+            _transactionCategoryMap.Remove(affectLabel);
+        }
+
+        public bool HasCategoryMark(string label)
+        {
+            if (label == null)
+                return false;
+            return _transactionCategoryMap.ContainsKey(label);
+        }
+
+        public TransactionCategory GetDefaultCategory(string label)
+        {
+            if (_transactionCategoryMap.TryGetValue(label, out TransactionCategory result))
+                return result;
+            return TransactionCategory.GetCategory(TransactionCategory.UnknownCategoryID);
+        }
+
+        public void ReplaceAllCategory(long oldCategoryId, long newCategoryId)
+        {
+            TransactionCategory newCategory = TransactionCategory.GetCategory(newCategoryId);
+            ReplaceAllMatchedCategory((t) => t.Category.ID == oldCategoryId, newCategory);
+            Analyzer.Update();
+        }
+
+        private void ReplaceAllMatchedCategory(Predicate<Transaction> condition, TransactionCategory newCategory)
+        {
+            Transaction t;
+            foreach (var ent in _allTransactions)
+            {
+                for (int i = 0; i < ent.Value.Transactions.Count; i++)
+                {
+                    t = ent.Value.Transactions[i];
+                    if (t.Category == null)
+                        t.Category = TransactionCategory.GetCategory(TransactionCategory.UnknownCategoryID);
+                    if (condition(t))
+                        t.Category = newCategory;
+                }
+            }
+        }
+
         public void RevalidateTransactionDatas()
         {
             foreach (var ent in _allTransactions)
@@ -119,9 +173,9 @@ namespace FinancialManagementProgram.Data
             Budget = reader.ReadInt64();
 
             // accounts
-            int account_len = reader.ReadInt32();
+            int len = reader.ReadInt32();
             _accounts.Clear();
-            for (int i = 0; i < account_len; i++)
+            for (int i = 0; i < len; i++)
             {
                 BankAccount account = new BankAccount(reader);
                 _accounts.Add(account);
@@ -130,15 +184,21 @@ namespace FinancialManagementProgram.Data
             OnPropertyChanged(nameof(BankAccounts));
 
             // transactions
-            int transaction_len = reader.ReadInt32();
+            len = reader.ReadInt32();
             _allTransactions.Clear();
-            for (int i = 0; i < transaction_len; i++)
+            for (int i = 0; i < len; i++)
             {
                 int key = reader.ReadInt32();
                 TransactionGroup value = new TransactionGroup();
                 value.Deserialize(this, reader);
                 _allTransactions.Add(key, value);
             }
+
+            // category saving map
+            len = reader.ReadInt32();
+            _transactionCategoryMap.Clear();
+            for (int i = 0; i < len; i++)
+                _transactionCategoryMap.Add(reader.ReadString(), TransactionCategory.GetCategory(reader.ReadInt64()));
             Analyzer.Update();
         }
 
@@ -158,6 +218,14 @@ namespace FinancialManagementProgram.Data
             {
                 writer.Write(ent.Key);
                 ent.Value.Serialize(writer);
+            }
+
+            // category saving map
+            writer.Write(_transactionCategoryMap.Count);
+            foreach (var ent in _transactionCategoryMap)
+            {
+                writer.Write(ent.Key);
+                writer.Write(ent.Value.ID);
             }
         }
 

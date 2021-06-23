@@ -20,8 +20,11 @@ namespace FinancialManagementProgram.Dialog
 {
     public partial class CategoryManagementDialog : UserControl
     {
-        public CategoryManagementDialog()
+        private DataManager _dataManager;
+
+        public CategoryManagementDialog(DataManager dataManager)
         {
+            _dataManager = dataManager;
             InitializeComponent();
         }
 
@@ -29,8 +32,7 @@ namespace FinancialManagementProgram.Dialog
         {
             if ((bool)e.Parameter)
             {
-                CategoryModifyDialog dialog = CommonUtil.GetDialog<CategoryModifyDialog>(o);
-                if (!dialog.HasError)
+                if (!CommonUtil.GetDialog<CategoryModifyDialog>(o).HasError)
                     BinaryProperties.Save();
             }
         }
@@ -40,6 +42,7 @@ namespace FinancialManagementProgram.Dialog
             if ((bool)e.Parameter)
             {
                 TransactionCategory.UnregisterCategory(prevKey);
+                _dataManager.ReplaceAllCategory(prevKey, 0);
                 BinaryProperties.Save();
             }
         }

@@ -12,13 +12,31 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             : base(parent)
         { }
 
+        private void MarkProcess(TransactionModifyDialog dialog, Transaction t)
+        {
+            bool oldMarked = DataManager.HasCategoryMark(t.Label);
+            TransactionCategory oldCategory = DataManager.GetDefaultCategory(t.Label);
+            if (oldMarked != dialog.ApplySameTypeAllTransaction || oldCategory != t.Category)
+            {
+                if (dialog.ApplySameTypeAllTransaction)
+                    DataManager.MarkAsAllCategoryAffect(t.Label, t.Category.ID);
+                else
+                    DataManager.UnmarkAsAllCategoryAffect(t.Label);
+            }
+        }
+
         private void OnAddDialogClosed(object o, DialogClosingEventArgs e)
         {
             if ((bool)e.Parameter)
             {
                 TransactionModifyDialog dialog = CommonUtil.GetDialog<TransactionModifyDialog>(o);
                 if (!dialog.HasError)
-                    DataManager.AddTransaction(dialog.TransactionObj);
+                {
+                    Transaction t = dialog.TransactionObj;
+                    DataManager.AddTransaction(t);
+                    MarkProcess(dialog, t);
+                    BinaryProperties.Save();
+                }
             }
         }
 
@@ -30,8 +48,10 @@ namespace FinancialManagementProgram.ViewModels.Tabs
                 if (!dialog.HasError)
                 {
                     t.Copy(dialog.TransactionObj);
+                    MarkProcess(dialog, t);
                     DataManager.RevalidateTransactionDatas();
                     DataManager.Analyzer.Update();
+                    BinaryProperties.Save();
                 }
             }
         }
@@ -41,6 +61,7 @@ namespace FinancialManagementProgram.ViewModels.Tabs
             if ((bool)e.Parameter)
             {
                 DataManager.DeleteTransaction(t);
+                BinaryProperties.Save();
             }
         }
 

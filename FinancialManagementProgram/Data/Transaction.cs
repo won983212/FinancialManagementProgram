@@ -21,7 +21,12 @@ namespace FinancialManagementProgram.Data
         public Transaction(DataManager dataManager, BinaryReader reader)
         {
             Label = reader.ReadString();
-            Category = TransactionCategory.GetCategory(reader.ReadInt64());
+
+            long categoryId = reader.ReadInt64();
+            Category = TransactionCategory.GetCategory(categoryId);
+            if(Category == null)
+                Logger.Error(new InvalidOperationException("알 수 없는 CategoryID입니다. (" + categoryId + ")"));
+
             Amount = reader.ReadInt64();
             Account = dataManager.FindAccount(reader.ReadInt64());
             Description = reader.ReadString();

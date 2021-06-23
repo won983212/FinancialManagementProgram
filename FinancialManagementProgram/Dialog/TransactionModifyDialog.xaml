@@ -20,7 +20,7 @@
                  Margin="0,0,0,24"
                  md:HintAssist.Hint="거래명">
             <TextBox.Text>
-                <Binding Path="TransactionObj.Label" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                <Binding Path="Label" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
                     <Binding.ValidationRules>
                         <root:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
                     </Binding.ValidationRules>

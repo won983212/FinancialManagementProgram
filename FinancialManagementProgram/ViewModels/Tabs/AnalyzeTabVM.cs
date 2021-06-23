@@ -12,6 +12,6 @@ namespace FinancialManagementProgram.ViewModels.Tabs
 
         public ICommand EditBudgetCommand => new RelayCommand(() => CommonUtil.ShowDialog(new BudgetModifyDialog(DataManager), null));
 
-        public ICommand EditCategoryCommand => new RelayCommand(() => CommonUtil.ShowDialog(new CategoryManagementDialog(), null));
+        public ICommand EditCategoryCommand => new RelayCommand(() => CommonUtil.ShowDialog(new CategoryManagementDialog(DataManager), null));
     }
 }
