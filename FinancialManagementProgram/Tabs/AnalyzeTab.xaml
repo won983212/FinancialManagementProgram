@@ -311,12 +311,19 @@
         <!-- categorized transaction pie chart -->
         <md:Card Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" 
                  Margin="0,0,12,12" Width="300">
-            <StackPanel Margin="20,16">
+            <Grid Margin="20,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <TextBlock FontSize="12pt" 
                        Foreground="{DynamicResource HeaderTextColor}"
                        Margin="0,0,0,16">카테고리별 지출 현황</TextBlock>
-                <Separator Background="{DynamicResource BorderColor}" />
+                <Separator Grid.Row="1" Background="{DynamicResource BorderColor}" />
                 <Button Style="{StaticResource MaterialDesignFlatButton}"
+                        Grid.Row="2"
                         HorizontalAlignment="Right"
                         FontSize="9pt"
                         Padding="0"
@@ -331,13 +338,19 @@
                            Margin="0,64,0,0"
                            FontSize="12pt"
                            Text="표시할 지출이 없습니다." />
-                <StackPanel Visibility="{Binding Analyzer.MonthlyTotalSpending, Converter={StaticResource ZeroToVisibilityConverter}, ConverterParameter=Invert}">
+                <Grid Grid.Row="3" 
+                      Visibility="{Binding Analyzer.MonthlyTotalSpending, Converter={StaticResource ZeroToVisibilityConverter}, ConverterParameter=Invert}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <control:TransactionChart ChartDatas="{Binding ChartDatas, ElementName=chartDataList}"
-                                          Margin="0,16" />
+                                              Margin="0,16" />
                     <control:TransactionChartDataList x:Name="chartDataList"
-                                                  CategorizedTransaction="{Binding Analyzer.CategorizedTransactions}"/>
-                </StackPanel>
-            </StackPanel>
+                                                      Grid.Row="1"
+                                                      CategorizedTransaction="{Binding Analyzer.CategorizedTransactions}"/>
+                </Grid>
+            </Grid>
         </md:Card>
     </Grid>
 </UserControl>
