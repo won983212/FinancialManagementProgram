@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace FinancialManagementProgram
@@ -15,7 +11,7 @@ namespace FinancialManagementProgram
             if (!DateTime.TryParse((value ?? "").ToString(),
                 CultureInfo.CurrentCulture,
                 DateTimeStyles.AssumeLocal | DateTimeStyles.AllowWhiteSpaces,
-                out _)) 
+                out _))
                 return new ValidationResult(false, "잘못된 입력입니다.");
             return ValidationResult.ValidResult;
         }

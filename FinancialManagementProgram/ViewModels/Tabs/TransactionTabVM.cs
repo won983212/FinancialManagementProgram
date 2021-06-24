@@ -1,5 +1,4 @@
 ﻿using FinancialManagementProgram.Data;
-using FinancialManagementProgram.Dialog;
 using FinancialManagementProgram.Dialog.ViewModel;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
@@ -11,7 +10,6 @@ namespace FinancialManagementProgram.ViewModels.Tabs
 {
     class TransactionTabVM : TabChild
     {
-        // TODO 달력 월 바꿀 수 있게 해야지;
         public TransactionTabVM(TabContainer parent)
             : base(parent)
         { }
@@ -42,7 +40,7 @@ namespace FinancialManagementProgram.ViewModels.Tabs
                 DataManager.Analyzer.Update();
                 BinaryProperties.Save();
                 Logger.Info("거래내역 CSV 불러오기가 완료되었습니다.");
-            } 
+            }
             catch (Exception e)
             {
                 Logger.Error(e);
@@ -140,5 +138,9 @@ namespace FinancialManagementProgram.ViewModels.Tabs
         public ICommand DeleteCommand => new RelayCommand<Transaction>((t) => CommonUtil.ShowDialog(
             new MessageVM("자산을 삭제합니다.", "자산과 관련 거래내역이 영구적으로 삭제되며, 통계에 영향을 줄 수 있습니다. 그래도 삭제하시겠습니까?"),
             (o, e) => OnDeleteDialogClosed(o, e, t)));
+
+        public ICommand PrevMonthCommand => new RelayCommand(() => DataManager.TargetDate = DataManager.TargetDate.AddMonths(-1));
+
+        public ICommand NextMonthCommand => new RelayCommand(() => DataManager.TargetDate = DataManager.TargetDate.AddMonths(1));
     }
 }

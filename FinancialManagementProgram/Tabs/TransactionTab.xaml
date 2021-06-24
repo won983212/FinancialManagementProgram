@@ -149,7 +149,10 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.ColumnSpan="2" FontSize="15pt" Text="{Binding DataManager.TargetDate, StringFormat=MMMM}"/>
+                <TextBlock FontSize="15pt" 
+                           VerticalAlignment="Center"
+                           Grid.ColumnSpan="2"
+                           Text="{Binding DataManager.TargetDate, StringFormat=MMMM}"/>
                 <TextBlock Grid.Row="1" Opacity="0.5" Text="수입"/>
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DataManager.Analyzer.MonthlyTotalIncoming, StringFormat='{}{0:#,##원;;없음}'}"/>
                 <TextBlock Grid.Row="2" Opacity="0.5" Margin="0,6,4,0" Text="지출"/>
@@ -167,7 +170,57 @@
         <!-- Transaction Calendar View -->
         <md:Card Grid.Row="1" Grid.Column="1" Margin="0,0,12,12">
             <Grid>
-                <control:TransactionCalendar Date="{Binding DataManager.TargetDate}" 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center"
+                            Margin="0,16,0,0">
+                    <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                            Foreground="{StaticResource TextColor}"
+                            Command="{Binding PrevMonthCommand}"
+                            Width="16"
+                            Height="16">
+                        <md:PackIcon Kind="ChevronLeft" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                    </Button>
+                    <StackPanel Margin="8,0"
+                                Orientation="Horizontal">
+                        <TextBlock x:Name="tbxYear"
+                                   Margin="0,0,4,0" 
+                                   FontSize="8pt"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource HeaderTextColor}"
+                                   Text="{Binding DataManager.TargetDate, StringFormat='yyyy년'}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=tbxYear}" Value="2021년">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBlock FontSize="14pt"
+                                   Foreground="{DynamicResource HeaderTextColor}"
+                                   Text="{Binding DataManager.TargetDate, StringFormat='MMMM'}"/>
+                    </StackPanel>
+                    <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                            Foreground="{StaticResource TextColor}"
+                            Command="{Binding NextMonthCommand}"
+                            Width="16"
+                            Height="16">
+                        <md:PackIcon Kind="ChevronRight" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                    </Button>
+                </StackPanel>
+                <control:TransactionCalendar Grid.Row="1"
+                                             Date="{Binding DataManager.TargetDate}" 
                                              TransactionData="{Binding DataManager.Analyzer.MonthlyTransactions}" 
                                              Margin="8"/>
             </Grid>

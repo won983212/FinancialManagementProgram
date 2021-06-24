@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 
@@ -95,7 +93,7 @@ namespace FinancialManagementProgram.Data
                 while ((line = reader.ReadLine()) != null)
                 {
                     string[] args = line.Split(',');
-                    RegisterCategory(args[0], (PackIconKind) Enum.Parse(typeof(PackIconKind), args[1]));
+                    RegisterCategory(args[0], (PackIconKind)Enum.Parse(typeof(PackIconKind), args[1]));
                 }
             }
         }
@@ -133,7 +131,7 @@ namespace FinancialManagementProgram.Data
             return result;
         }
 
-        private static void FireNotifyCategoryValues() 
+        private static void FireNotifyCategoryValues()
         {
             _categoryValues.Clear();
             foreach (TransactionCategory ent in _categoryMap.Values)

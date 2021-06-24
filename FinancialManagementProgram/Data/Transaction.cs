@@ -1,7 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace FinancialManagementProgram.Data
@@ -87,9 +85,9 @@ namespace FinancialManagementProgram.Data
                         inText = true;
                     }
                 }
-                else if(c == ',')
+                else if (c == ',')
                 {
-                    if(inText)
+                    if (inText)
                         throw new InvalidDataException("따옴표가 완전히 닫히지 않았습니다: " + line);
                     ApplyProperty(dataManager, index++, sb.ToString());
                     sb.Clear();
@@ -108,7 +106,7 @@ namespace FinancialManagementProgram.Data
             {
                 case 0:
                     Label = text;
-                    if(string.IsNullOrWhiteSpace(Label))
+                    if (string.IsNullOrWhiteSpace(Label))
                         throw new InvalidDataException("거래명은 반드시 입력되어야합니다: " + text);
                     break;
                 case 1:
@@ -119,7 +117,7 @@ namespace FinancialManagementProgram.Data
                         Category = _category;
                     break;
                 case 2:
-                    if(long.TryParse(text, out long _amount))
+                    if (long.TryParse(text, out long _amount))
                         Amount = _amount;
                     else
                         throw new InvalidDataException("거래량은 정수로 입력해야합니다: " + text);

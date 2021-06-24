@@ -1,5 +1,4 @@
 ﻿using FinancialManagementProgram.Data;
-using FinancialManagementProgram.Dialog;
 using FinancialManagementProgram.Dialog.ViewModel;
 using MaterialDesignThemes.Wpf;
 using System;
@@ -94,7 +93,7 @@ namespace FinancialManagementProgram.ViewModels.Tabs
 
         public int SelectedAccountColor
         {
-            get 
+            get
             {
                 BankAccount account = GetSelectedAccount();
                 return account == null ? 0 : (int)account.Color;
@@ -111,9 +110,9 @@ namespace FinancialManagementProgram.ViewModels.Tabs
         public bool IsEditing
         {
             get => _isEditing;
-            set 
-            { 
-                _isEditing = value; 
+            set
+            {
+                _isEditing = value;
                 OnPropertyChanged();
             }
         }

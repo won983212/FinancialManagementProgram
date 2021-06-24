@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-
-namespace FinancialManagementProgram.ViewModels.Tabs
+﻿namespace FinancialManagementProgram.ViewModels.Tabs
 {
     class SettingsTabVM : TabChild
     {

@@ -28,10 +28,11 @@ namespace FinancialManagementProgram.Controls
         public static readonly DependencyProperty ChartDatasProperty =
             DependencyProperty.Register(nameof(ChartDatas), typeof(IEnumerable<ColoredChartCategory>), typeof(TransactionChartDataList));
 
-        // TODO Color Addition
         private static Brush[] _categoryFills = new Brush[]
         {
-            Brushes.Tomato, Brushes.LightSeaGreen, Brushes.DodgerBlue, Brushes.Coral, Brushes.Cornsilk, Brushes.Khaki, Brushes.LightPink
+            Brushes.Tomato, Brushes.Orange, Brushes.Khaki, Brushes.SeaGreen, Brushes.DodgerBlue, Brushes.SteelBlue, Brushes.Violet,
+            Brushes.Pink, Brushes.BlueViolet, Brushes.Chocolate, Brushes.Silver, Brushes.LightSeaGreen, Brushes.Cyan, Brushes.Purple,
+            Brushes.DeepPink, Brushes.LimeGreen
         };
 
         private ICollectionView _categorizedCollectionView;

@@ -57,7 +57,7 @@ namespace FinancialManagementProgram.Data
         public void DeleteTransaction(Transaction t)
         {
             int date = CommonUtil.GetIntegerDate(t.TransDateTime);
-            if(_allTransactions.TryGetValue(date, out TransactionGroup group))
+            if (_allTransactions.TryGetValue(date, out TransactionGroup group))
             {
                 if (group.DeleteTransaction(t))
                     _allTransactions.Remove(date);
@@ -101,7 +101,7 @@ namespace FinancialManagementProgram.Data
             List<string> removeKeys = new List<string>();
             foreach (var ent in _transactionCategoryMap)
             {
-                if(ent.Value.ID == categoryId)
+                if (ent.Value.ID == categoryId)
                     removeKeys.Add(ent.Key);
             }
             foreach (string key in removeKeys)
@@ -165,7 +165,7 @@ namespace FinancialManagementProgram.Data
 
         public BankAccount FindAccount(long accountId)
         {
-            if(_accountsIDMap.TryGetValue(accountId, out BankAccount value))
+            if (_accountsIDMap.TryGetValue(accountId, out BankAccount value))
                 return value;
             return null;
         }
@@ -265,7 +265,7 @@ namespace FinancialManagementProgram.Data
         public DateTime TargetDate
         {
             get => _targetDate;
-            private set
+            set
             {
                 if (_targetDate != value)
                 {

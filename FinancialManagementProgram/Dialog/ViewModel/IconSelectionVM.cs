@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FinancialManagementProgram.Dialog.ViewModel
@@ -60,9 +59,9 @@ namespace FinancialManagementProgram.Dialog.ViewModel
         public string SearchBoxText
         {
             get => _searchText;
-            set 
+            set
             {
-                _searchText = value; 
+                _searchText = value;
                 FilterIcons(value);
             }
         }

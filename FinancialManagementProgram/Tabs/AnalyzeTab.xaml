@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:control="clr-namespace:FinancialManagementProgram.Controls"
              xmlns:converter="clr-namespace:FinancialManagementProgram.Converters"
              x:Name="tabRoot"
@@ -44,14 +43,53 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.ColumnSpan="2"
-                           HorizontalAlignment="Center"
-                           FontSize="14pt"
-                           Foreground="{DynamicResource HeaderTextColor}"
-                           Text="{Binding TargetDate, StringFormat='MMMM'}"/>
+                <StackPanel Orientation="Horizontal" 
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Center">
+                    <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                            Foreground="{StaticResource TextColor}"
+                            Command="{Binding DataContext.PrevMonthCommand, ElementName=tabRoot}"
+                            Width="16"
+                            Height="16">
+                        <md:PackIcon Kind="ChevronLeft" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                    </Button>
+                    <StackPanel Margin="8,0">
+                        <TextBlock x:Name="tbxYear"
+                                   Margin="0,0,0,4" 
+                                   FontSize="9pt"
+                                   Foreground="{DynamicResource HeaderTextColor}"
+                                   Text="{Binding TargetDate, StringFormat='yyyy년'}">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=tbxYear}" Value="2021년">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBlock HorizontalAlignment="Center"
+                                   FontSize="14pt"
+                                   Foreground="{DynamicResource HeaderTextColor}"
+                                   Text="{Binding TargetDate, StringFormat='MMMM'}"/>
+                    </StackPanel>
+                    <Button Style="{StaticResource MaterialDesignIconForegroundButton}"
+                            Foreground="{StaticResource TextColor}"
+                            Command="{Binding DataContext.NextMonthCommand, ElementName=tabRoot}"
+                            Width="16"
+                            Height="16">
+                        <md:PackIcon Kind="ChevronRight" 
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"/>
+                    </Button>
+                </StackPanel>
                 <Separator Grid.Row="1"
                            Grid.ColumnSpan="2"
-                           Margin="0,20"
+                           Margin="0,12"
                            Background="{DynamicResource BorderColor}"/>
 
                 <StackPanel Grid.Row="2"

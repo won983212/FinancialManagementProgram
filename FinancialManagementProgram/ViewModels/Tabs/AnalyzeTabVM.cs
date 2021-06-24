@@ -1,6 +1,4 @@
-﻿using FinancialManagementProgram.Dialog;
-using FinancialManagementProgram.Dialog.ViewModel;
-using System;
+﻿using FinancialManagementProgram.Dialog.ViewModel;
 using System.Windows.Input;
 
 namespace FinancialManagementProgram.ViewModels.Tabs
@@ -14,5 +12,9 @@ namespace FinancialManagementProgram.ViewModels.Tabs
         public ICommand EditBudgetCommand => new RelayCommand(() => CommonUtil.ShowDialog(new BudgetModifyVM(DataManager), null));
 
         public ICommand EditCategoryCommand => new RelayCommand(() => CommonUtil.ShowDialog(new CategoryManagementVM(DataManager), null));
+
+        public ICommand PrevMonthCommand => new RelayCommand(() => DataManager.TargetDate = DataManager.TargetDate.AddMonths(-1));
+
+        public ICommand NextMonthCommand => new RelayCommand(() => DataManager.TargetDate = DataManager.TargetDate.AddMonths(1));
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace FinancialManagementProgram.Data
@@ -33,10 +32,10 @@ namespace FinancialManagementProgram.Data
         internal bool DeleteTransactionsByAccount(BankAccount account)
         {
             Transaction t;
-            for(int i = Transactions.Count - 1; i >= 0; i--)
+            for (int i = Transactions.Count - 1; i >= 0; i--)
             {
                 t = Transactions[i];
-                if(t.Account == account)
+                if (t.Account == account)
                 {
                     Transactions.RemoveAt(i);
                     if (t.Amount < 0)
@@ -82,7 +81,7 @@ namespace FinancialManagementProgram.Data
             TotalIncoming = 0;
             foreach (Transaction t in Transactions)
             {
-                if(t.Amount < 0)
+                if (t.Amount < 0)
                     TotalSpending -= t.Amount;
                 else
                     TotalIncoming += t.Amount;
