@@ -18,7 +18,7 @@ namespace FinancialManagementProgram
 
         public static void Error(Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine("Handled Error:" + e);
             MainViewModel.SnackMessageQueue.Enqueue("오류: " + e.Message);
         }
     }

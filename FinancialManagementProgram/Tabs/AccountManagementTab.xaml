@@ -56,57 +56,13 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Card Control Panel -->
-            <md:Card Grid.Row="1" Margin="12,0,0,12">
-                <Grid Margin="16">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <ctrl:PayCard Grid.RowSpan="2"
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Center"
-                                  Margin="0,8"
-                                  BankAccount="{Binding SelectedItem, Mode=OneWay, ElementName=listAccount}"/>
-
-                    <TextBlock Grid.Column="1"
-                               FontSize="12pt" 
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Right">이번달 수입</TextBlock>
-                    <TextBlock Grid.Column="2"
-                               VerticalAlignment="Center"
-                               FontWeight="Bold"
-                               FontSize="12pt"
-                               Margin="20,0"
-                               Foreground="{DynamicResource Primary}"
-                               Text="{Binding AccountTotalIncoming, StringFormat='{}{0:#,##원;;없음}'}"/>
-
-                    <TextBlock Grid.Column="1" Grid.Row="1"
-                               FontSize="12pt" 
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Right">이번달 지출</TextBlock>
-                    <TextBlock Grid.Column="2"
-                               Grid.Row="1"
-                               VerticalAlignment="Center"
-                               FontWeight="Bold"
-                               FontSize="12pt"
-                               Margin="20,0"
-                               Foreground="{DynamicResource ErrorColor}"
-                               Text="{Binding AccountTotalSpending, StringFormat='{}{0:#,##원;;없음}'}"/>
-                </Grid>
-            </md:Card>
-
             <!-- Card Information Panel -->
             <md:Card Margin="12,0,0,12">
                 <Grid Margin="20,28,20,20" DataContext="{Binding SelectedItem, ElementName=listAccount}">
                     <Grid.Resources>
                         <Style x:Key="InfoTitleText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
                             <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="FontSize" Value="10pt" />
                             <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
                         </Style>
                         <Style x:Key="InfoValueText" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
@@ -130,6 +86,8 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -169,10 +127,17 @@
                               ItemsSource="{Binding Source={x:Static data:BankAccount.AccountColorItems}}"
                               Visibility="{Binding DataContext.IsEditing, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=pnlContent}" />
 
+                    <TextBlock Grid.Row="5" Style="{StaticResource InfoTitleText}">이번달 수입</TextBlock>
+                    <TextBlock Grid.Row="5" Style="{StaticResource InfoValueText}" 
+                               Text="{Binding DataContext.AccountTotalIncoming, StringFormat='{}{0:#,##원;;없음}', ElementName=pnlContent}"/>
+                    <TextBlock Grid.Row="6" Style="{StaticResource InfoTitleText}">이번달 지출</TextBlock>
+                    <TextBlock Grid.Row="6" Style="{StaticResource InfoValueText}" 
+                               Text="{Binding DataContext.AccountTotalSpending, StringFormat='{}{0:#,##원;;없음}', ElementName=pnlContent}"/>
+
                     <StackPanel Orientation="Horizontal" 
                                 HorizontalAlignment="Right" 
-                                Margin="0,40,0,0"
-                                Grid.Row="5"
+                                Margin="0,50,0,0"
+                                Grid.Row="7"
                                 Grid.ColumnSpan="2">
                         <Button FontSize="9pt"
                                 Command="{Binding DataContext.EditCommand, ElementName=pnlContent}">

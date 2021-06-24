@@ -134,12 +134,6 @@ namespace FinancialManagementProgram.Data
                         throw new InvalidDataException("날짜 포맷을 읽을 수 없습니다: " + text);
                     break;
                 case 5:
-                    if (DateTime.TryParse(text, out DateTime _time))
-                        TransDateTime = new DateTime(TransDateTime.Year, TransDateTime.Month, TransDateTime.Day, _time.Hour, _time.Minute, _time.Second);
-                    else
-                        throw new InvalidDataException("시각 포맷을 읽을 수 없습니다: " + text);
-                    break;
-                case 6:
                     Description = text;
                     break;
                 default:

@@ -6,6 +6,8 @@
 생활,HomeCity
 편의점,CartOutline
 술,GlassMugVariant
+음료,Beer
+과자,FoodForkDrink
 주유,Oil
 세차,CarWash
 주거,Building

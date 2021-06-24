@@ -11,6 +11,13 @@ namespace FinancialManagementProgram
             FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement),
                 new FrameworkPropertyMetadata(XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
             base.OnStartup(e);
+
+            Dispatcher.UnhandledException += (o, ev) =>
+            {
+                Logger.Error(ev.Exception);
+                ev.Handled = true;
+            };
+
             BinaryProperties.Load();
         }
     }
